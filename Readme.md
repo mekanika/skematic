@@ -45,7 +45,7 @@ The options you can pass to a Property:
 Casts a value to the property `type`.
 
 ```js
-var age = new Property( 'age', {type:'string'} );
+var age = new Property( 'age', {type:'number'} );
 age.cast( '21' );
 // -> 21 (converted string to number)
 ```
