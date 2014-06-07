@@ -3,6 +3,7 @@
  */
 
 var expect = require('expect.js')
+  , schema = require('mekanika-schema')
   , Property = require('../lib/index');
 
 
@@ -85,6 +86,14 @@ describe('Property', function() {
         done();
       };
       p.cast( 1 );
+    });
+
+    it('casts to a single Schema instance', function () {
+      schema('!').prop('buzzed', {default:'Moomoo'});
+      var p = new Property('woo', {type: schema('!') });
+      var rec = p.cast({});
+      // @todo Expect that rec is a schema('!') (ie. has a 'buzzed' prop)
+      expect( rec.buzzed ).to.be( 'Moomoo' );
     });
 
 
