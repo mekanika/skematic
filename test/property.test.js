@@ -87,6 +87,15 @@ describe('Property', function() {
       p.cast( 1 );
     });
 
+
+    it('casts an array of values to a defined type', function () {
+      var p = new Property('woo', {type:'number', array:true});
+      var casted = p.cast( [true, '3'] );
+      expect( casted ).to.be.an( Array );
+      expect( typeof casted[0] ).to.be( 'number' );
+      expect( typeof casted[1] ).to.be( 'number' );
+    });
+
   });
 
 
