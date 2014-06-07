@@ -31,7 +31,7 @@ The options you can pass to a Property:
 
 - **default** _{any}_ value to apply if no value is set/passed
 
-- **required** _{Boolean}_ flag if property MUST be set and/or provided
+- **required** _{Boolean}_ flag if property MUST be set and/or provided. Note: Only `undefined` counts as a 'missing' valude. If you've "set" a value (eg. `null`), this will pass the 'required' test.
 
 - **validators** _{Array}_ list of validation rules:
     - `[ { rule: validationFn, errorMsg: "Custom error string" }, ... ]`
