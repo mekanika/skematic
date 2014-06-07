@@ -23,9 +23,9 @@ describe('AuxArray', function() {
       expect( a ).to.contain( 1, 'two', 55 );
     });
 
-    it('sets internal schema reference if passed', function() {
+    it('sets internal casting reference if passed', function() {
       var a = new AuxArray( undefined, {woo:'woo'} );
-      expect( a._schema ).to.not.be.empty();
+      expect( a._castAs ).to.not.be.empty();
     });
 
     it('can force legacy mode [object Object] inheritance', function() {
@@ -47,12 +47,12 @@ describe('AuxArray', function() {
 
     it('no-ops if no schema is set', function() {
       var a = new AuxArray();
-      expect( a._convertToSchema( '!' ) ).to.be( '!' );
+      expect( a._innerCast( '!' ) ).to.be( '!' );
     });
 
     it('casts a value to the defined AuxArray schema', function() {
       var a = new AuxArray( undefined, schema('^_^') );
-      expect( a._convertToSchema().name ).to.be( ':)' );
+      expect( a._innerCast().name ).to.be( ':)' );
     });
 
     it('pre-casts initialised values if passed', function() {
