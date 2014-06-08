@@ -39,6 +39,24 @@ The options you can pass to a Property:
 ## Overview
 
 ### Casting
+`Property` type is fixed on instantiation of the property:
+
+```js
+new Property( 'myProp', {type:$TYPE} );
+```
+
+You can also pass a **schema instance** as the property type:
+
+```js
+new Property( 'author', {type: schema('User')} );
+```
+
+Property **arrays** will cast their contents to type specified `type` (including schema instances, if this is provided):
+
+```js
+new Property( 'tags', {array: true, type: schema('Tag')} );
+```
+
 #### .cast( val )
 **Returns:** The cast value `val`
 

@@ -96,6 +96,16 @@ describe('Property', function() {
       expect( rec.buzzed ).to.be( 'Moomoo' );
     });
 
+    it('casts an array of Schema models', function () {
+      schema('!').prop('name', {default:'Moomoo'});
+      var p = new Property('woo', {type:schema('!'), array:true});
+      var casted = p.cast( [{age:42}, {name:'Bob', age:21}]);
+      expect( casted ).to.be.an( Array );
+      // Actual type check
+      expect( casted[0].constructor.name ).to.be( 'Record' );
+      // Duck type check
+      expect( casted[0].name ).to.be( 'Moomoo' );
+    });
 
     it('casts an array of values to a defined type', function () {
       var p = new Property('woo', {type:'number', array:true});
