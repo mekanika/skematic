@@ -7,7 +7,7 @@ install:
 	@echo "Install complete"
 
 docs:
-	@jsdoc -c .jsdoc.conf index.js src/ Readme.md
+	@jsdoc -c .jsdoc.conf index.js src/ tools/ Readme.md
 
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \

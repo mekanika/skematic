@@ -1,12 +1,18 @@
+/**
+ * @module schema.exportAsJSON
+ */
 
 /**
  * Convert a Schema# to a JSON string representation
  *
  * @param {Schema} schema
  * @param {Mixed} [pretty] Optional format string for JSON.stringify
+ *
+ * @return {JSON} A JSON string representation of the Schema
+ * @method exportAsJSON
  */
 
-module.exports = function schemaToJSON( schema, pretty ) {
+module.exports = function exportAsJSON( schema, pretty ) {
   // JSON stringify formatting
   pretty || (pretty = 0);
 
