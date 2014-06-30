@@ -6,6 +6,9 @@ install:
 	@npm install --production
 	@echo "Install complete"
 
+docs:
+	@jsdoc -c .jsdoc.conf index.js src/ Readme.md
+
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
@@ -22,4 +25,4 @@ coverage:
 	@istanbul cover _mocha
 	@echo "Done: ./coverage/lcov-report/index.html"
 
-.PHONY: install test lint coverage
+.PHONY: install docs test lint coverage
