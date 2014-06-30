@@ -44,6 +44,16 @@ function schema( key ) {
 
 
 /**
+ * Expose `Schema` Class constructor via schema.Schema
+ *
+ * @member Schema
+ * @static
+ */
+
+schema.Schema = Schema;
+
+
+/**
  * Create a new schema
  *
  * @param {String} key
@@ -83,16 +93,6 @@ schema.unload = function (id) {
     ? delete cache[ id ]
     : false;
 };
-
-
-/**
- * Expose `Schema` Class constructor via schema.Schema
- *
- * @member Schema
- * @static
- */
-
-schema.Schema = Schema;
 
 
 /**
