@@ -54,7 +54,7 @@ function load( o ) {
   }
 
   // @tmp "OR key" is only relevant until we validate all MUST have identity
-  var _m = schema( o.identity || o.key );
+  var _m = schema.new( o.identity || o.key );
 
   // Add any properties to the schema
   if (o.properties) _m = addProperties( o.properties, _m );

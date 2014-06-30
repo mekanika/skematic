@@ -28,24 +28,38 @@ var adapter;
 
 
 /**
- * Initialise (or retrieve a cached) `Schema#` identified by `name`
+ * Return a cached `schema` instance identified by `key`
  *
- * @param {String} name
- * @constructor
+ * @param {String} key
  * @module schema
  * @borrows load as load
  */
 
-function schema( name ) {
-  if (!name) throw new Error('schema( name ) requires a name to lookup');
+function schema( key ) {
+  if (!key) throw new Error('schema( key ) requires a key to lookup');
 
-  if (reserved[ name ]) throw new Error('Schema name `'+name+'` is reserved');
+  if (cache[ key ]) return cache[ key ];
+  else throw new Error('Cannot find schema: '+key);
+}
 
-  if (cache[ name ]) return cache[ name ];
+
+/**
+ * Create a new schema
+ *
+ * @param {String} key
+ *
+ * @method new
+ * @static
+ */
+
+schema.new = function (key) {
+  if (!key) throw new Error('Requires a key to create');
+  if (cache[ key ]) throw new Error( 'Already exists: '+key );
+  if (reserved[ key ]) throw new Error('Schema name `'+key+'` is reserved');
 
   // Store a named reference in cache and return it
-  return ( cache[ name ] = new Schema( name, adapter ) );
-}
+  return ( cache[ key ] = new Schema( key, adapter ) );
+};
 
 
 /**

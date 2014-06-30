@@ -9,9 +9,9 @@ var expect = require('chai').expect
 
 describe('Core - schema', function() {
 
-  beforeEach( function() { schema.reset(); } );
-
   describe('Library:', function() {
+
+    beforeEach( function() { schema.reset(); } );
 
     it('loads the schema library', function() {
       expect( schema ).to.be.a( "function" );
@@ -24,20 +24,20 @@ describe('Core - schema', function() {
     it('.list() returns all declared schema keys', function() {
       expect( schema.list() ).to.be.empty;
 
-      schema('^_^');
-      schema('o_O');
+      schema.new('^_^');
+      schema.new('o_O');
 
       expect( schema.list() ).to.contain( '^_^', 'o_O' );
     });
 
     it('.has( id ) returns boolean existence of schema `id`', function () {
-      schema('mega');
+      schema.new('mega');
       expect( schema.has( 'mega' ) ).to.be.true;
       expect( schema.has( 'nope' ) ).to.be.false;
     });
 
     it('.unload( id ) removes the `id` from schema cache', function () {
-      schema('deleteme');
+      schema.new('deleteme');
       expect( schema.list() ).to.contain( 'deleteme' );
       var retval = schema.unload( 'deleteme' );
       expect( schema.list() ).to.not.contain( 'deleteme' );
@@ -49,26 +49,24 @@ describe('Core - schema', function() {
     });
 
     it('returns the toString() accessor as "schema( modelName )"', function() {
-      expect( schema('Demo').toString() ).to.equal( "schema('Demo')" );
+      expect( schema.new('Demo').toString() ).to.equal( "schema('Demo')" );
     });
 
 
     describe('.reset()', function() {
 
-      beforeEach( function() { schema.reset(); } );
-
       it('unassigns any declared global adapter', function() {
-        expect( schema('^_^').adapter ).to.be.undefined;
+        expect( schema.new('^_^').adapter ).to.be.undefined;
         schema.useAdapter( {exec:function(){}});
-        expect( schema('O_o').adapter ).to.be.ok;
+        expect( schema.new('O_o').adapter ).to.be.ok;
 
         schema.reset();
-        expect( schema('_!_').adapter ).to.be.undefined;
+        expect( schema.new('_!_').adapter ).to.be.undefined;
       });
 
       it('is able to schema.reset() internal cache', function() {
         expect( schema.list() ).to.have.length( 0 );
-        schema('^_^');
+        schema.new('^_^');
         expect( schema.list() ).to.have.length( 1 );
         schema.reset();
 
@@ -87,20 +85,20 @@ describe('Core - schema', function() {
     beforeEach( function() { schema.reset(); } );
 
     it('sets adapter for new schemas', function() {
-      expect( schema('first').adapter ).to.be.undefined;
+      expect( schema.new('first').adapter ).to.be.undefined;
       schema.useAdapter( _a );
-      expect( schema('second').adapter ).to.equal( _a ) ;
+      expect( schema.new('second').adapter ).to.equal( _a ) ;
     });
 
     it('does not override existing schema declared adapters', function() {
-      schema('^_^').useAdapter( {exec:function(){ return false; }} );
+      schema.new('^_^').useAdapter( {exec:function(){ return false; }} );
 
       schema.useAdapter( _a );
       expect( schema('^_^').adapter ).to.not.equal( _a );
     });
 
     it('applies adapter to existing schemas that have none', function() {
-      schema('^_^');
+      schema.new('^_^');
       expect( schema('^_^').adapter ).to.be.undefined;
 
       schema.useAdapter( _a );
@@ -110,15 +108,15 @@ describe('Core - schema', function() {
   });
 
 
-  describe('instantiation:', function() {
+  describe('instantiation: .new(key)', function() {
 
     it('creates a new Schema# object', function() {
-      var model = schema( 'Demo' );
+      var model = schema.new( 'Demo' );
       expect( model ).to.be.an.instanceof( schema.Schema );
     });
 
     it('throws if the schema name is reserved', function ( done ) {
-      try { schema('integer'); }
+      try { schema.new('integer'); }
       catch ( e ) {
         expect( e.message ).to.match( /reserved/ );
         done();
@@ -132,11 +130,11 @@ describe('Core - schema', function() {
     it('fails to initialise if not passed a name property', function() {
       var err;
       try {
-        schema();
+        schema.new();
       }
       catch( e ) { err = e; }
       expect( err ).to.be.an.instanceof( Error );
-      expect( err.message ).to.match( /requires.*name/ );
+      expect( err.message ).to.match( /requires.*key/i );
     });
 
     it('applies the schema( name ) as Schema#identity', function() {

@@ -359,10 +359,10 @@ Schema.prototype.getRequiredPaths = function() {
 
 
 /**
- * Add instance properties to Records
+ * Add a new property to the schema structure
  *
  * @param {String} key
- * @param {Object} [options]
+ * @param {Object} [options] Mekanika Property options
  *
  * @return {Schema}
  */
@@ -389,7 +389,7 @@ Schema.prototype.prop = function( key, options ) {
 
   }
 
-  this.properties.push( new Property( key, options, type ) );
+  this.properties.push( new Property( key, options ) );
   return this;
 };
 

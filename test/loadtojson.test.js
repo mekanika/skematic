@@ -14,7 +14,7 @@ describe('Statics', function() {
   describe('schemaToJSON convertor', function () {
 
     // Setup a basic schema to test loadout
-    var $ = schema('^_^')
+    var $ = schema.new('^_^')
         .prop('smoo')
         .prop('hooobooy', {default:true})
         .method('axe', function() { return 200; });
@@ -34,7 +34,7 @@ describe('Statics', function() {
     });
 
     it('serialises property validator functions', function () {
-      var r = schema('Ruler').prop('king', {required:true});
+      var r = schema.new('Ruler').prop('king', {required:true});
       // Ensure the 'required' rule is present
       expect( r.properties[0].rules.length ).to.equal( 1 );
 
@@ -75,14 +75,14 @@ describe('Statics', function() {
 
   describe('schema.load()', function() {
 
-    var rock = schema('Rock')
+    var rock = schema.new('Rock')
       .prop('name')
       .prop('age', {type:'number'})
       .method('jam', function(x) { return 'doing '+x; });
 
     var rockjson = schemaToJSON( rock );
 
-    var bluesobj = schema('Blues')
+    var bluesobj = schema.new('Blues')
       .prop('cool', {type:'boolean'})
       .prop('style')
       .method('slick', function (x) { return 'slick '+x; });
