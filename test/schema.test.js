@@ -119,12 +119,12 @@ describe('Schema', function() {
       expect( model.properties[0].key ).to.equal( 'errorcode' );
     });
 
-    it.skip('aliases as .property() and .attr()', function() {
+    it('aliases as .property() and .attr()', function() {
       var model = schema.new('Play');
-      model.attr( 'punch', {key:'punch', type:'integer'} );
-      expect( model.properties[1].key ).to.equal( 'punch' );
-      model.property( 'kick', {key:'kick', type:'integer'} );
-      expect( model.properties[2].key ).to.equal( 'kick' );
+      model.attr( 'punch', {type:'integer'} );
+      expect( model.properties[0].key ).to.equal( 'punch' );
+      model.property( 'kick', {type:'integer'} );
+      expect( model.properties[1].key ).to.equal( 'kick' );
     });
 
     it('no-ops setting a property that has already been set', function() {

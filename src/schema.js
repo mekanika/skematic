@@ -394,7 +394,7 @@ Schema.prototype.prop = function( key, options ) {
 };
 
 
-Schema.prototype.property = Schema.attr = Schema.prototype.prop;
+Schema.prototype.property = Schema.prototype.attr = Schema.prototype.prop;
 
 
 /**
