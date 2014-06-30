@@ -1,0 +1,8 @@
+build
+.DS_Store
+node_modules
+coverage/
+
+# Ignore any files that include .ignore. in their filename
+# eg. todo.ignore.txt
+*.ignore.*
