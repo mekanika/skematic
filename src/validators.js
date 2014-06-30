@@ -10,7 +10,7 @@ module.exports = exports;
  * Ensure the value is set (and not undefined)
  *
  * @param {Mixed} val The value to test
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.required = function required( val ) {
@@ -26,7 +26,7 @@ exports.required = function required( val ) {
  * @param {String} str
  * @param {Number} min
  * @param {Number} max
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.betweenLength = function betweenLength( str, min, max ) {
@@ -38,7 +38,7 @@ exports.betweenLength = function betweenLength( str, min, max ) {
  * Minimum string length
  *
  * @param {String} val The value to test
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.minLength = function minLength( str, limit ) {
@@ -50,7 +50,7 @@ exports.minLength = function minLength( str, limit ) {
  * Maximum string length
  *
  * @param {String} val The value to test
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.maxLength = function maxLength( str, limit ) {
@@ -72,7 +72,7 @@ exports.between = function between( val, min, max ) {
  *
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.max = function max( val, limit ) {
@@ -85,7 +85,7 @@ exports.max = function max( val, limit ) {
  *
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.min = function min( val, limit ) {
@@ -97,7 +97,7 @@ exports.min = function min( val, limit ) {
  * String is a valid email
  *
  * @param {String} str
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.isEmail = function isEmail( str ) {
@@ -121,7 +121,7 @@ exports.isUrl = function isUrl( str ) {
  * @param {String} str
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.is =
@@ -137,7 +137,7 @@ exports.regex = function regex( str, exp, flags ) {
  * @param {String} str
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
- * @returns {Boolean}
+ * @return {Boolean}
  */
 
 exports.not =

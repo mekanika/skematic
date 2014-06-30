@@ -80,7 +80,7 @@ function Schema( name, adapter ) {
 /**
  * Provide description of accessor for each schema: `schema( name )`
  *
- * @returns {String} "schema( name )"
+ * @return {String} "schema( name )"
  */
 
 Schema.prototype.toString = function() {
@@ -94,7 +94,7 @@ Schema.prototype.toString = function() {
  * @param {Object|String} [options] Object to set, String to retrieve specific, empty to retrieve all
  * @param {Mixed} [value] Sets the option value if first parameter is a String
  *
- * @returns {Object|Mixed} Returns either all options or specific option value
+ * @return {Object|Mixed} Returns either all options or specific option value
  */
 
 Schema.prototype.options = function( options, value ) {
@@ -127,7 +127,7 @@ Schema.prototype.options = function( options, value ) {
  * Update the resource reference key
  *
  * @param {String} newKey
- * @returns {Schema} This Schema#
+ * @return {Schema} This Schema#
  */
 
 Schema.prototype.updateKey = function( newKey ) {
@@ -187,7 +187,7 @@ function middleware( stack, event, fn ) {
  * @param {String} event The name of the event to apply middleware on
  * @param {Function} fn The method to run, passed ( Query# )
  *
- * @returns {this}
+ * @return {this}
  */
 
 Schema.prototype.pre = function( event, fn ) {
@@ -201,7 +201,7 @@ Schema.prototype.pre = function( event, fn ) {
  * @param {String} event The name of the event to apply middleware on
  * @param {Function} fn The method to run, passed ( err, res )
  *
- * @returns {this}
+ * @return {this}
  */
 
 Schema.prototype.post = function( event, fn ) {
@@ -214,7 +214,7 @@ Schema.prototype.post = function( event, fn ) {
  *
  * @param {Object|Object[]} res The data object or objects[] to convert
  *
- * @returns The result as a Record of this schema, or the raw data
+ * @return The result as a Record of this schema, or the raw data
  */
 
 Schema.prototype.toRecord = function( res ) {
@@ -270,7 +270,7 @@ Schema.prototype.toRecord = function( res ) {
  *
  * @param {Adapter} adapter An Adapter# instance
  *
- * @returns {Schema} This schema
+ * @return {Schema} This schema
  */
 
 Schema.prototype.useAdapter = function( adapter ) {
@@ -289,7 +289,7 @@ Schema.prototype.useAdapter = function( adapter ) {
  *
  * @param {String} key The unique identifier for the Property
  *
- * @returns {Property|undefined}
+ * @return {Property|undefined}
  */
 
 Schema.prototype.path = function( key ) {
@@ -307,7 +307,7 @@ Schema.prototype.path = function( key ) {
 /**
  * Schema properties returned as flat array
  *
- * @returns {Array}
+ * @return {Array}
  */
 
 Schema.prototype.getPaths = function() {
@@ -324,7 +324,7 @@ Schema.prototype.getPaths = function() {
 /**
  * Schema required properties returned as flat array
  *
- * @returns {Array}
+ * @return {Array}
  */
 
 Schema.prototype.getRequiredPaths = function() {
@@ -346,7 +346,7 @@ Schema.prototype.getRequiredPaths = function() {
  * @param {Object} [options]
  * @param {Object} [options]
  *
- * @returns {Schema}
+ * @return {Schema}
  */
 
 Schema.prototype.attr =
@@ -384,7 +384,7 @@ Schema.prototype.property = function( key, options, type ) {
  * @param {String} property The property key
  * @param {Mixed} value
  *
- * @returns {Array} of errors (empty if none)
+ * @return {Array} of errors (empty if none)
  */
 
 Schema.prototype.validate = function (property, value) {
@@ -401,7 +401,7 @@ Schema.prototype.validate = function (property, value) {
  * @param {String} methodName An identifier for the method
  * @param {Function} fn The Function defining the method
  *
- * @returns {Schema}
+ * @return {Schema}
  */
 
 Schema.prototype.method = function( methodName, fn ) {
@@ -425,7 +425,7 @@ Schema.prototype.method = function( methodName, fn ) {
  * @param {String} methodName An identifier for the method
  * @param {Function} fn The Function defining the method
  *
- * @returns {Schema}
+ * @return {Schema}
  */
 
 Schema.prototype.static = function( methodName, fn ) {
@@ -439,7 +439,7 @@ Schema.prototype.static = function( methodName, fn ) {
  *
  * @param {Object} attributes An object of property key:values
  *
- * @returns {Record} A new record with populated attributes
+ * @return {Record} A new record with populated attributes
  */
 
 Schema.prototype.new = function( attributes ) {

@@ -20,7 +20,7 @@ module.exports = exports;
  *
  * @param {Mixed} obj The object/array requiring cleanup
  *
- * @returns A cleaned object
+ * @return A cleaned object
  */
 
 exports.clean = function clean( obj ) {
@@ -45,7 +45,7 @@ exports.clean = function clean( obj ) {
  *
  * @param type to coerce
  *
- * @returns a normalised type, or false if unrecognised
+ * @return a normalised type, or false if unrecognised
  */
 
 exports.normaliseType = function normaliseType( type ) {

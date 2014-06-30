@@ -18,7 +18,7 @@ module.exports = exports = load;
  *
  * @param {Object|JSON} o A schema config as an Object or JSON object
  *
- * @returns {Schema#}
+ * @return {Schema#}
  * @public
  */
 
@@ -72,7 +72,7 @@ function load( o ) {
  * @prop {Array} props
  * @prop {Schema} schemaRef A schema instance
  *
- * @returns {Schema} the updated schema instance
+ * @return {Schema} the updated schema instance
  */
 
 function addProperties( props, schemaRef ) {
@@ -146,7 +146,7 @@ function addProperties( props, schemaRef ) {
  * @prop {Array} methods
  * @prop {Schema} schemaRef A schema instance
  *
- * @returns {Schema} the uppdated schema instance
+ * @return {Schema} the uppdated schema instance
  */
 
 function addMethods( methods, schemaRef ) {
@@ -178,7 +178,7 @@ function addMethods( methods, schemaRef ) {
  *
  * @param {String} str A string representation of a fn "function(...) {...}"
  *
- * @returns {Function}
+ * @return {Function}
  * @private
  */
 
