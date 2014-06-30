@@ -59,7 +59,12 @@ exports.maxLength = function maxLength( str, limit ) {
 
 
 /**
+ * Number range (inclusive)
  *
+ * @param {String} val The value to test
+ * @param {Number} min
+ * @param {Number} max
+ * @return {Boolean}
  */
 
 exports.between = function between( val, min, max ) {
@@ -106,7 +111,10 @@ exports.isEmail = function isEmail( str ) {
 
 
 /**
+ * String is a valid URL
  *
+ * @param {String} str
+ * @return {Boolean}
  */
 
 exports.isUrl = function isUrl( str ) {

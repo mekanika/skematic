@@ -18,7 +18,7 @@ module.exports = exports = load;
  *
  * @param {Object|JSON} o A schema config as an Object or JSON object
  *
- * @return {Schema#}
+ * @return {Schema}
  * @public
  */
 
