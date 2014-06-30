@@ -12,7 +12,8 @@ module.exports = schema;
 /**
  * Stores all created Schemas
  *
- * @private {Object}
+ * @type {Object}
+ * @private
  */
 
 var cache = {};
@@ -30,7 +31,9 @@ var adapter;
  * Initialise (or retrieve a cached) `Schema#` identified by `name`
  *
  * @param {String} name
- * @public
+ * @constructor
+ * @module schema
+ * @borrows load as load
  */
 
 function schema( name ) {
@@ -47,8 +50,6 @@ function schema( name ) {
 
 /**
  * Expose .load( schemaConfig ) loader
- *
- * @public
  */
 
 schema.load = require('./src/load.js');
@@ -59,7 +60,8 @@ schema.load = require('./src/load.js');
  *
  * @param {String} id
  *
- * @public
+ * @method unload
+ * @static
  */
 
 schema.unload = function (id) {
@@ -70,9 +72,10 @@ schema.unload = function (id) {
 
 
 /**
- * Expose `Schema` constructor via schema.Schema
+ * Expose `Schema` Class constructor via schema.Schema
  *
- * @public
+ * @member Schema
+ * @static
  */
 
 schema.Schema = Schema;
@@ -81,8 +84,9 @@ schema.Schema = Schema;
 /**
  * Returns a list of keys for all declared schema
  *
+ * @method list
  * @returns {Array}
- * @public
+ * @static
  */
 
 schema.list = function() {
@@ -99,8 +103,9 @@ schema.list = function() {
  *
  * @param {String} id Named identifier for the schema
  *
+ * @method has
  * @returns {Boolean}
- * @public
+ * @static
  */
 
 schema.has = function ( id ) {
@@ -111,7 +116,9 @@ schema.has = function ( id ) {
 /**
  * Reset entire schema class - nukes the internal `cache` and `adapter`
  *
- * @public
+ * @method reset
+ * @alias flush
+ * @static
  */
 
 schema.flush = schema.reset = function() {
@@ -125,7 +132,8 @@ schema.flush = schema.reset = function() {
  *
  * @param {Adapter} ad The adapter to use
  *
- * @public
+ * @method useAdapter
+ * @static
  */
 
 schema.useAdapter = function( ad ) {

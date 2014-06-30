@@ -8,7 +8,7 @@ var expect = require('chai').expect
   , schemaToJSON = require('../tools/toJSON');
 
 
-describe.only('Statics', function() {
+describe('Statics', function() {
 
 
   describe('schemaToJSON convertor', function () {

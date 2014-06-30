@@ -1,6 +1,10 @@
+/**
+  @namespace utils
+*/
 
 /**
  * Dependencies
+ * @private
  */
 
 var types = require( './reservedtypes' ).reservedTypes;
@@ -20,7 +24,9 @@ module.exports = exports;
  *
  * @param {Mixed} obj The object/array requiring cleanup
  *
- * @return A cleaned object
+ * @return {Object} A cleaned object
+ * @alias clean
+ * @memberOf utils
  */
 
 exports.clean = function clean( obj ) {
@@ -46,6 +52,8 @@ exports.clean = function clean( obj ) {
  * @param type to coerce
  *
  * @return a normalised type, or false if unrecognised
+ * @memberOf utils
+ * @alias normaliseType
  */
 
 exports.normaliseType = function normaliseType( type ) {

@@ -1,6 +1,6 @@
-
 /**
  * Module dependencies
+ * @private
  */
 
 var schema = require('../index');
@@ -19,7 +19,7 @@ module.exports = exports = load;
  * @param {Object|JSON} o A schema config as an Object or JSON object
  *
  * @return {Schema}
- * @public
+ * @method load
  */
 
 function load( o ) {
@@ -73,6 +73,7 @@ function load( o ) {
  * @prop {Schema} schemaRef A schema instance
  *
  * @return {Schema} the updated schema instance
+ * @private
  */
 
 function addProperties( props, schemaRef ) {
@@ -147,6 +148,7 @@ function addProperties( props, schemaRef ) {
  * @prop {Schema} schemaRef A schema instance
  *
  * @return {Schema} the uppdated schema instance
+ * @private
  */
 
 function addMethods( methods, schemaRef ) {

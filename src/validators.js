@@ -1,3 +1,7 @@
+/**
+  @namespace validators
+*/
+
 
 /**
  * Expose module
@@ -11,6 +15,8 @@ module.exports = exports;
  *
  * @param {Mixed} val The value to test
  * @return {Boolean}
+ * @memberOf validators
+ * @alias required
  */
 
 exports.required = function required( val ) {
@@ -27,6 +33,8 @@ exports.required = function required( val ) {
  * @param {Number} min
  * @param {Number} max
  * @return {Boolean}
+ * @memberOf validators
+ * @alias betweenLength
  */
 
 exports.betweenLength = function betweenLength( str, min, max ) {
@@ -39,6 +47,8 @@ exports.betweenLength = function betweenLength( str, min, max ) {
  *
  * @param {String} val The value to test
  * @return {Boolean}
+ * @memberOf validators
+ * @alias minLength
  */
 
 exports.minLength = function minLength( str, limit ) {
@@ -51,6 +61,8 @@ exports.minLength = function minLength( str, limit ) {
  *
  * @param {String} val The value to test
  * @return {Boolean}
+ * @memberOf validators
+ * @alias maxLength
  */
 
 exports.maxLength = function maxLength( str, limit ) {
@@ -65,6 +77,8 @@ exports.maxLength = function maxLength( str, limit ) {
  * @param {Number} min
  * @param {Number} max
  * @return {Boolean}
+ * @memberOf validators
+ * @alias between
  */
 
 exports.between = function between( val, min, max ) {
@@ -78,6 +92,8 @@ exports.between = function between( val, min, max ) {
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
  * @return {Boolean}
+ * @memberOf validators
+ * @alias max
  */
 
 exports.max = function max( val, limit ) {
@@ -91,6 +107,8 @@ exports.max = function max( val, limit ) {
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
  * @return {Boolean}
+ * @memberOf validators
+ * @alias min
  */
 
 exports.min = function min( val, limit ) {
@@ -103,6 +121,8 @@ exports.min = function min( val, limit ) {
  *
  * @param {String} str
  * @return {Boolean}
+ * @memberOf validators
+ * @alias isEmail
  */
 
 exports.isEmail = function isEmail( str ) {
@@ -115,6 +135,8 @@ exports.isEmail = function isEmail( str ) {
  *
  * @param {String} str
  * @return {Boolean}
+ * @memberOf validators
+ * @alias isUrl
  */
 
 exports.isUrl = function isUrl( str ) {
@@ -130,6 +152,9 @@ exports.isUrl = function isUrl( str ) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
+ * @memberOf validators
+ * @method is
+ * @alias regex
  */
 
 exports.is =
@@ -146,6 +171,9 @@ exports.regex = function regex( str, exp, flags ) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
+ * @memberOf validators
+ * @method not
+ * @alias notRegex
  */
 
 exports.not =

@@ -17,6 +17,7 @@ module.exports = Schema;
  * @param {String} name The unique identifier for the Schema#
  * @param {Adapter} [adapter] Optional adapter to use for this new Schema#
  *
+ * @class Schema
  * @constructor
  */
 
@@ -24,6 +25,9 @@ function Schema( name, adapter ) {
 
   /**
    * The Schema identity is the schema( identity ) reference
+   *
+   * @type {String}
+   * @property identity
    */
 
   this.identity = name;
@@ -35,21 +39,33 @@ function Schema( name, adapter ) {
    * Defaults to lowercase `Schema.identity`
    *
    * eg. "User" -> "user"
+   *
+   * @type {String}
    */
 
   this.key = name.toLowerCase();
 
 
   /**
-   * Properties and methods structure
+   * Properties
+   *
+   * @type {Property[]}
    */
 
   this.properties = [];
+
+  /**
+   * Methods
+   *
+   * @type {Array}
+   */
+
   this.methods = [];
 
 
   /**
    * Placeholders for schema middleware
+   * @private
    */
 
   this._pre = {};
@@ -71,6 +87,9 @@ function Schema( name, adapter ) {
 
   /**
    * Internal pointer to any instanced adapter (Set with `.useAdapter()`)
+   *
+   * @type {Adapter}
+   * @see https://github.com/mekanika/adapter
    */
 
   this.adapter = adapter;
@@ -344,14 +363,11 @@ Schema.prototype.getRequiredPaths = function() {
  *
  * @param {String} key
  * @param {Object} [options]
- * @param {Object} [options]
  *
  * @return {Schema}
  */
 
-Schema.prototype.attr =
-Schema.prototype.prop =
-Schema.prototype.property = function( key, options, type ) {
+Schema.prototype.prop = function( key, options ) {
   var len = this.properties.length;
 
   // Bail out (noop) if this property key is already set
@@ -376,6 +392,9 @@ Schema.prototype.property = function( key, options, type ) {
   this.properties.push( new Property( key, options, type ) );
   return this;
 };
+
+
+Schema.prototype.property = Schema.attr = Schema.prototype.prop;
 
 
 /**
