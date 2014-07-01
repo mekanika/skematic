@@ -197,60 +197,6 @@ Schema.prototype.post = function( event, fn ) {
 
 
 /**
- * Convert a result (results array) to Records of Schema# if data types match
- *
- * @param {Object|Object[]} res The data object or objects[] to convert
- *
- * @return The result as a Record of this schema, or the raw data
- */
-
-Schema.prototype.toRecord = function( res ) {
-
-  var err
-    , isMiddleware = arguments.length > 1;
-
-  // Middleware? Setup err AND res correctly:
-  if ( isMiddleware ) {
-    err = arguments[0];
-    res = arguments[1];
-    if (err !== null) return [err, res];
-  }
-
-  var self = this;
-
-  function _convert( obj ) {
-    // Middleware can no-op and passthrough data if not an object
-    if (isMiddleware)
-      if (typeof obj !== 'object' || obj instanceof Array) return obj;
-
-    var rp = self.getRequiredPaths();
-    // Attempt to verify data obj has at least the required properties
-    var match = true;
-    for (var i=0; i < rp.length; i++)
-      if ( !obj[ rp[i] ] ) { match = false; continue; }
-
-    // Return empty schema cast if no data provided and no required props
-    if (obj === undefined && match) return self.new();
-
-    // Error if data object was defined but does not match required props
-    if (!match) throw new Error('Convert to schema failed');
-
-    // Cast: create a new record based on the passed data
-    return self.new( obj );
-  }
-
-  // MUST clear undefined keys from results or will get cast
-  // errors when trying to assign 'undefined' to schema properties
-  res = res instanceof Array
-    ? utils.clean(res).map( _convert, this )
-    : _convert( utils.clean(res) );
-
-  return isMiddleware ? [ err, res ] : res;
-
-};
-
-
-/**
  * Set an explicit adapter to use with this schema
  *
  * Updates an internal pointer to a given `adapter`, used by `Schema.prototype.query()`
