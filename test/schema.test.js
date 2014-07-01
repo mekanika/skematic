@@ -4,7 +4,7 @@
 
 var expect = require('chai').expect
   , schema = require('../index')
-  , Property = require('mekanika-property')
+  , Property = require('mekanika-property');
 
 
 describe('Schema', function() {
