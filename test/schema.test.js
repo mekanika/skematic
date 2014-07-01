@@ -9,6 +9,8 @@ var expect = require('chai').expect
 
 describe('Schema', function() {
 
+  beforeEach( function () { schema.reset(); });
+
   describe('Class', function() {
 
     it('sets Schema#resource as lowercased key (id)', function(){
@@ -31,7 +33,7 @@ describe('Schema', function() {
 
   describe('.options(opt)', function() {
 
-    before( function () {
+    beforeEach( function () {
       schema.new('Demo').options( {validateOnSet: true} );
     });
 
@@ -160,7 +162,7 @@ describe('Schema', function() {
 
   describe('.validate( property, value )', function () {
     it('throws an error if the `property` does not resolve', function () {
-      schema('^_^').prop('!', {required:true});
+      schema.new('^_^').prop('!', {required:true});
       var err;
       try {
         schema('^_^').validate('fakey!', 'ermehgerd!');
@@ -171,14 +173,14 @@ describe('Schema', function() {
     });
 
     it('returns error array from property validation', function () {
-      schema('^_^').prop('!', {required:true});
+      schema.new('^_^').prop('!', {required:true});
       var errs = schema('^_^').validate('!', undefined);
       expect( errs ).to.be.an.instanceof( Array );
       expect( errs ).to.have.length( 1 );
     });
 
     it('returns empty array on all conditions passing rules', function () {
-      schema('^_^').prop('!', {required:true});
+      schema.new('^_^').prop('!', {required:true});
       var errs = schema('^_^').validate('!', 'WOOO!');
       expect( errs ).to.have.length( 0 );
     });
@@ -268,6 +270,43 @@ describe('Schema', function() {
 
   });
 
+
+  describe('.new()', function () {
+    it('fails if `Record` not available', function () {
+      var err;
+      try { schema.new('x').new(); }
+      catch (e) { err = e; }
+      expect( err ).to.be.an.instanceof( Error );
+      expect( err.message ).to.match( /no record/ig );
+    });
+
+    it('instantiates new Record() if present', function () {
+      GLOBAL.Record = function () {};
+      expect( schema.new('x').new() ).to.be.an.instanceof( Record );
+      delete GLOBAL.Record;
+    });
+  });
+
+
+  describe('Adapter - .useAdapter(a)', function () {
+
+    var stubAdapter = {exec: function( q, cb ) { return cb(); }};
+    beforeEach( function () { schema.reset(); } );
+
+    it('throws if adapter has no .exec() default', function () {
+      var err;
+      try { schema.new('!').useAdapter( {} ); }
+      catch (e) { err = e; }
+
+      expect( err ).to.be.an.instanceof( Error );
+      expect( err.message ).to.match( /valid adapter/ig );
+    });
+
+    it('applies an adapter to the schema', function () {
+      schema.new('!').useAdapter( stubAdapter );
+
+    });
+  });
 
 
   describe('Middleware', function() {

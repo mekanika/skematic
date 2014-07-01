@@ -262,7 +262,7 @@ Schema.prototype.toRecord = function( res ) {
 
 Schema.prototype.useAdapter = function( adapter ) {
   // Ensure we have an approximately valid adapter
-  var adapterError = new Error( 'Schema#adapter must supply valid adapter');
+  var adapterError = new Error( 'Must supply valid adapter');
   if (!adapter || !adapter.exec) throw adapterError;
 
   this.adapter = adapter;
