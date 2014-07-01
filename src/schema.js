@@ -156,25 +156,6 @@ Schema.prototype.updateKey = function( newKey ) {
 
 
 /**
- * Compose query as `Schema.prototype.query()` with preset Schema properties
- */
-
-Schema.prototype.query = function() {
-  // Set the `resource` to query as the current Schema#key
-  var _query = query().from( this.key );
-
-  // Fold in an adapter if one is provided
-  if ( this.adapter ) _query.useAdapter( this.adapter );
-
-  // Apply schema middleware to the query
-  _query.middleware.pre = this._pre;
-  _query.middleware.post = this._post;
-
-  return _query;
-};
-
-
-/**
  * Helper method to apply a middleware `fn` to a `stack` on `event`
  *
  * @param {Array} stack The schema middleware reference array to push onto
