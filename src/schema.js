@@ -349,7 +349,7 @@ Schema.prototype.prop = function( key, options ) {
 
     // Otherwise check that it's a schema
     else {
-      var _s = require('./index');
+      var _s = require('../index');
       if (!_s.has( options.type ))
         throw new Error('Cannot find schema: '+options.type);
       else options.type = _s( options.type );

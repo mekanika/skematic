@@ -119,6 +119,19 @@ describe('Schema', function() {
       expect( model.properties[0].key ).to.equal( 'errorcode' );
     });
 
+    it('supports {type: $schemaKey} to set type as other schema', function () {
+      schema.new('xman');
+      schema.new('play').prop('test', {type:'xman'});
+    });
+
+    it('throws if {type: $schemaKey} is not defined/present', function () {
+      var err;
+      try { schema.new('play').prop('test', {type:'xman'}); }
+      catch (e) { err = e; }
+      expect( err ).to.be.an.instanceof( Error );
+      expect( err.message ).to.match( /find schema/ig );
+    });
+
     it('aliases as .property() and .attr()', function() {
       var model = schema.new('Play');
       model.attr( 'punch', {type:'integer'} );
