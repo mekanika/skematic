@@ -1,3 +1,20 @@
+0.5.1 - 1 July 2014
+=====
+
+Fixed:
+
+- Setting property type as $schemaKey reference
+
+Removed:
+
+- Unused .updateKey(key) method (prefer direct .key accessor)
+
+Internal:
+
+- Additional test coverage
+
+
+
 0.5.0 - 1 July 2014
 =====
 
