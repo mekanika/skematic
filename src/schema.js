@@ -143,19 +143,6 @@ Schema.prototype.options = function( options, value ) {
 
 
 /**
- * Update the resource reference key
- *
- * @param {String} newKey
- * @return {Schema} This Schema#
- */
-
-Schema.prototype.updateKey = function( newKey ) {
-  this.key = newKey;
-  return this;
-};
-
-
-/**
  * Helper method to apply a middleware `fn` to a `stack` on `event`
  *
  * @param {Array} stack The schema middleware reference array to push onto
