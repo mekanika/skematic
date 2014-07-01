@@ -13,6 +13,7 @@ An example, represented in JSON:
 ```json
 {
   "key": "user",
+  "resource": "user",
   "properties": [
     {"key": "username", "type": "string", "required": true},
     {"key": "friends", "array": true, "hasMany": "user"}

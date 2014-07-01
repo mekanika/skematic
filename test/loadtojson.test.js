@@ -115,8 +115,8 @@ describe('Statics', function() {
 
     it('generates a schema key if none provided', function() {
       var O_o = schema.load( {} );
-      expect( typeof O_o.identity ).to.equal( 'string' );
-      expect( O_o.identity.length ).to.be.above( 5 );
+      expect( typeof O_o.key ).to.equal( 'string' );
+      expect( O_o.key.length ).to.be.above( 5 );
     });
 
     it('applies complex properties {key:{Object}} (JSON + obj)', function() {

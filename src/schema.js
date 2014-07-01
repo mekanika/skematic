@@ -10,40 +10,40 @@ module.exports = Schema;
 
 
 /**
- * Create a Schema# **object** accessed as `schema(name)`
+ * Create a Schema# **object** accessed as `schema(key)`
  *
  * **Schemas** describe Object instances comprised of properties and methods
  *
- * @param {String} name The unique identifier for the Schema#
+ * @param {String} key The unique identifier for the Schema#
  * @param {Adapter} [adapter] Optional adapter to use for this new Schema#
  *
  * @class Schema
  * @constructor
  */
 
-function Schema( name, adapter ) {
+function Schema( key, adapter ) {
 
   /**
-   * The Schema identity is the schema( identity ) reference
+   * Unique identifying key to reference schema( key )
    *
    * @type {String}
-   * @property identity
+   * @property key
    */
 
-  this.identity = name;
+  this.key = key;
 
 
   /**
-   * The `key` to address the adapter reference resource
+   * The `resource` used by an adapter to reference this type of model
    * In effect this is the 'table' or 'document' reference in the datastore
-   * Defaults to lowercase `Schema.identity`
+   * Defaults to lowercase `Schema.key`
    *
    * eg. "User" -> "user"
    *
    * @type {String}
    */
 
-  this.key = name.toLowerCase();
+  this.resource = key.toLowerCase();
 
 
   /**
@@ -97,13 +97,13 @@ function Schema( name, adapter ) {
 
 
 /**
- * Provide description of accessor for each schema: `schema( name )`
+ * Provide description of accessor for each schema: `schema( key )`
  *
- * @return {String} "schema( name )"
+ * @return {String} "schema( key )"
  */
 
 Schema.prototype.toString = function() {
-  return 'schema(\''+this.identity+'\')';
+  return 'schema(\''+this.key+'\')';
 };
 
 

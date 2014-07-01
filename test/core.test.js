@@ -137,8 +137,8 @@ describe('Core - schema', function() {
       expect( err.message ).to.match( /requires.*key/i );
     });
 
-    it('applies the schema( name ) as Schema#identity', function() {
-      expect( schema( 'Demo' ).identity ).to.equal( 'Demo' );
+    it('applies the schema( name ) as Schema#key', function() {
+      expect( schema( 'Demo' ).key ).to.equal( 'Demo' );
     });
   });
 

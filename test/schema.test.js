@@ -11,8 +11,8 @@ describe('Schema', function() {
 
   describe('Class', function() {
 
-    it('sets Schema#key as lowercased identity', function(){
-        expect( schema.new('Xbox').key ).to.equal( 'xbox' );
+    it('sets Schema#resource as lowercased key (id)', function(){
+        expect( schema.new('Xbox').resource ).to.equal( 'xbox' );
       });
 
     it('exposes .properties and .methods props', function() {
