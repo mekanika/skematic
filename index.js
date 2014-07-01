@@ -1,6 +1,4 @@
-var Schema = require( './src/schema')
-  , reserved = require( './src/reservedtypes' ).reservedTypes;
-
+var Schema = require( './src/schema');
 
 /**
  * Expose `schema`
@@ -65,7 +63,6 @@ schema.Schema = Schema;
 schema.new = function (key) {
   if (!key) throw new Error('Requires a key to create');
   if (cache[ key ]) throw new Error( 'Already exists: '+key );
-  if (reserved[ key ]) throw new Error('Schema name `'+key+'` is reserved');
 
   // Store a named reference in cache and return it
   return ( cache[ key ] = new Schema( key, adapter ) );

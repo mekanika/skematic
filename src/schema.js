@@ -1,5 +1,4 @@
-var Property = require( 'mekanika-property' )
-  , utils = require( './utils' );
+var Property = require( 'mekanika-property' );
 
 
 /**
@@ -273,6 +272,57 @@ Schema.prototype.getRequiredPaths = function() {
 
 
 /**
+ * Coerce recognised 'types' into a lowercase known format
+ *
+ * @param type to coerce
+ *
+ * @return a normalised type, or false if unrecognised
+ * @private
+ */
+
+var _normaliseType = Schema.normaliseType = function ( type ) {
+
+  if (!type) return;
+
+  var types = {
+      boolean: 'boolean'
+    , date: 'date'
+    , float: 'float'
+    , integer: 'integer'
+    , number: 'number'
+    , regexp: 'regexp'
+    , string: 'string'
+  };
+
+  // Handle known types
+  switch( type ) {
+    // Natives
+    case Date: return types.date;
+    case Number: return types.number;
+    case String: return types.string;
+    case Boolean: return types.boolean;
+    case RegExp: return types.regexp;
+
+    // Schema supported types
+    case 'integer': return types.integer;
+    case 'float': return types.float;
+  }
+
+  // Handle 'string' variants on core types
+  var re = [ /String/i, /Date/i, /Number/i, /Boolean/i, /RegExp/i ];
+  for (var i=0; i<re.length; i++ )
+    if (re[i].test( type ))
+      return type.toLowerCase ? type.toLowerCase() : type;
+
+  // Arrays are not cool as 'types'
+  if (/Array/i.test( type )) throw new Error('type:Array is not allowed');
+
+  return false;
+
+};
+
+
+/**
  * Add a new property to the schema structure
  *
  * @param {String} key
@@ -290,7 +340,7 @@ Schema.prototype.prop = function( key, options ) {
 
   if (options && options.type) {
     // Normalise native and 'special' types to lowercase string
-    var nml = utils.normaliseType( options.type );
+    var nml = _normaliseType( options.type );
     if (nml) options.type = nml;
 
     // Otherwise check that it's a schema

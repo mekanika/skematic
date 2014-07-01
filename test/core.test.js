@@ -134,14 +134,6 @@ describe('Core - schema', function() {
       expect( schema('Demo') ).to.be.an.instanceof( schema.Schema );
     });
 
-    it('throws if the schema key is reserved', function ( done ) {
-      try { schema.new('integer'); }
-      catch ( e ) {
-        expect( e.message ).to.match( /reserved/ );
-        done();
-      }
-    });
-
     it('fails to create if schema key already exists', function () {
       var err;
       schema.new('!');
