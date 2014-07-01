@@ -1,3 +1,28 @@
+0.5.0 - 1 July 2014
+=====
+
+Massive **breaking** update that splits out `schema` into its own contained library to focus on providing structure for data models (built on Mekanika [Property](https://github.com/mekanika/property)). Other functionality moved to their own libraries (ie. Records, Collections, etc).
+
+Changed:
+
+- [Breaking!] Accessor `schema(key)` only returns existing schema (ie. `find` not `findOrCreate`)
+- [Breaking!] Identity renamed to `key`, 'key' renamed to `resource`
+
+Added:
+
+- [Breaking!] New schema instantiation through `.new(key)`
+
+Removed:
+
+- [Breaking!] All references to and instantiation of 'Record' Class
+- [Breaking!] Query delegation for CRUD methods (and `query` lib references)
+
+Internal:
+
+- Testing framework switched over to ChaiJS
+
+
+
 0.4.1 - 17 Jun 2014
 =====
 
