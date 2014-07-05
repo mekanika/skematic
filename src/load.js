@@ -118,12 +118,9 @@ function addProperties( props, schemaRef ) {
             catch ( e ) { throwConvertError( e ); }
           }
           else {
-            if (ik === 'rules') {
-              var rel = JSON.parse( el );
-              rel.rule = makeFunction( rel.rule );
-              _a.push( rel );
-            }
-            else _a.push( el );
+            if (ik === 'rules') el.rule = makeFunction( el.rule );
+
+            _a.push( el );
           }
         });
         convertedVal = _a;

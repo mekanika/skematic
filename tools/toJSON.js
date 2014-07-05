@@ -1,83 +1,75 @@
 /**
- * @module schema.exportAsJSON
- */
+  @module schema.exportAsJSON
+*/
+
 
 /**
- * Convert a Schema# to a JSON string representation
- *
- * @param {Schema} schema
- * @param {Mixed} [pretty] Optional format string for JSON.stringify
- *
- * @return {JSON} A JSON string representation of the Schema
- * @method exportAsJSON
- */
+  Converts any functions in an object (deep) to strings and returns the
+  JSON string representation of the object.
 
-module.exports = function exportAsJSON( schema, pretty ) {
-  // JSON stringify formatting
-  pretty || (pretty = 0);
+  @example
+  var exportAsJSON = require('./tools/toJSON');
+  var obj = { key: true, fn: function(arg) { return arg; } };
 
-  // Return object
-  var o = {};
+  JSON.stringify( obj, 2 );
+  // {
+  //   "key": true
+  // }
 
-  // Assumes array of functions to run .toString() on
-  var step = function ( arr ) {
-    var ret = [];
-    arr.forEach( function (fn) {
+  exportAsJSON( obj, 2 );
+  // {
+  //   "key": true,
+  //   "fn": "function(arg) { return arg; }"
+  // }
 
-      // Process `rule` objects if present
-      if (typeof fn === 'object' && fn.rule) {
-        fn.rule = fn.rule.toString();
-        ret.push( JSON.stringify( fn ) );
+  @param {Object} obj to convert to JSON
+  @param {Number} [prettyIndent] Indentation on output
+
+  @return {JSON}
+  @method exportAsJSON
+*/
+
+module.exports = function (obj, prettyIndent ) {
+
+  // Converts any Function attributes (or values in arrays) on `o` to strings
+  function strFn( o ) {
+    var ret = {};
+
+    for (var key in o) {
+      // Only attempt to convert own properties
+      if (!o.hasOwnProperty(key)) continue;
+
+      // Skip "private" properties
+      if (key[0] === '_') continue;
+
+      // Deal with Arrays
+      if (o[key] instanceof Array) {
+        var ar = [];
+        o[key].forEach( function(el) {
+          if (!el) return;
+          // Array of functions?
+          if (typeof el === 'function') ar.push( el.toString() );
+          // Array of other things:
+          else {
+            typeof el === 'object' && Object.keys( el ).length
+              ? ar.push( strFn(el) )
+              : ar.push( el );
+          }
+        });
+        ret[key] = ar;
       }
-
-      // Otherwise treat as an array of functions
-      else ret.push( fn.toString() );
-
-    });
+      // Deal with objects
+      else if ( typeof o[key] === 'object' && Object.keys( o[key] ).length )
+        ret[key] = strFn( o[key] );
+      // Deal with everything else
+      else {
+        ret[key] = typeof o[key] === 'function'
+          ? o[key].toString()
+          : o[key];
+      }
+    }
     return ret;
   }
 
-  for (var attr in schema) {
-
-    // Don't touch prototype properties
-    if ( !schema.hasOwnProperty( attr ) ) continue;
-    // Ignore "_private" properties
-    if ( attr[0] === '_' ) continue;
-
-    // Need to call .toString() on any embedded functions
-    // Handle 'methods' explicitly
-    if (attr === 'methods') {
-      var storeMethods = [];
-      schema.methods.forEach( function (mObj) {
-        var nm = {};
-        nm.key = mObj.key;
-        nm.fn = mObj.fn.toString();
-        storeMethods.push( nm );
-      });
-      o.methods = storeMethods;
-    }
-
-    // Handle 'properties' explicitly
-    else if (attr === 'properties') {
-      var p = [];
-      // Step through props, and clone with explicit handlers for fn arrays
-      schema.properties.forEach( function (prop) {
-        var k = {};
-        for (var el in prop) {
-          if (!prop.hasOwnProperty( el )) continue;
-          if (el === 'setters') k.setters = step( prop.setters );
-          else if (el === 'getters') k.getters = step( prop.getters );
-          else if (el === 'rules') k.rules = step( prop.rules );
-          else k[ el ] = prop[ el ];
-        };
-        p.push( k );
-      });
-      o.properties = p;
-    }
-
-    // Non explicit handler - just add the property to the exported object
-    else o[ attr ] = schema[ attr ];
-  }
-
-  return JSON.stringify( o, null, pretty );
+  return JSON.stringify( strFn( obj ), null, prettyIndent );
 };
