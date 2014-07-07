@@ -1,6 +1,6 @@
 {
   "name": "mekanika-schema",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Data model definition scaffold",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,6 @@
   "devDependencies": {
     "mocha": "~1.20.1",
     "chai": "~1.9.1",
-    "jshint": "~2.5.1"
+    "jshint": "~2.5.2"
   }
 }

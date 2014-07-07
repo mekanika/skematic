@@ -1,3 +1,23 @@
+0.6.0 - 7 July 2014
+=====
+
+Added:
+
+- Support for `all` middleware hook by passing _just_ a function (no named event)
+- Enable passing schema `options` as object hash on init `schema.new(key, opts)`
+
+Removed:
+
+- [Breaking!] .toRecord conversion utility (relying on .new() delegate to Record)
+- Removed `reservedKey` check and restructured `normaliseType`
+- [Breaking!] Application of pre + post middleware to vanilla schema
+
+Internal:
+
+- Simplify exportToJSON
+
+
+
 0.5.1 - 1 July 2014
 =====
 
