@@ -15,12 +15,13 @@ module.exports = Schema;
  *
  * @param {String} key The unique identifier for the Schema#
  * @param {Adapter} [adapter] Optional adapter to use for this new Schema#
+ * @param {Object} [options]
  *
  * @class Schema
  * @constructor
  */
 
-function Schema( key, adapter ) {
+function Schema( key, adapter, options ) {
 
   /**
    * Unique identifying key to reference schema( key )
@@ -69,6 +70,13 @@ function Schema( key, adapter ) {
 
   this._pre = {};
   this._post = {};
+
+
+  /**
+   * Apply options
+   */
+
+  this.options( options );
 
 
   /**
@@ -417,11 +425,12 @@ Schema.prototype.static = function( methodName, fn ) {
  * Instance a new record based on this Schema
  *
  * @param {Object} attributes An object of property key:values
+ * @param {Object} [options] A hash of override options to pass to new Record
  *
  * @return {Record} A new record with populated attributes
  */
 
-Schema.prototype.new = function( attributes ) {
+Schema.prototype.new = function( attributes, options ) {
   if (typeof Record === 'undefined') throw new Error('No Record class');
   else return new Record( this, attributes );
 };

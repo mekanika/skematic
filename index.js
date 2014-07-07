@@ -55,17 +55,18 @@ schema.Schema = Schema;
  * Create a new schema
  *
  * @param {String} key
+ * @param {Object} [options] Options to initialise schema
  *
  * @method new
  * @static
  */
 
-schema.new = function (key) {
+schema.new = function (key, options) {
   if (!key) throw new Error('Requires a key to create');
   if (cache[ key ]) throw new Error( 'Already exists: '+key );
 
   // Store a named reference in cache and return it
-  return ( cache[ key ] = new Schema( key, adapter ) );
+  return ( cache[ key ] = new Schema( key, adapter, options ) );
 };
 
 

@@ -28,6 +28,11 @@ describe('Schema', function() {
       expect( O_o.adapter ).to.equal( 'faux' );
     });
 
+    it('can pass initialisation options', function () {
+      var s = schema.new('!', {validateOnSet: true} );
+      expect( s.options('validateOnSet') ).to.equal( true );
+    });
+
   });
 
 
