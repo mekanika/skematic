@@ -139,17 +139,26 @@ Schema.prototype.options = function( options, value ) {
  */
 
 function middleware( stack, event, fn ) {
-  if (!stack[ event ]) stack[ event ] = [];
+  var _act = event;
+  var _hook = fn;
+
+  // Support passing a pure (fn) applying to `all` events
+  if (typeof event === 'function' ) {
+    _act = 'all';
+    _hook = event;
+  }
+
+  if (!stack[ _act ]) stack[ _act ] = [];
 
   // Fold in reference to `this` Schema# in the middleware `fn`
   function _fn() {
     var self = this;
     return function() {
-      return fn.apply( self, arguments );
+      return _hook.apply( self, arguments );
     };
   }
 
-  stack[ event ].push( _fn.call( this ) );
+  stack[ _act ].push( _fn.call( this ) );
   return this;
 }
 
@@ -157,7 +166,7 @@ function middleware( stack, event, fn ) {
 /**
  * Delegation method to setup pre middleware to the Schema#query()
  *
- * @param {String} event The name of the event to apply middleware on
+ * @param {String|Function} event The name of the event to apply middleware on (assumes `all` if passed a function)
  * @param {Function} fn The method to run, passed ( Query# )
  *
  * @return {this}
@@ -171,7 +180,7 @@ Schema.prototype.pre = function( event, fn ) {
 /**
  * Delegation method to setup post middleware to the Schema#query()
  *
- * @param {String} event The name of the event to apply middleware on
+ * @param {String|Function} event The name of the event to apply middleware on (assumes `all` if passed a function)
  * @param {Function} fn The method to run, passed ( err, res )
  *
  * @return {this}

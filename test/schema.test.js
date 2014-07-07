@@ -311,10 +311,10 @@ describe('Schema', function() {
 
   describe('Middleware', function() {
 
-    var Hero = schema.new('Hero');
-    before( function() { schema.reset(); } );
+    var Hero;
+    beforeEach( function() { schema.reset(); Hero = schema.new('Hero'); } );
 
-    it('.pre( event, fn ) adds pre middleware to stack', function() {
+    it('.pre( event, fn ) adds "named" pre middleware to stack', function() {
       Hero.pre( 'save', function() { return 'yo'; } );
 
       expect( Hero._pre.save ).to.be.an.instanceof( Array );
@@ -322,36 +322,18 @@ describe('Schema', function() {
       expect( Hero._pre.save[0]() ).to.equal( 'yo' );
     });
 
-    it('.post( event, fn ) adds post middleware to stack', function() {
+    it('.post( event, fn ) adds "named" post middleware to stack', function() {
       Hero.post( 'save', function() { return 'yo'; } );
 
       expect( Hero._post.save ).to.be.an.instanceof( Array );
-      expect( Hero._post.save ).to.have.length( 3 );
-      expect( Hero._post.save[2]() ).to.equal( 'yo' );
+      expect( Hero._post.save ).to.have.length( 1 );
+      expect( Hero._post.save[0]() ).to.equal( 'yo' );
     });
 
-    it.skip('applies middleware on query execution', function( done ) {
-      Hero._pre = {};
-      Hero._post = {};
-
-      // Stub adapter to force return of (err, res) rather than ( Query# )
-      Hero.useAdapter( {exec: function( q, cb ) { return cb(); }} );
-
-      var preset;
-
-      Hero.pre( 'save', function(q) { preset = q.action; } );
-      Hero.post( 'save', function(e,r) {
-        return [':(', ':)'];
-      });
-
-      function cb( err, res ) {
-        expect( err ).to.equal( ':(' );
-        expect( res ).to.equal( ':)' );
-        expect( preset ).to.equal( 'save' );
-        done();
-      }
-
-      Hero.save().done(cb);
+    it('supports passing hook as pure (fn) ie. "all" event', function () {
+      Hero.pre( function (ref) { return ref+1; } );
+      expect( Hero._pre.all ).to.have.length( 1 );
+      expect( Hero._pre.all[0](1) ).to.equal( 2 );
     });
 
   });
