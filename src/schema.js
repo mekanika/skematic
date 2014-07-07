@@ -70,19 +70,6 @@ function Schema( key, adapter ) {
   this._pre = {};
   this._post = {};
 
-  // Middleware: Apply schema post middleware to all query actions
-  ['save', 'find', 'create', 'remove', 'update'].forEach( function( act ) {
-
-    // Convert resource responses to this schema
-    this.post.call( this, act, this.toRecord);
-
-    // Fire error event if errors from resource
-    this.post.call( this, act, function( err, res, qry ) {
-      if ( err ) this.emit( 'error', qry, err );
-    });
-
-  }, this );
-
 
   /**
    * Internal pointer to any instanced adapter (Set with `.useAdapter()`)
