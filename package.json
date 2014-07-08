@@ -15,7 +15,7 @@
     "url": "https://github.com/mekanika/schema/issues"
   },
   "dependencies": {
-    "mekanika-property": "~0.2.0"
+    "mekanika-property": "~0.2.1"
   },
   "devDependencies": {
     "mocha": "~1.20.1",
