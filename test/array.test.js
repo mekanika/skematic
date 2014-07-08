@@ -5,7 +5,7 @@
 
 var AuxArray = require('../lib/array')
   , schema = require('mekanika-schema')
-  , expect = require('expect.js');
+  , expect = require('chai').expect;
 
 
 // Overwrite schema.new() implementation
@@ -27,27 +27,27 @@ describe('AuxArray', function() {
 
     it('inherits from Array', function() {
       var a = new AuxArray();
-      expect( a ).to.be.an( Array );
+      expect( a ).to.be.an.instanceof( Array );
     });
 
     it('applies values parameter as array contents', function() {
       var a = new AuxArray( [1,'two', 55] );
-      expect( a.length ).to.be( 3 );
+      expect( a.length ).to.equal( 3 );
       expect( a ).to.contain( 1, 'two', 55 );
     });
 
     it('sets internal casting reference if passed', function() {
       var a = new AuxArray( undefined, {woo:'woo'} );
-      expect( a._castAs ).to.not.be.empty();
+      expect( a._castAs ).to.not.be.empty;
     });
 
     it('can force legacy mode [object Object] inheritance', function() {
       var a = new AuxArray( [], null, true );
-      expect( Array.isArray( a ) ).to.be( false );
+      expect( Array.isArray( a ) ).to.equal( false );
 
       // Doublecheck 'correct' subclassing (node supports __proto__)
       a = new AuxArray();
-      expect( Array.isArray( a ) ).to.be( true );
+      expect( Array.isArray( a ) ).to.true;
     });
 
   });
@@ -60,18 +60,18 @@ describe('AuxArray', function() {
 
     it('no-ops if no schema is set', function() {
       var a = new AuxArray();
-      expect( a._innerCast( '!' ) ).to.be( '!' );
+      expect( a._innerCast( '!' ) ).to.equal( '!' );
     });
 
     it('casts a value to the defined AuxArray schema', function() {
       var a = new AuxArray( undefined, schema('^_^') );
-      expect( a._innerCast()._invoked ).to.be( true );
+      expect( a._innerCast()._invoked ).to.true;
     });
 
     it('pre-casts initialised values if passed', function() {
       var a = new AuxArray( [{name:'>:P'}], schema('^_^') );
       expect( a[0] ).to.include.key( '_invoked' );
-      expect( a[0].$schema.key ).to.be( '^_^' );
+      expect( a[0].$schema.key ).to.equal( '^_^' );
     });
 
   });
@@ -86,7 +86,7 @@ describe('AuxArray', function() {
       var a = new AuxArray( [], schema('^_^') );
       a.push( {}, {name:'smoo'} );
       expect( a ).to.have.length( 2 );
-      expect( a[0]._invoked ).to.be(true);
+      expect( a[0]._invoked ).to.true;
     });
 
     it('.unshift() casts unshifted values', function() {
@@ -95,14 +95,14 @@ describe('AuxArray', function() {
       // Unshift onto front of array
       a.unshift( {name:'smoo'} );
       expect( a ).to.have.length( 2 );
-      expect( a[1]._invoked ).to.be(true);
-      expect( a[0]._invoked ).to.be(true);
+      expect( a[1]._invoked ).to.true;
+      expect( a[0]._invoked ).to.true;
     });
 
     it('.set( index, value ) sets cast value at index', function() {
       var a = new AuxArray( [ {} ], schema('^_^') );
       a.set( 1, {name:'willcastas_invoked'} );
-      expect( a[1].name ).to.be( '_invoked' );
+      expect( a[1].name ).to.equal( '_invoked' );
     });
 
   });
@@ -112,7 +112,7 @@ describe('AuxArray', function() {
 
     it('returns an Array', function() {
       var a = new AuxArray([1,'two']);
-      expect( Array.isArray( a.inspect() ) ).to.be( true );
+      expect( Array.isArray( a.inspect() ) ).to.true;
     });
 
     // In legacy situations, where length is not correct, slice() fails

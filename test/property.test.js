@@ -2,7 +2,7 @@
  * Test dependencies
  */
 
-var expect = require('expect.js')
+var expect = require('chai').expect
   , schema = require('mekanika-schema')
   , Property = require('../lib/index');
 
@@ -28,7 +28,7 @@ describe('Property', function() {
       p = new Property();
     }
     catch( e ) {err = e;}
-    expect( err ).to.be.an( Error );
+    expect( err ).to.be.an.instanceof( Error );
     expect( err.message ).to.match( /requires.*key/ );
 
     err = undefined;
@@ -36,7 +36,7 @@ describe('Property', function() {
       p = new Property( 1234 );
     }
     catch( e ) { err = e; }
-    expect( err ).to.be.an( Error );
+    expect( err ).to.be.an.instanceof( Error );
     expect( err.message ).to.match( /requires.*string/ );
   });
 
@@ -44,14 +44,14 @@ describe('Property', function() {
     var initial = {type:'integer', required:true};
     var prop = new Property( 'errorcode', initial );
 
-    expect( prop.type ).to.be( initial.type );
-    expect( prop.key ).to.be( 'errorcode' );
-    expect( prop.isRequired ).to.be( initial.required );
+    expect( prop.type ).to.equal( initial.type );
+    expect( prop.key ).to.equal( 'errorcode' );
+    expect( prop.isRequired ).to.equal( initial.required );
   });
 
   it('construct( key ) correctly with only a key', function() {
     var prop = new Property( 'woo' );
-    expect( prop.key ).to.be( 'woo' );
+    expect( prop.key ).to.equal( 'woo' );
   });
 
   it('rejects an invalid key being initialised on create', function() {
@@ -60,13 +60,13 @@ describe('Property', function() {
       var prop = new Property( {junk:'break'} );
     }
     catch( e ) { err = e; }
-    expect( err ).to.be.an( Error );
+    expect( err ).to.be.an.instanceof( Error );
     expect( err.message ).to.match( /requires/ );
   });
 
   it('retains `key` value even if passed in options', function() {
     var p = new Property('!', {key:'?'});
-    expect( p.key ).to.be( '!' );
+    expect( p.key ).to.equal( '!' );
   });
 
 
@@ -76,25 +76,25 @@ describe('Property', function() {
       var t = ['string', 'number', 'integer', 'float', 'boolean', 'date'];
       t.forEach( function( type ) {
         var p = new Property( 'woo', {type:type} );
-        expect( p.caster.name.toLowerCase() ).to.be( 'to'+type );
+        expect( p.caster.name.toLowerCase() ).to.equal( 'to'+type );
       });
     });
 
     it('.cast( val ) returns cast value if a caster fn declared', function() {
       var p = new Property( 'woo', {type:'string'} );
-      expect( p.cast( 1234 ) ).to.be( '1234' );
+      expect( p.cast( 1234 ) ).to.equal( '1234' );
     });
 
     it('.cast( val ) returns no-op val if no caster fn', function() {
       var p = new Property( 'woo' );
-      expect( p.cast( '!') ).to.be( '!' );
+      expect( p.cast( '!') ).to.equal( '!' );
     });
 
     it('.cast( val ) passes through property.type if set', function( done ) {
       var p = new Property( '!', {type:{a:1}} );
       // Stub caster to test arity + params
       p.caster = function() {
-        expect( arguments.length ).to.be( 2 );
+        expect( arguments.length ).to.equal( 2 );
         expect( arguments[1] ).to.have.keys( 'a' );
         done();
       };
@@ -105,24 +105,24 @@ describe('Property', function() {
       schema.new('!').prop('buzzed', {default:'Moomoo'});
       var p = new Property('woo', {type: schema('!') });
       var rec = p.cast({});
-      expect( rec._invoked ).to.be( true );
+      expect( rec._invoked ).to.true;
     });
 
     it('casts an array of Schema models', function () {
       schema('!').prop('name', {default:'Moomoo'});
       var p = new Property('woo', {type:schema('!'), array:true});
       var casted = p.cast( [{age:42}, {name:'Bob', age:21}]);
-      expect( casted ).to.be.an( Array );
+      expect( casted ).to.be.an.instanceof( Array );
       // Check that our stub schema.new() was invoked
-      expect( casted[0]._invoked ).to.be( true );
+      expect( casted[0]._invoked ).to.true;
     });
 
     it('casts an array of values to a defined type', function () {
       var p = new Property('woo', {type:'number', array:true});
       var casted = p.cast( [true, '3'] );
-      expect( casted ).to.be.an( Array );
-      expect( typeof casted[0] ).to.be( 'number' );
-      expect( typeof casted[1] ).to.be( 'number' );
+      expect( casted ).to.be.an.instanceof( Array );
+      expect( typeof casted[0] ).to.equal( 'number' );
+      expect( typeof casted[1] ).to.equal( 'number' );
     });
 
   });
@@ -131,10 +131,10 @@ describe('Property', function() {
   describe('.required()', function() {
     it('initialises isRequired based on options.required', function() {
       var prop = new Property('woo', {required: true});
-      expect( prop.isRequired ).to.be( true );
+      expect( prop.isRequired ).to.true;
 
       prop.required( false );
-      expect( prop.isRequired ).to.be( false );
+      expect( prop.isRequired ).to.equal( false );
     });
 
     it('applies/removes a required validator on options.required', function() {
@@ -152,17 +152,17 @@ describe('Property', function() {
         default: 'foobar'
       });
 
-      expect( prop.default() ).to.be( 'foobar' );
+      expect( prop.default() ).to.equal( 'foobar' );
     });
 
     it('returns the defaultValue if no argument passed', function() {
       var p = new Property('wat').default('ermergerd');
-      expect( p.default() ).to.be( 'ermergerd' );
+      expect( p.default() ).to.equal( 'ermergerd' );
     });
 
     it('returns Property if argument passed', function() {
       var p = new Property('wat').default('hello');
-      expect( p ).to.be.a( Property );
+      expect( p ).to.be.an.instanceof( Property );
     });
 
   });
@@ -183,7 +183,7 @@ describe('Property', function() {
         var p = new Property('wat').set( 'boo' );
       }
       catch( e ) { err = e; }
-      expect( err ).to.be.an( Error );
+      expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /set.*requires/ );
     });
 
@@ -193,7 +193,7 @@ describe('Property', function() {
       p.set( function(v) { return v+' (whatever)'; });
 
       var res = p.applySetters( 'dude' );
-      expect( res ).to.be( 'DUDE (whatever)');
+      expect( res ).to.equal( 'DUDE (whatever)');
     });
 
     it('.get( fn ) adds a transform method to setters array', function() {
@@ -209,7 +209,7 @@ describe('Property', function() {
         var p = new Property('wat').get( 'boo' );
       }
       catch( e ) { err = e; }
-      expect( err ).to.be.an( Error );
+      expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /get.*requires/ );
     });
 
@@ -219,7 +219,7 @@ describe('Property', function() {
       p.get( function(v) { return v+' (cardude)'; });
 
       var res = p.applyGetters( 'dude' );
-      expect( res ).to.be( 'DUDE (cardude)');
+      expect( res ).to.equal( 'DUDE (cardude)');
     });
 
   });
@@ -236,8 +236,8 @@ describe('Property', function() {
       p.addValidator( demoValid );
 
       expect( p.validators() ).to.have.length( 1 );
-      expect( p.validators()[0].rule ).to.be( demoValid );
-      expect( p.validators()[0].msg ).to.be( 'Validation failed' );
+      expect( p.validators()[0].rule ).to.equal( demoValid );
+      expect( p.validators()[0].msg ).to.equal( 'Validation failed' );
     });
 
     it('.addValidator() with no rule simply no-ops', function() {
@@ -250,7 +250,7 @@ describe('Property', function() {
     it('applies a custom error message if passed', function() {
       var p = new Property('wat');
       p.addValidator( demoValid, 'boo fail' );
-      expect( p.validators()[0].msg ).to.be( 'boo fail' );
+      expect( p.validators()[0].msg ).to.equal( 'boo fail' );
     });
 
     it('.validators(arr) applies an array of validators', function() {
@@ -267,7 +267,7 @@ describe('Property', function() {
       var p = new Property('wat');
       p.addValidator( demoValid );
       var errs = p.validate( 'fail' );
-      expect( errs ).to.be.an( Array );
+      expect( errs ).to.be.an.instanceof( Array );
       expect( errs ).to.have.length( 1 );
       expect( errs[0] ).to.match( /Validation failed/ );
     });
@@ -292,7 +292,7 @@ describe('Property', function() {
       var err;
       try { p.validate(); }
       catch( e ) { err = e; }
-      expect( err ).to.be.an( Error );
+      expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /validate.*requires/ );
     });
 
@@ -302,7 +302,7 @@ describe('Property', function() {
       p.addValidator( function(v) { return v.length < 3 ? true : false; }, 'String too long' );
 
       var errs = p.validate('smoo');
-      expect( errs ).to.be.an( Array );
+      expect( errs ).to.be.an.instanceof( Array );
       expect( errs ).to.have.length( 2 );
     });
 
@@ -315,17 +315,17 @@ describe('Property', function() {
     it('.validators adds args to rule stack as (limits, args, conditions)', function() {
       var p = new Property('!');
       p.validators([{rule:function(){}, limits:[1]}]);
-      expect( p.rules[0].args[0] ).to.be( 1 );
+      expect( p.rules[0].args[0] ).to.equal( 1 );
       p.validators([{rule:function(){}, args:[2]}]);
-      expect( p.rules[1].args[0] ).to.be( 2 );
+      expect( p.rules[1].args[0] ).to.equal( 2 );
       p.validators([{rule:function(){}, args:[3]}]);
-      expect( p.rules[2].args[0] ).to.be( 3 );
+      expect( p.rules[2].args[0] ).to.equal( 3 );
     });
 
     it('.validators packs a single limits:value as an array', function() {
       var p = new Property('!');
       p.validators([{rule:function(){}, limits:1}]);
-      expect( p.rules[0].args[0] ).to.be( 1 );
+      expect( p.rules[0].args[0] ).to.equal( 1 );
     });
 
     it('.validate() passes any declared limts to rule', function( done ) {
@@ -334,9 +334,9 @@ describe('Property', function() {
 
       var v = {
         rule: function(v, a, b){
-          expect( v ).to.be( 'woo' );
-          expect( a ).to.be( 10 );
-          expect( b ).to.be( 'yes' );
+          expect( v ).to.equal( 'woo' );
+          expect( a ).to.equal( 10 );
+          expect( b ).to.equal( 'yes' );
           done();
           return v;
         },

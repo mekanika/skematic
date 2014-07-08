@@ -13,13 +13,12 @@
   "bugs": {
     "url": "https://github.com/mekanika/property/issues"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "chai": "^1.9.1",
+    "jshint": "~2.5.2",
     "mekanika-schema": "~0.6.0",
-    "mocha": "~1.20.1",
-    "expect.js": "~0.3.1",
-    "jshint": "~2.5.2"
+    "mocha": "~1.20.1"
   },
   "license": "MIT"
 }
