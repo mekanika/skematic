@@ -8,6 +8,19 @@ var AuxArray = require('../lib/array')
   , expect = require('expect.js');
 
 
+// Overwrite schema.new() implementation
+schema.Schema.prototype.new = function (res) {
+  res || (res = {});
+
+  for (var key in res) {
+    res[key] = '_invoked';
+  }
+  res._invoked = true;
+  res.$schema = this;
+  return res;
+};
+
+
 describe('AuxArray', function() {
 
   describe('initialising', function() {
@@ -42,7 +55,7 @@ describe('AuxArray', function() {
 
   describe('Casting to Schema', function() {
 
-    before( function() { schema('^_^').prop('name', {default:':)'}); } );
+    before( function() { schema.new('^_^').prop('name', {default:':)'}); } );
     after( function() { schema.reset(); } );
 
     it('no-ops if no schema is set', function() {
@@ -52,13 +65,13 @@ describe('AuxArray', function() {
 
     it('casts a value to the defined AuxArray schema', function() {
       var a = new AuxArray( undefined, schema('^_^') );
-      expect( a._innerCast().name ).to.be( ':)' );
+      expect( a._innerCast()._invoked ).to.be( true );
     });
 
     it('pre-casts initialised values if passed', function() {
       var a = new AuxArray( [{name:'>:P'}], schema('^_^') );
-      expect( a[0] ).to.be.a( schema.Record );
-      expect( a[0].$schema.identity ).to.be( '^_^' );
+      expect( a[0] ).to.include.key( '_invoked' );
+      expect( a[0].$schema.key ).to.be( '^_^' );
     });
 
   });
@@ -66,15 +79,14 @@ describe('AuxArray', function() {
 
   describe('Methods', function() {
 
-    before( function() { schema('^_^').prop('name', {default:':)'}); } );
+    before( function() { schema.new('^_^').prop('name', {default:':)'}); } );
     after( function() { schema.reset(); } );
 
     it('.push() casts pushed values', function() {
       var a = new AuxArray( [], schema('^_^') );
       a.push( {}, {name:'smoo'} );
       expect( a ).to.have.length( 2 );
-      expect( a[0].name ).to.be(':)');
-      expect( a[1].name ).to.be('smoo');
+      expect( a[0]._invoked ).to.be(true);
     });
 
     it('.unshift() casts unshifted values', function() {
@@ -83,15 +95,14 @@ describe('AuxArray', function() {
       // Unshift onto front of array
       a.unshift( {name:'smoo'} );
       expect( a ).to.have.length( 2 );
-      expect( a[1].name ).to.be(':)');
-      expect( a[0].name ).to.be('smoo');
+      expect( a[1]._invoked ).to.be(true);
+      expect( a[0]._invoked ).to.be(true);
     });
 
     it('.set( index, value ) sets cast value at index', function() {
       var a = new AuxArray( [ {} ], schema('^_^') );
-      a.set( 1, {name:'smoo'} );
-      expect( a[0].name ).to.be( ':)' );
-      expect( a[1].name ).to.be( 'smoo' );
+      a.set( 1, {name:'willcastas_invoked'} );
+      expect( a[1].name ).to.be( '_invoked' );
     });
 
   });

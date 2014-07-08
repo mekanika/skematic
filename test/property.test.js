@@ -7,6 +7,19 @@ var expect = require('expect.js')
   , Property = require('../lib/index');
 
 
+// Overwrite schema.new() implementation
+schema.Schema.prototype.new = function (res) {
+  res || (res = {});
+
+  for (var key in res) {
+    res[key] = '_invoked';
+  }
+  res._invoked = true;
+  res.$schema = this;
+  return res;
+};
+
+
 describe('Property', function() {
 
   it('fails if not initialised with a String key prop', function() {
@@ -89,11 +102,10 @@ describe('Property', function() {
     });
 
     it('casts to a single Schema instance', function () {
-      schema('!').prop('buzzed', {default:'Moomoo'});
+      schema.new('!').prop('buzzed', {default:'Moomoo'});
       var p = new Property('woo', {type: schema('!') });
       var rec = p.cast({});
-      // @todo Expect that rec is a schema('!') (ie. has a 'buzzed' prop)
-      expect( rec.buzzed ).to.be( 'Moomoo' );
+      expect( rec._invoked ).to.be( true );
     });
 
     it('casts an array of Schema models', function () {
@@ -101,10 +113,8 @@ describe('Property', function() {
       var p = new Property('woo', {type:schema('!'), array:true});
       var casted = p.cast( [{age:42}, {name:'Bob', age:21}]);
       expect( casted ).to.be.an( Array );
-      // Actual type check
-      expect( casted[0].constructor.name ).to.be( 'Record' );
-      // Duck type check
-      expect( casted[0].name ).to.be( 'Moomoo' );
+      // Check that our stub schema.new() was invoked
+      expect( casted[0]._invoked ).to.be( true );
     });
 
     it('casts an array of values to a defined type', function () {

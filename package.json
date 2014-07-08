@@ -16,10 +16,10 @@
   "dependencies": {
   },
   "devDependencies": {
-    "mekanika-schema": "~0.3.0",
-    "mocha": "~1.17.1",
+    "mekanika-schema": "~0.6.0",
+    "mocha": "~1.20.1",
     "expect.js": "~0.3.1",
-    "jshint": "~2.4.4"
+    "jshint": "~2.5.2"
   },
   "license": "MIT"
 }
