@@ -147,10 +147,11 @@ describe('Schema', function() {
       expect( model.properties[1].key ).to.equal( 'kick' );
     });
 
-    it('no-ops setting a property that has already been set', function() {
-      var test = schema.new('Doubleset').prop('onlyone');
+    it('overwrites a property that already exists', function() {
+      var test = schema.new('Doubleset').prop('onlyone', {required:true});
+      expect( test.path('onlyone').isRequired ).to.be.true;
       test.prop('onlyone');
-      expect( test.properties.length ).to.equal( 1 );
+      expect( test.path('onlyone').isRequired ).to.be.undefined;
     });
 
     describe('Property options', function () {

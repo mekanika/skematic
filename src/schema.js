@@ -328,6 +328,7 @@ var _normaliseType = Schema.normaliseType = function ( type ) {
 
 /**
  * Add a new property to the schema structure
+ * Overwrites is property is already defined
  *
  * @param {String} key
  * @param {Object} [options] Mekanika Property options
@@ -337,10 +338,6 @@ var _normaliseType = Schema.normaliseType = function ( type ) {
 
 Schema.prototype.prop = function( key, options ) {
   var len = this.properties.length;
-
-  // Bail out (noop) if this property key is already set
-  while( len-- )
-    if ( key === this.properties[ len ].key ) return this;
 
   if (options && options.type) {
     // Normalise native and 'special' types to lowercase string
@@ -357,7 +354,13 @@ Schema.prototype.prop = function( key, options ) {
 
   }
 
-  this.properties.push( new Property( key, options ) );
+  // Overwrite property if it already exists
+  var index = this.properties.length;
+  this.properties.forEach( function (p, i, ar) {
+    if (p.key === key) ar.splice( (index = i), 1 );
+  });
+
+  this.properties.splice( index, 0, new Property( key, options ) );
   return this;
 };
 
