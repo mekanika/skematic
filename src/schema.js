@@ -34,6 +34,14 @@ function Schema( key, adapter, options ) {
 
 
   /**
+   * Set the default `idAttribute` to 'id'
+   * Modify this if your datasource uses an alternative form ('_id' for Mongo)
+   */
+
+  this.idAttribute = 'id';
+
+
+  /**
    * The `resource` used by an adapter to reference this type of model
    * In effect this is the 'table' or 'document' reference in the datastore
    * Defaults to lowercase `Schema.key`

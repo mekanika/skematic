@@ -33,6 +33,11 @@ describe('Schema', function() {
       expect( s.options('validateOnSet') ).to.equal( true );
     });
 
+    it('defaults .idAttribute to `id`', function () {
+      var s = schema.new('!');
+      expect( s.idAttribute ).to.equal( 'id' );
+    });
+
   });
 
 
