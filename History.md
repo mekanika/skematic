@@ -1,3 +1,16 @@
+0.6.1 - 14 July 2014
+=====
+
+Added:
+
+- Schema now include default `.idAttribute = 'id';` property
+
+Changed:
+
+- Setting an existing property now overwrites that property (not silent return)
+
+
+
 0.6.0 - 7 July 2014
 =====
 

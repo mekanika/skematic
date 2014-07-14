@@ -1,6 +1,6 @@
 {
   "name": "mekanika-schema",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Data model definition scaffold",
   "main": "index.js",
   "scripts": {
