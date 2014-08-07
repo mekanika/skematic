@@ -4,8 +4,8 @@
  */
 
 var expect = require('chai').expect
-  , AuxArray = require('../lib/array')
-  , Cast = require('../lib/cast');
+  , AuxArray = require('../src/property/array')
+  , Cast = require('../src/property/cast');
 
 
 describe('Cast Types', function() {

@@ -3,8 +3,8 @@
  * Test dependencies
  */
 
-var AuxArray = require('../lib/array')
-  , schema = require('mekanika-schema')
+var AuxArray = require('../src/property/array')
+  , schema = require('../index')
   , expect = require('chai').expect;
 
 

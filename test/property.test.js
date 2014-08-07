@@ -3,8 +3,8 @@
  */
 
 var expect = require('chai').expect
-  , schema = require('mekanika-schema')
-  , Property = require('../lib/index');
+  , schema = require('../index')
+  , Property = require('../src/property');
 
 
 // Overwrite schema.new() implementation

@@ -1,4 +1,4 @@
-var Property = require( 'mekanika-property' );
+var Property = require( './property' );
 
 
 /**

@@ -14,9 +14,7 @@
   "bugs": {
     "url": "https://github.com/mekanika/schema/issues"
   },
-  "dependencies": {
-    "mekanika-property": "~0.2.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
