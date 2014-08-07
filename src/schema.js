@@ -418,21 +418,6 @@ Schema.prototype.method = function( methodName, fn ) {
 
 
 /**
- * Applies a static method to the Schema# instance
- *
- * @param {String} methodName An identifier for the method
- * @param {Function} fn The Function defining the method
- *
- * @return {Schema}
- */
-
-Schema.prototype.static = function( methodName, fn ) {
-  this[ methodName ] = fn;
-  return this;
-};
-
-
-/**
  * Instance a new record based on this Schema
  *
  * @param {Object} attributes An object of property key:values

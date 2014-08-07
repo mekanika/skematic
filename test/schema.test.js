@@ -270,18 +270,6 @@ describe('Schema', function() {
   });
 
 
-  describe('.static( name, fn )', function() {
-
-    it('applies a static method to Schema# instances', function() {
-      var Bomb = schema.new('Bomb').static('bro', function(){ return 'supbra'; });
-
-      expect( Bomb.bro ).to.be.a( 'function' );
-      expect( Bomb.bro() ).to.equal( 'supbra' );
-    });
-
-  });
-
-
   describe('.new()', function () {
     it('fails if `Record` not available', function () {
       var err;
