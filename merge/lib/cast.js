@@ -1,0 +1,262 @@
+
+/**
+ * Expose module
+ */
+
+module.exports = exports;
+
+
+/**
+ * Convert to an AuxArray
+ *
+ * Returns the following conversions:
+ *   undefined -> AuxArray: undefined -> []
+ *   null     -> AuxArray: null -> []
+ *   string   -> throws Error
+ *   number   -> throws Error
+ *   boolean  -> throws Error
+ *   function -> throws Error
+ *   Date     -> throws Error
+ *   object   -> throws Error
+ *   array    -> AuxArray: [1,'2',true] -> [1,'2',true]
+ *
+ *
+ * @param {Mixed} val to convert
+ * @param {String|Schema} type Used to cast array values (to schema)
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toAuxArray = function toArray( val, type ) {
+
+  var AuxArray = require('./array');
+
+  if (val instanceof AuxArray) return val;
+
+  try {
+    val = new AuxArray( val, type );
+  }
+  catch( e ) { throw new Error('Failed to cast'); }
+
+  return val;
+
+};
+
+
+/**
+ * Convert to a string
+ *
+ * Returns the following conversions:
+ *   undefined -> throws Error
+ *   null     -> null
+ *   string   -> string: 'hi' -> 'hi'
+ *   number   -> string: 1234 -> '1234'
+ *   boolean  -> string: true -> 'true'
+ *   function -> string: function(a){} -> 'function(a){}'
+ *   Date     -> string: new Date() -> 'Thu Nov 21 2013 15:29:36 GMT+0800 (WST)'
+ *   object   -> string: {a:1, b:{c:'2'}} -> '{"a":1, "b":{"c":"2"}}' (JSON)
+ *   array    -> string: [1,'2',three] -> '1,2,three'
+ *
+ *
+ * @param {Mixed} val to convert
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toString = function toString( val ) {
+
+  if (val === null) return val;
+
+  // Parse if value is not undefined
+  if (val !== undefined) {
+    // Convert objects with simple JSON.stringify (does not convert methods)
+    if (val.constructor && val.constructor.name === 'Object')
+      if (JSON && JSON.stringify) return JSON.stringify( val );
+
+    // Otherwise just try a simple conversion
+    if (val.toString) return val.toString();
+  }
+
+  throw new Error('Failed to cast');
+};
+
+
+/**
+ * Convert to a number (optionally integer or float)
+ *
+ * Returns the following conversions:
+ *   undefined -> throws Error
+ *   null     -> null
+ *   string   -> number || throws Error: '1234' -> 1234, 'abcd' -> Error
+ *   number   -> number: 1234 -> 1234
+ *   boolean  -> number: true -> 1 (false -> 0)
+ *   function -> throws Error
+ *   Date     -> throws Error
+ *   object   -> throws Error
+ *   array    -> throws Error
+ *
+ * @param {Mixed} val to convert
+ * @param {Function} [convertor] A format function: Number, parseInt, parseFloat
+ * @param {Number} [radix] The base radix to convert parseInt/Float. Default 10
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.convertNumber = function convertNumber( val, convertor, radix ) {
+
+  // Setup defaults
+  convertor || (convertor = radix !== undefined ? parseInt : Number);
+  radix || (radix = 10);
+
+  if ( !isNaN(val) ) {
+
+    // Empty values
+    if (null === val) return val;
+    if ('' === val) return null;
+
+    // Already a number? Run it through the convertor and return
+    if (val instanceof Number || 'number' === typeof val)
+      return convertor( val, radix );
+
+    // Convert booleans
+    if (typeof val === 'boolean')
+      return val ? 1 : 0;
+
+    // Convert any remaining possibilities
+    if ('string' === typeof val) val = convertor(val, radix);
+    if (val.toString
+      && !Array.isArray(val)
+      && val.toString() === Number(val)) val = convertor( val, radix );
+
+    // And return if we don't have a NaN
+    if ( !isNaN(val) && typeof val === 'number') return val;
+  }
+
+  throw new Error('Failed to cast');
+
+};
+
+
+/**
+ * Convert to a Number
+ *
+ * @param {Mixed} val to convert
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toNumber = function toNumber( val ) {
+  return exports.convertNumber( val, Number );
+};
+
+
+/**
+ * Convert to a float Number
+ *
+ * Calls .toNumber() with `parseFloat` as convertor
+ *
+ * @param {Mixed} val to convert
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toFloat = function toFloat( val ) {
+  return exports.convertNumber( val, parseFloat );
+};
+
+
+/**
+ * Convert to an integer Number (optional radix to convert to base)
+ *
+ * Calls .toNumber() with `parseInt` as convertor and optional radix
+ *
+ * @param {Mixed} val to convert
+ * @param {Number} [radix] The base radix to convert parseInt/Float. Default 10
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toInteger = function toInteger( val, radix ) {
+  return exports.convertNumber( val, parseInt, radix );
+};
+
+
+/**
+ * Convert to a Boolean
+ *
+ * Returns the following conversions:
+ *   undefined -> boolean: undefined -> false
+ *   null     -> null
+ *   string   -> boolean: '0' -> false, 'false' -> false, all others -> true
+ *   number   -> boolean: 0 -> false, all other numbers -> true
+ *   boolean  -> boolean
+ *   function -> boolean: all -> true
+ *   Date     -> boolean: all -> true
+ *   object   -> boolean: all -> true
+ *   array    -> boolean: all -> true
+ *
+ * @param {Mixed} val to convert
+ *
+ * @returns converted value
+ */
+
+exports.toBoolean = function toBoolean( val ) {
+
+  if (null === val) return val;
+  if ('0' === val) return false;
+  if ('true' === val) return true;
+  if ('false' === val) return false;
+  return !!val;
+
+};
+
+
+/**
+ * Convert to a Date
+ *
+ * Returns the following conversions:
+ *   undefined -> throws Error
+ *   null     -> null
+ *   string   -> Date || throws Error: '1234' -> Date#, 'abcd' -> Error
+ *   number   -> Date: 1234 -> Date# (equiv to `new Date(1234)`)
+ *   boolean  -> throws Error
+ *   function -> throws Error
+ *   Date     -> Date
+ *   object   -> throws Error
+ *   array    -> Date || Error: ['5'] -> Date# `new Date( ['5'].toString() )`
+ *
+ * @param {Mixed} val to convert
+ *
+ * @throws Conversion failure error
+ * @returns converted value
+ */
+
+exports.toDate = function toDate( val ) {
+
+  if (val === null || val === '') return null;
+  if (val instanceof Date) return val;
+
+  var date;
+
+  // support for timestamps
+  if (val instanceof Number
+      || 'number' === typeof val
+      || String(val) === Number( val ) )
+    date = new Date( Number( val ) );
+
+  // support for date strings
+  else if (val && val.toString)
+    date = new Date( val.toString() );
+
+  if (date && date.toString() !== 'Invalid Date')
+    return date;
+
+  throw new Error( 'Failed to cast');
+
+};

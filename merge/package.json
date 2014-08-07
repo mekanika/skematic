@@ -1,0 +1,24 @@
+{
+  "name": "mekanika-property",
+  "version": "0.2.1",
+  "description": "Property validation and casting",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mekanika/property.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mekanika/property/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "jshint": "~2.5.2",
+    "mekanika-schema": "~0.6.0",
+    "mocha": "~1.20.1"
+  },
+  "license": "MIT"
+}
