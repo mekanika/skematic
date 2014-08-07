@@ -285,6 +285,7 @@ Schema.prototype.getRequiredPaths = function() {
 
 /**
  * Coerce recognised 'types' into a lowercase known format
+ * Expose as a static method on the Schema class
  *
  * @param type to coerce
  *
