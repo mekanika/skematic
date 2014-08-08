@@ -27,6 +27,10 @@ describe('default', function () {
 describe('filters', function () {
 
   describe('apply', function () {
+    it('no-ops if no filters provided', function () {
+      expect( schema.filter('x') ).to.equal( 'x' );
+    });
+
     it('applies array of filter keys', function () {
       expect( schema.filter(' ! ', ['trim']) ).to.equal( '!' );
     });

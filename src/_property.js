@@ -74,6 +74,9 @@ for (var cast in Cast) if (cast.substr(0,2)==='to') _filters[cast] = Cast[cast];
 */
 
 exports.filter = function (val, filters) {
+  // No-op if no filters
+  if (!filters) return val;
+
   // Ensure filters are provided as an array
   if (typeof filters === 'string') filters = [filters];
 
