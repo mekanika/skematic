@@ -50,7 +50,7 @@ exports.minLength = function minLength( str, min ) {
  */
 
 exports.maxLength = function maxLength( str, max ) {
-  return str.length <= max
+  return str.length <= max;
 };
 
 
@@ -145,6 +145,34 @@ exports.isEmail = function isEmail( str ) {
 exports.isUrl = function isUrl( str ) {
   //A modified version of the validator from @diegoperini / https://gist.github.com/729294
   return str.length < 2083 && (/^(?!mailto:)(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[0-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))|localhost)(?::\d{2,5})?(?:\/[^\s]*)?$/i).test( str );
+};
+
+
+/**
+ * String is alpha characters
+ *
+ * @param {String} str
+ * @return {Boolean}
+ * @memberOf rules
+ * @alias isAlpha
+ */
+
+exports.isAlpha = function (v) {
+  return (/^[a-zA-Z]+$/i).test(v);
+};
+
+
+/**
+ * String is alphaNumeric characters
+ *
+ * @param {String} str
+ * @return {Boolean}
+ * @memberOf rules
+ * @alias isUrl
+ */
+
+exports.isAlphaNum = function (v) {
+  return (/^[a-zA-Z0-9]+$/i).test(v) && typeof(v) === 'string';
 };
 
 

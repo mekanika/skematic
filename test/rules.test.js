@@ -157,6 +157,32 @@ describe('Rules', function() {
 
     });
 
+
+    describe('isAlpha( str )', function () {
+      it('passes if str is alpha characters', function () {
+        expect( V.isAlpha('abcDEF') ).to.be.true;
+      });
+
+      it('fails if str is not alpha characters', function () {
+        expect( V.isAlpha('123abc') ).to.be.false;
+        expect( V.isAlpha('_abc') ).to.be.false;
+        expect( V.isAlpha(',./abc') ).to.be.false;
+      });
+    });
+
+
+    describe('isAlphaNum( str )', function () {
+      it('passes if str is alphaNumeric characters', function () {
+        expect( V.isAlphaNum('123abc') ).to.be.true;
+      });
+
+      it('fails if str is not alphaNumeric characters', function () {
+        // expect( V.isAlpha('123abc') ).to.be.false;
+        expect( V.isAlphaNum('_abc') ).to.be.false;
+        expect( V.isAlphaNum(',./abc') ).to.be.false;
+      });
+    });
+
   });
 
 
