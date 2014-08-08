@@ -74,3 +74,31 @@ describe('filters', function () {
 
 });
 
+
+describe('typeCheck(val, type)', function () {
+  it('validates a value is of type returning array of errors', function () {
+    expect( schema.typeCheck ).to.be.an.instanceof( Function );
+    expect( schema.typeCheck('a', 'string') ).to.have.length( 0 );
+  });
+
+  describe('types', function () {
+    it('string', function () {
+      expect( schema.typeCheck('abc', 'string') ).to.have.length(0);
+      expect( schema.typeCheck( 123, 'string')  ).to.have.length(1);
+    });
+
+    it('integer', function () {
+      var i = 'integer';
+      expect( schema.typeCheck('1', i) ).to.have.length(1);
+      expect( schema.typeCheck(100, i) ).to.have.length(0);
+      expect( schema.typeCheck(100.0, i) ).to.have.length(0);
+      expect( schema.typeCheck(100.1, i) ).to.have.length(1);
+      expect( schema.typeCheck(NaN, i) ).to.have.length(1);
+    });;
+
+    it('should test number');
+    it('should test boolean');
+    it('should test boolean');
+  });
+});
+

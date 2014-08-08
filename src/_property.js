@@ -111,3 +111,36 @@ exports.filter.add = function (key, fn) {
   _filters[ key ] = fn;
 };
 
+
+/**
+  Type check
+
+  Explicit tests on `{type:$TypeFn}` declarations. Same as 'Rules'
+*/
+
+var is = {
+  string: function (v) { return typeof v === 'string'; },
+  integer: function (v) { return typeof v === 'number' && v%1 === 0 && !isNaN(v);}
+}
+
+
+/**
+  Checks that a `val` is of `type`
+
+  Runs `val` against a 'type' function that returns boolean if the
+  value meets its criteria.
+
+  @param {Mixed} val The value to test
+  @param {String} type The name of the type check to run
+
+  @return {Array} errors
+*/
+
+exports.typeCheck = function ( val, type ) {
+  if (!is[ type ]) return ['Unknown type to check: '+type];
+
+  return is[ type ](val)
+    ? []
+    : ['Not of type: '+type];
+}
+
