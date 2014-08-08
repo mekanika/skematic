@@ -43,8 +43,13 @@ describe('filters', function () {
     });
   });
 
-  it('.availabe provides list of available filters', function () {
+  it('.available provides list of available filters', function () {
     expect( schema.filter.available ).to.have.length.gt( 0 );
+  });
+
+  it('.add(key,fn) adds a filter to be used', function () {
+    schema.filter.add('go', function(v){ return v+'go!';} );
+    expect( schema.filter( '!', ['go'] ) ).to.equal( '!go!' );
   });
 
   it('to$Cast available filters [see cast tests]', function () {

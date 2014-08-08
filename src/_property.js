@@ -99,3 +99,15 @@ exports.filter = function (val, filters) {
 
 exports.filter.available = Object.keys(_filters);
 
+
+/**
+  Adds a named `key` filter `fn`
+
+  @param {String} key The identifier for the filter
+  @param {Function} fn The filter function (passed `v` and returns modified `v`)
+*/
+
+exports.filter.add = function (key, fn) {
+  _filters[ key ] = fn;
+};
+
