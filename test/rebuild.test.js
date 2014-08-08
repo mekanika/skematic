@@ -102,3 +102,73 @@ describe('typeCheck(val, type)', function () {
   });
 });
 
+
+describe('test(val, schema)', function () {
+  it('returns an array of string errors', function () {
+    expect( schema.test ).to.be.an.instanceof( Function );
+    expect( schema.test('abc') ).to.have.length( 0 );
+    expect( schema.test( 1, {type:'string'} ) ).to.have.length(1);
+    expect( schema.test( 1, {type:'string'} )[0] ).to.be.a( 'string' );
+  });
+
+  it('returns empty array if no schema provided', function () {
+    expect( schema.test('abc') ).to.have.length( 0 );
+  });
+
+  it('applies default value first', function () {
+    var s = {
+      default: 'zim',
+      rules: {in:['zim']}
+    }
+
+    // The rule tests that the value is 'zim'. Only true if default is applied.
+    expect( schema.test('', s) ).to.have.length( 0 );
+  });
+
+  it('applies filters after default and prior to rule check', function () {
+    var s = {default:' zim ', filters:['trim'], rules:{in:['zim']}};
+    expect( schema.test( '', s) ).to.have.length( 0 );
+  });
+
+  it('then checks that required values are set', function () {
+    var s = {required:true, filters:['trim'], rules:{in:['x']}};
+    expect( schema.test('', s) ).to.have.length(1);
+    expect( schema.test('', s)[0] ).to.match( /required/ig );
+
+    // Now check sequencing (required should pass because default was set)
+    var s = {required:true, default:' zim ', filters:['trim'], rules:{in:['zim']}};
+    expect( schema.test( '', s) ).to.have.length( 0 );
+  });
+
+  it('then checks type matches', function () {
+    var fail = {type:'integer'};
+    var pass = {type:'integer', filters:['toInteger']}
+    expect( schema.test( '1', fail) ).to.have.length( 1 );
+    expect( schema.test( '1', pass) ).to.have.length( 0 );
+  });;
+
+  it('then applies specified rules', function () {
+    var s = {type:'integer', rules:{min:5}};
+    expect( schema.test(1, s) ).to.have.length(1);
+    expect( schema.test(1, s) ).to.match( /min/ig );
+  });
+
+  describe('error msgs', function () {
+    it('can be set declaritively', function () {
+      var s = {rules:{in:['a']}, errors:{in:'Hotdog!'}};
+      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+    });
+
+    it('can set default error message for schema', function () {
+      var s = {rules:{in:['a']}, errors:{default:'Hotdog!'}};
+      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+    });
+
+    it('can set default msg as string', function () {
+      var s = {rules:{in:['a']}, errors:'Hotdog!'};
+      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+    });
+  })
+
+});
+
