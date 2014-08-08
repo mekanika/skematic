@@ -1,5 +1,5 @@
 /**
-  @namespace validators
+  @namespace rules
 */
 
 
@@ -15,7 +15,7 @@ module.exports = exports;
  *
  * @param {Mixed} val The value to test
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias required
  */
 
@@ -27,32 +27,16 @@ exports.required = function required( val ) {
 
 
 /**
- * Evaluates if a string length is between `min` and `max`
- *
- * @param {String} str
- * @param {Number} min
- * @param {Number} max
- * @return {Boolean}
- * @memberOf validators
- * @alias betweenLength
- */
-
-exports.betweenLength = function betweenLength( str, min, max ) {
-  return str.length >= min && (max === undefined || str.length <= max);
-};
-
-
-/**
  * Minimum string length
  *
  * @param {String} val The value to test
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias minLength
  */
 
-exports.minLength = function minLength( str, limit ) {
-  return exports.betweenLength( str, limit );
+exports.minLength = function minLength( str, min ) {
+  return str.length >= min;
 };
 
 
@@ -61,28 +45,12 @@ exports.minLength = function minLength( str, limit ) {
  *
  * @param {String} val The value to test
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias maxLength
  */
 
-exports.maxLength = function maxLength( str, limit ) {
-  return exports.betweenLength( str, 0, limit );
-};
-
-
-/**
- * Number range (inclusive)
- *
- * @param {String} val The value to test
- * @param {Number} min
- * @param {Number} max
- * @return {Boolean}
- * @memberOf validators
- * @alias between
- */
-
-exports.between = function between( val, min, max ) {
-  return val >= min && val <= max;
+exports.maxLength = function maxLength( str, max ) {
+  return str.length <= max
 };
 
 
@@ -92,7 +60,7 @@ exports.between = function between( val, min, max ) {
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias max
  */
 
@@ -107,7 +75,7 @@ exports.max = function max( val, limit ) {
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias min
  */
 
@@ -121,7 +89,7 @@ exports.min = function min( val, limit ) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias isEmail
  */
 
@@ -135,7 +103,7 @@ exports.isEmail = function isEmail( str ) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @alias isUrl
  */
 
@@ -152,13 +120,12 @@ exports.isUrl = function isUrl( str ) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @method is
  * @alias regex
  */
 
-exports.is =
-exports.regex = function regex( str, exp, flags ) {
+exports.match = function regex( str, exp, flags ) {
   if ( !(exp instanceof RegExp) ) exp = new RegExp( exp, flags );
   return exp.test( str );
 };
@@ -171,38 +138,11 @@ exports.regex = function regex( str, exp, flags ) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf validators
+ * @memberOf rules
  * @method not
  * @alias notRegex
  */
 
-exports.not =
-exports.notRegex = function notRegex( str, exp, flags ) {
-  return !exports.regex( str, exp, flags );
+exports.notMatch = function notRegex( str, exp, flags ) {
+  return !exports.match( str, exp, flags );
 };
-
-
-// var ErrorMessages = {default:'Val err.chang me'};
-
-// if (!ErrorMessages.default)
-//   throw new Error('No default validators error message set');
-
-// // Step through all exported validators and attach error message
-// for (var el in exports) {
-
-//   exports[ el ].msg = ErrorMessages[ el ]
-//     ? ErrorMessages[ el ]
-//     : ErrorMessages.default + ': ' + el;
-
-// }
-
-
-
-// -- Array
-// .minItems
-// .maxItems
-// .uniqueItems
-// .enum
-
-// -- Any
-// .dependencies

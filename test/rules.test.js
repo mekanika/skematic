@@ -3,9 +3,9 @@
  */
 
 var expect = require('chai').expect
-  , V = require('../src/validators');
+  , V = require('../src/rules');
 
-describe('Validators', function() {
+describe('Rules', function() {
 
   describe('.required(val)', function() {
     it('passes with any value that is defined', function() {
@@ -52,17 +52,6 @@ describe('Validators', function() {
       });
     });
 
-
-    describe('.betweenLength( v, min, max )', function() {
-      it('passes if string length is between min and max', function() {
-        expect( V.betweenLength( '12345', 5, 6) ).to.be.true;
-      });
-
-      it('fails if string length is not between min and max', function() {
-        expect( V.maxLength( '123456', 1, 5) ).to.be.false;
-      });
-    });
-
   });
 
 
@@ -90,17 +79,6 @@ describe('Validators', function() {
 
       it('fails if number is less than `limit`', function() {
         expect( V.min( 10, 50) ).to.be.false;
-      });
-    });
-
-    describe('.between( v, min, max )', function() {
-      it('passes if number is between min and max', function() {
-        expect( V.between( 25, 10, 50) ).to.be.true;
-        expect( V.between( 25, 25, 30) ).to.be.true;
-      });
-
-      it('fails if number is not between min and max', function() {
-        expect( V.between( 10, 50, 55) ).to.be.false;
       });
     });
 
@@ -146,46 +124,39 @@ describe('Validators', function() {
 
 
 
-  // --- Regex
-  describe('Regex', function() {
+  // --- Match
+  describe('Match (Regexp)', function() {
 
-    describe('is( str, exp, flags )', function() {
-
-      it('aliases as .regex()', function() {
-        expect( V.is ).to.equal( V.regex );
-      });
+    describe('match( str, exp, flags )', function() {
 
       it('converts non regex `exp` to RegExp and applies `flags`', function(){
-        expect( V.is( 'hello', 'Ello', 'i' ) ).to.be.true;
+        expect( V.match( 'hello', 'Ello', 'i' ) ).to.be.true;
       });
 
       it('passes if str matches regex', function() {
-        expect( V.is( 'smash', /.*Ash$/i ) ).to.be.true;
+        expect( V.match( 'smash', /.*Ash$/i ) ).to.be.true;
       });
 
       it('fails if str does not match regex', function() {
-        expect( V.is( 'smash', /.*Ash$/ ) ).to.be.false;
+        expect( V.match( 'smash', /.*Ash$/ ) ).to.be.false;
       });
 
     });
 
 
-    describe('not( str, exp, flags )', function() {
+    describe('notMatch( str, exp, flags )', function() {
 
-      it('aliases as .notRegex()', function() {
-        expect( V.not ).to.equal( V.notRegex );
-      });
 
       it('converts non regex `exp` to RegExp and applies `flags`', function(){
-        expect( V.not( 'hello', 'Ello', 'i' ) ).to.be.false;
+        expect( V.notMatch( 'hello', 'Ello', 'i' ) ).to.be.false;
       });
 
       it('passes if str DOES NOT match regex', function() {
-        expect( V.not( 'smash', /.*Ash$/i ) ).to.be.false;
+        expect( V.notMatch( 'smash', /.*Ash$/i ) ).to.be.false;
       });
 
       it('fails if str DOES match regex', function() {
-        expect( V.not( 'smash', /.*Ash$/ ) ).to.be.true;
+        expect( V.notMatch( 'smash', /.*Ash$/ ) ).to.be.true;
       });
 
     });
