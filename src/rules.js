@@ -85,6 +85,41 @@ exports.min = function min( val, limit ) {
 
 
 /**
+ * Present in a list of values (whitelist)
+ * Also works passing in list values as arguments
+ *
+ * @param {Number} v The value to test
+ * @param {Number} limit The list of values to test against
+ * @return {Boolean}
+ * @memberOf rules
+ * @alias in
+ */
+
+exports.in = function (v, list) {
+  // Check against an array
+  if (list instanceof Array) return list.indexOf(v) > -1;
+  // Check against a list of arguments
+  else return Array.prototype.slice.call(arguments, 1).indexOf(v) > -1;
+};
+
+
+/**
+ * Not present in a list of values (blacklist)
+ * Also works passing in list values as arguments
+ *
+ * @param {Number} v The value to test
+ * @param {Number} limit The list of values to test against
+ * @return {Boolean}
+ * @memberOf rules
+ * @alias notIn
+ */
+
+exports.notIn = function () {
+  return !exports.in.apply( this, arguments );
+};
+
+
+/**
  * String is a valid email
  *
  * @param {String} str

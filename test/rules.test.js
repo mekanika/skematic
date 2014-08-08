@@ -86,6 +86,43 @@ describe('Rules', function() {
 
 
 
+  // --- Lists
+  describe('Lists', function () {
+
+    describe('.in(v,list)', function () {
+      it('passes if value is in declared list', function (){
+        expect( V.in( 'hi', ['yo','hi','sup'] ) ).to.be.true;
+      });
+
+      it('passes if value is in arguments list', function (){
+        expect( V.in( 'hi', 'yo','hi','sup' ) ).to.be.true;
+      });
+
+      it('fails if value not present in list', function () {
+        expect( V.in( 'bye', 'yo','hi','sup' ) ).to.be.false;
+        expect( V.in( 'bye', ['yo','hi','sup'] ) ).to.be.false;
+      });
+    });
+
+    describe('.notIn(v,list)', function () {
+      it('passes if value is NOT in declared list', function (){
+        expect( V.notIn( 'bye', ['yo','hi','sup'] ) ).to.be.true;
+      });
+
+      it('passes if value is NOT in arguments list', function (){
+        expect( V.notIn( 'bye', 'yo','hi','sup' ) ).to.be.true;
+      });
+
+      it('fails if value IS present in list', function () {
+        expect( V.notIn( 'hi', 'yo','hi','sup' ) ).to.be.false;
+        expect( V.notIn( 'hi', ['yo','hi','sup'] ) ).to.be.false;
+      });
+    });
+
+  });
+
+
+
   // --- Formats
   describe('Formats', function() {
 
