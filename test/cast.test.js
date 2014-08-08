@@ -5,7 +5,7 @@
 
 var expect = require('chai').expect
   , AuxArray = require('../src/property/array')
-  , Cast = require('../src/property/cast');
+  , Cast = require('../src/cast');
 
 
 describe('Cast Types', function() {

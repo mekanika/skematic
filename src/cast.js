@@ -30,7 +30,7 @@ module.exports = exports;
 
 exports.toAuxArray = function toArray( val, type ) {
 
-  var AuxArray = require('./array');
+  var AuxArray = require('./property/array');
 
   if (val instanceof AuxArray) return val;
 

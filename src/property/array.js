@@ -3,7 +3,7 @@
  * Dependencies
  */
 
-var Cast = require('./cast');
+var Cast = require('../cast');
 
 
 /**
