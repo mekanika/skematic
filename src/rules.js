@@ -27,6 +27,22 @@ exports.required = function required( val ) {
 
 
 /**
+ * Is the value empty or not
+ *
+ * @param {Mixed} val The value to test
+ * @param {Boolean} allowEmpty Whether the value can be empty or not
+ * @return {Boolean}
+ * @memberOf rules
+ * @alias empty
+ */
+
+exports.empty = function (v, allowEmpty) {
+  if (typeof allowEmpty === 'undefined') allowEmpty = true;
+  return (v === '' || v === undefined) && allowEmpty;
+}
+
+
+/**
  * Minimum string length
  *
  * @param {String} val The value to test

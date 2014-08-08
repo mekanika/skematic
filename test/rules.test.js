@@ -25,6 +25,26 @@ describe('Rules', function() {
   });
 
 
+  describe('.empty(v,allowEmpty)', function () {
+    it('passes if value is empty', function () {
+      expect( V.empty('') ).to.be.true;
+    });
+
+    it('passes if value is empty and allowEmpty', function () {
+      expect( V.empty('', true) ).to.be.true;
+    });
+
+    it('fails if value is NOT empty', function () {
+      expect( V.empty('123') ).to.be.false;
+      expect( V.empty('123', true) ).to.be.false;
+    });
+
+    it('fails if value IS empty by NOT allowEmpty', function () {
+      expect( V.empty('', false) ).to.be.false;
+    });
+  });
+
+
 
   // --- Strings
   describe('Strings', function() {
