@@ -352,7 +352,6 @@ exports.validate = function (data, schema, _noCheck) {
       if (errors.length) {
         isValid = false;
         errs[key] = errors;
-        dx[key] = v;
       }
       else
         dx[key] = _cast( v, scm );
