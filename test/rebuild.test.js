@@ -31,6 +31,10 @@ describe('filters', function () {
       expect( schema.filter('x') ).to.equal( 'x' );
     });
 
+    it('applies a single string filter', function () {
+      expect( schema.filter(' ! ', 'trim') ).to.equal( '!' );
+    });
+
     it('applies array of filter keys', function () {
       expect( schema.filter(' ! ', ['trim']) ).to.equal( '!' );
     });
