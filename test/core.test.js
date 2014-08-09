@@ -46,10 +46,6 @@ describe('Core - schema', function() {
     expect( schema.unload('blah') ).to.be.false;
   });
 
-  it('returns the toString() accessor as "schema( modelName )"', function() {
-    expect( schema.new('Demo').toString() ).to.equal( "schema('Demo')" );
-  });
-
 
   describe('accessor - schema(key)', function () {
     it('throws if no key provided', function () {

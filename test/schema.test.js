@@ -3,8 +3,7 @@
  */
 
 var expect = require('chai').expect
-  , schema = require('../index')
-  , Property = require('../src/property');
+  , schema = require('../index');
 
 
 describe('Schema', function() {
@@ -30,7 +29,7 @@ describe('Schema', function() {
 
     it('can pass initialisation options', function () {
       var s = schema.new('!', {validateOnSet: true} );
-      expect( s.options('validateOnSet') ).to.equal( true );
+      expect( s.config.validateOnSet ).to.equal( true );
     });
 
     it('defaults .idAttribute to `id`', function () {
@@ -41,47 +40,16 @@ describe('Schema', function() {
   });
 
 
-  describe('.options(opt)', function() {
+  describe('.config', function() {
+    describe('defaults', function () {
+      it('validateOnSet: false', function () {
+        expect( schema.new('!').config.validateOnSet ).to.be.false;
+      });
 
-    beforeEach( function () {
-      schema.new('Demo').options( {validateOnSet: true} );
+      it('castOnSet: true', function () {
+        expect( schema.new('!').config.castOnSet ).to.be.true;
+      });
     });
-
-    it('applies options( object ) as options', function() {
-      expect( schema('Demo').options() ).to.be.an.instanceof( Object );
-      expect( schema('Demo').options('validateOnSet') ).to.equal( true );
-    });
-
-    it('acts as a getter if passed a string .options( key )', function() {
-      expect( schema('Demo').options('validateOnSet') ).to.equal( true );
-    });
-
-    it('acts as a setter if passed .options( key, val )', function() {
-      expect( schema('Demo').options('validateOnSet', false) ).to.equal( false );
-    });
-
-    it.skip('can validateOnSet all Schema# record instances', function() {
-      var Grunt = schema.new('Grunt').prop('name');
-
-      Grunt.options('validateOnSet', true);
-
-      function validYes(v) { return v==='yes'; }
-      Grunt.path('name').addValidator( validYes, 'Must be yes' );
-
-      var wat = Grunt.new();
-
-      var err;
-      try {
-        wat.name = 'yes';
-        expect( wat.name ).to.equal( 'yes' );
-        wat.name = 'no';
-      }
-      catch( e ) { err = e; }
-
-      expect( err ).to.be.an.instanceof( Error );
-      expect( err.message ).to.match( /Must be yes/ );
-    });
-
   });
 
 

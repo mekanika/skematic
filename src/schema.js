@@ -81,10 +81,16 @@ function Schema( key, adapter, options ) {
 
 
   /**
-   * Apply options
+   * Initial config defaults
    */
 
-  this.options( options );
+  this.config = {
+    castOnSet: true,
+    validateOnSet: false
+  };
+
+  // Apply options
+  if (options) for (var key in options) this.config[key] = options[key];
 
 
   /**
@@ -96,52 +102,6 @@ function Schema( key, adapter, options ) {
 
   this.adapter = adapter;
 }
-
-
-/**
- * Provide description of accessor for each schema: `schema( key )`
- *
- * @return {String} "schema( key )"
- */
-
-Schema.prototype.toString = function() {
-  return 'schema(\''+this.key+'\')';
-};
-
-
-/**
- * Getter/Setter for Schema# options
- *
- * @param {Object|String} [options] Object to set, String to retrieve specific, empty to retrieve all
- * @param {Mixed} [value] Sets the option value if first parameter is a String
- *
- * @return {Object|Mixed} Returns either all options or specific option value
- */
-
-Schema.prototype.options = function( options, value ) {
-
-  // Initialise internal options cache if not existent
-  this.__opt = this.__opt || {};
-
-  // Return options if nothing passed
-  if (!options) return this.__opt;
-
-  // Get (and set) specified option path
-  if (typeof options === 'string') {
-    if (typeof value !== 'undefined') this.__opt[ options ] = value;
-    return this.__opt[ options ];
-  }
-
-  // Otherwise apply options object
-  for (var key in options) {
-    if (options.hasOwnProperty( key )) {
-      this.__opt[ key ] = options[ key ];
-    }
-  }
-
-  // And return newly set
-  return this.__opt;
-};
 
 
 /**
