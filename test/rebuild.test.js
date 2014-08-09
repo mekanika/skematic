@@ -207,3 +207,151 @@ describe('test(val, schema)', function () {
 
 });
 
+
+describe('Validate', function () {
+  it('returns {data, valid, errors} object', function () {
+    var record = {name:'Jack'};
+    var s = { name: {type:'string'} };
+    var res = schema.validate( record, s );
+    expect( res ).to.have.keys( 'data', 'valid', 'errors' );
+  });
+
+  it('casts/filters the values in `data` on valid', function () {
+    var record = {power:'40'};
+    var s = { power:{type:'integer' } };
+
+    expect( schema.validate( record, s ).data.power ).to.equal('40');
+
+    s.power.default = '50';
+    s.power.filters = ['toInteger'];
+    var res = schema.validate( {power:''}, s );
+    expect( res.data.power ).to.equal( 50 );
+  });
+
+  it('provides error arrays keyed to properties', function () {
+    var res = schema.validate({power:'1'}, {power:{type:'integer'}});
+    expect( res.errors ).to.have.keys( 'power' );
+    expect( res.errors.power ).to.have.length.gt( 0 );
+  });
+
+  it('sets .valid boolean based on validation result', function () {
+    var res = schema.validate({power:'1'}, {power:{type:'integer'}});
+    expect( res.valid ).to.be.false;
+
+    res = schema.validate({power:1}, {power:{type:'integer'}});
+    expect( res.valid ).to.be.true;
+  });
+
+  it('whitelists properties on cast (discards unknowns)', function () {
+    var s = {power:{type:'integer'}};
+    var data = {power:3, jack:'jill'};
+    var res = schema.validate( data, s );
+    expect( res.data ).to.have.keys( 'power' );
+  });
+
+
+  describe('subschema', function () {
+
+    describe('objects', function () {
+      it('can validate complex subschema', function () {
+        var s = { bigsub: {schema:{
+          top:{type:'integer'},
+          cool:{type:'string'}}
+        }};
+
+        var res = schema.validate({bigsub:{top:'s'}}, s );
+        expect( res.errors ).to.have.keys( 'bigsub' );
+        expect( res.errors.bigsub.top ).to.have.length( 1 );
+
+        s.bigsub.schema.top.filters = ['toInteger'];
+        res = schema.validate({bigsub:{top:'11'}}, s );
+        expect( res.valid ).to.be.true;
+        expect( res.data.bigsub.top ).to.equal( 11 );
+      });
+
+      it('can recursively validate', function () {
+
+        var s = {
+          name: {type:'string'},
+          address: { schema: {
+            street: {schema: {
+              number: {type:'integer', required:true},
+              name: {type:'string', rules:{maxLength:5}}
+            }},
+            city: {type:'string', required:true},
+            zipcode: {type:'integer', required:true}
+          }},
+          tags: { type:'array', schema:{type:'string'} },
+          books: {type:'array', schema:{
+            title:{type:'string'},
+            author: {type:'string'}
+          }}
+        };
+
+        var data = {
+          name:'zim',
+          address: {
+            street:{number:4},
+            city:'mrrn',
+            zipcode:5151},
+          tags: ['hello', '20'],
+          books: [{title:'WOT', author:'RJ'}, {title:'GOT', author:555}]
+        };
+
+        // Demonstrate error validation
+        var res = schema.validate( data, s );
+        expect( res.valid ).to.be.false;
+        expect( res.errors.books['1'].author ).to.have.length( 1 );
+
+        // Demonstrate PASSING
+        s.books.schema.author.filters = ['toString'];
+        res = schema.validate( data, s );
+        expect( res.valid ).to.be.true;
+        expect( res.data.books[1].author ).to.equal('555');
+      });
+    });
+
+    describe('arrays', function () {
+      it('index errors', function () {
+        var s = {gir:{schema:{type:'string'}}};
+        var res = schema.validate( {gir:['a','b',4]}, s );
+
+        expect( res.valid ).to.be.false;
+        // The 3rd element should have an error `arr['2']`
+        expect( res.errors.gir ).to.have.key('2');
+      });
+
+      it('detects array values without declaring type:array', function () {
+        var s = {gir:{schema:{type:'string', filters:['toString']}}};
+        var res = schema.validate( {gir:['a','b',4]}, s );
+        expect( res.valid ).to.be.true;
+        s.gir.type = 'array';
+        res = schema.validate( {gir:['a','b',4]}, s );
+        expect( res.valid ).to.be.true;
+      });
+
+      it('of simple (primitive) types', function () {
+        var s = {gir:{type:'array', schema:{type:'string', filters:['toString']}}};
+        var res = schema.validate( {gir:['a','b',4]}, s );
+
+        expect( res.valid ).to.be.true;
+      });
+
+      it('of complex objects/models', function () {
+        var s = {
+          gir: {schema:{
+            age:{type:'integer'},
+            says:{type:'string'}
+          }}
+        };
+
+        var res = schema.validate({gir:[{age:2, says:'hi'},{age:4,says:1337}]}, s);
+        expect( res.valid ).to.be.false;
+        expect( res.errors.gir['1'].says ).to.have.length(1);
+      });
+    });
+
+  });
+
+});
+

@@ -250,3 +250,96 @@ function _cast (val, schema) {
   return exports.filter( exports.default( val, schema ), schema.filters );
 };
 
+
+/**
+  Validates complex data objects
+  @return {Array} errors
+*/
+
+exports.validate = function (data, schema) {
+  var dx = {};
+  var errs = {};
+  var isValid = true;
+
+  // Step through ONLY our schema keys
+  for (var key in schema) {
+    // Only handle own properties
+    if (!schema.hasOwnProperty(key)) continue;
+
+    // Shorthand
+    var scm = schema[key];
+    var v = data[key];
+
+    // If it's not required and the default value is 'empty', skip it
+    if (!scm.required && Rules.empty( exports.default(v,scm) )) continue;
+
+    // Recursively Validate sub-schema
+    if (scm.schema) {
+
+      // Arrays can be either raw 'values' or complex 'objects'
+      if (scm.type === 'array' || v instanceof Array) {
+
+        // Step through the values in the array
+        v.forEach(function(val,idx) {
+
+          // Array of complex objects
+          if (toType(val) === 'object') {
+            var arsub = exports.validate( val, scm.schema );
+            if (arsub.valid) {
+              if (!dx[key]) dx[key] = [];
+              dx[ key ][idx] = arsub.data;
+            }
+            else {
+              isValid = false;
+              if (!errs[key]) errs[key] = {};
+              errs[key][idx] = arsub.errors;
+            }
+          }
+
+          // Array of simple types
+          else {
+            var er = exports.test( val, scm.schema );
+            if (er.length) {
+              isValid = false;
+              if (!errs[key]) errs[key] = {};
+              errs[key][idx] = er;
+            }
+            else {
+              if (!dx[key]) dx[key] = [];
+              dx[key][idx] = _cast( val, scm.schema );
+            }
+          }
+        });
+      }
+
+      // Otherwise just assume it's an object
+      else {
+        var sub = exports.validate( v, scm.schema );
+        if (sub.valid) dx[key] = sub.data;
+        else {
+          isValid = false;
+          errs[key] = sub.errors;
+        }
+      }
+    }
+
+    // Otherwise NO sub-schema: test the value directly
+    else {
+      var errors = exports.test( v, scm );
+      if (errors.length) {
+        isValid = false;
+        errs[key] = errors;
+        dx[key] = v;
+      }
+      else
+        dx[key] = _cast( v, scm );
+    }
+  }
+
+  return {
+    data: isValid ? dx : data,
+    valid: isValid,
+    errors: errs
+  };
+};
+
