@@ -237,3 +237,16 @@ exports.test = function (val, schema) {
 };
 
 
+/**
+  Helper method: Applies a default and runs filters on a `val`
+
+  @param {Mixed} val The value to cast
+  @param {Schema} schema The schema to apply to the value
+
+  @return the cast value
+*/
+
+function _cast (val, schema) {
+  return exports.filter( exports.default( val, schema ), schema.filters );
+};
+
