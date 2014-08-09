@@ -89,6 +89,11 @@ describe('typeCheck(val, type)', function () {
     expect( schema.typeCheck('a', 'string') ).to.have.length( 0 );
   });
 
+  it('returns error if type is unknown/undeclared', function () {
+    expect( schema.typeCheck(1, 'WOOootss') ).to.have.length( 1 );
+    expect( schema.typeCheck(1, 'WOOootss')[0] ).to.match( /unknown/ig );
+  });
+
   describe('types', function () {
     it('string', function () {
       expect( schema.typeCheck('abc', 'string') ).to.have.length(0);
