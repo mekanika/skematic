@@ -249,6 +249,21 @@ exports.test = function (val, schema) {
 
 function _cast (val, schema) {
   return exports.filter( exports.default( val, schema ), schema.filters );
+}
+
+
+/**
+  The schema for a valid schema (used to validate schema objects)
+*/
+
+var validSchema = {
+  type: {type:'string', rules:{in:Object.keys(is)}},
+  required: {type:'boolean'},
+  rules: {type:'object', schema: {wat:'????'}},
+  filters: {schema:{type:'string'}},
+  array: {type:'boolean'},
+  default: {},
+  allowNull: {type:'boolean'}
 };
 
 
@@ -257,7 +272,7 @@ function _cast (val, schema) {
   @return {Array} errors
 */
 
-exports.validate = function (data, schema) {
+exports.validate = function (data, schema, _noCheck) {
   var dx = {};
   var errs = {};
   var isValid = true;
@@ -270,6 +285,13 @@ exports.validate = function (data, schema) {
     // Shorthand
     var scm = schema[key];
     var v = data[key];
+
+    // Self validate schema
+    if (!_noCheck) {
+      var chk = exports.validate( scm, validSchema, true );
+      if (!chk.valid)
+        throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
+    }
 
     // If it's not required and the default value is 'empty', skip it
     if (!scm.required && Rules.empty( exports.default(v,scm) )) continue;

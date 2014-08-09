@@ -217,6 +217,17 @@ describe('test(val, schema)', function () {
 
 
 describe('Validate', function () {
+  it('throws on invalid schema', function (done) {
+    var s = {name:{type:true}};
+    try {
+      schema.validate( {name:'dib'}, s );
+    }
+    catch (e) {
+      expect( e.message ).to.match( /invalid/ig );
+      done();
+    }
+  });
+
   it('returns {data, valid, errors} object', function () {
     var record = {name:'Jack'};
     var s = { name: {type:'string'} };
