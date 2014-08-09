@@ -118,9 +118,17 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck(true, ar) ).to.have.length(1);
     });
 
+    it('boolean', function () {
+      var b = 'boolean';
+      expect( schema.typeCheck(1, b) ).to.have.length(1);
+      expect( schema.typeCheck(0, b) ).to.have.length(1);
+      expect( schema.typeCheck('true', b) ).to.have.length(1);
+      expect( schema.typeCheck(true, b) ).to.have.length(0);
+      expect( schema.typeCheck(false, b) ).to.have.length(0);
+    });
+
     it('should test number');
-    it('should test boolean');
-    it('should test boolean');
+
   });
 });
 
