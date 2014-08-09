@@ -100,6 +100,15 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck(NaN, i) ).to.have.length(1);
     });;
 
+    it('array', function () {
+      var ar = 'array';
+      expect( schema.typeCheck([], ar) ).to.have.length(0);
+      expect( schema.typeCheck([1,2,3], ar) ).to.have.length(0);
+      expect( schema.typeCheck({}, ar) ).to.have.length(1);
+      expect( schema.typeCheck({length:0}, ar) ).to.have.length(1);
+      expect( schema.typeCheck(true, ar) ).to.have.length(1);
+    });
+
     it('should test number');
     it('should test boolean');
     it('should test boolean');

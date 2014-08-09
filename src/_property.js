@@ -135,7 +135,8 @@ var toType = function(obj) {
 
 var is = {
   string: function (v) { return typeof v === 'string'; },
-  integer: function (v) { return typeof v === 'number' && v%1 === 0 && !isNaN(v);}
+  integer: function (v) { return typeof v === 'number' && v%1 === 0 && !isNaN(v);},
+  array: function (v) { return toType(v) === 'array'; }
 };
 
 
