@@ -175,6 +175,12 @@ describe('test(val, schema)', function () {
     expect( schema.test(1, s) ).to.match( /min/ig );
   });
 
+  it('adds error if rule is unknown/undeclared', function () {
+    var s = {type:'integer', rules:{'attack':true}};
+    expect( schema.test(1, s) ).to.have.length(1);
+    expect( schema.test(1, s) ).to.match( /unknown/ig );
+  });
+
   describe('error msgs', function () {
     it('can be set declaritively', function () {
       var s = {rules:{in:['a']}, errors:{in:'Hotdog!'}};
@@ -190,7 +196,14 @@ describe('test(val, schema)', function () {
       var s = {rules:{in:['a']}, errors:'Hotdog!'};
       expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
     });
-  })
+
+    it('uses system default msg if no match', function () {
+      var s = {rules:{in:['a']}, errors:{}};
+
+      // @note This is HARDCODED to match the 'defaultError'
+      expect( schema.test('b', s) ).to.match( /failed/ig );
+    });
+  });
 
 });
 
