@@ -107,7 +107,7 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck(100.0, i) ).to.have.length(0);
       expect( schema.typeCheck(100.1, i) ).to.have.length(1);
       expect( schema.typeCheck(NaN, i) ).to.have.length(1);
-    });;
+    });
 
     it('array', function () {
       var ar = 'array';
@@ -141,7 +141,7 @@ describe('test(val, schema)', function () {
     var s = {
       default: 'zim',
       rules: {in:['zim']}
-    }
+    };
 
     // The rule tests that the value is 'zim'. Only true if default is applied.
     expect( schema.test('', s) ).to.have.length( 0 );
@@ -158,16 +158,16 @@ describe('test(val, schema)', function () {
     expect( schema.test('', s)[0] ).to.match( /required/ig );
 
     // Now check sequencing (required should pass because default was set)
-    var s = {required:true, default:' zim ', filters:['trim'], rules:{in:['zim']}};
+    s = {required:true, default:' zim ', filters:['trim'], rules:{in:['zim']}};
     expect( schema.test( '', s) ).to.have.length( 0 );
   });
 
   it('then checks type matches', function () {
     var fail = {type:'integer'};
-    var pass = {type:'integer', filters:['toInteger']}
+    var pass = {type:'integer', filters:['toInteger']};
     expect( schema.test( '1', fail) ).to.have.length( 1 );
     expect( schema.test( '1', pass) ).to.have.length( 0 );
-  });;
+  });
 
   it('then applies specified rules', function () {
     var s = {type:'integer', rules:{min:5}};

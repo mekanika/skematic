@@ -39,7 +39,7 @@ exports.required = function required( val ) {
 exports.empty = function (v, allowEmpty) {
   if (typeof allowEmpty === 'undefined') allowEmpty = true;
   return (v === '' || v === undefined) && allowEmpty;
-}
+};
 
 
 /**
