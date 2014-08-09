@@ -116,6 +116,18 @@ exports.filter.add = function (key, fn) {
 
 
 /**
+  Cross browser object 'type' checker
+  Helper: returns the [[Class]] subjugate
+
+  @return {String} type
+*/
+
+var toType = function(obj) {
+  return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+};
+
+
+/**
   Type check
 
   Explicit tests on `{type:$TypeFn}` declarations. Same as 'Rules'
