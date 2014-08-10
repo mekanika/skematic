@@ -33,6 +33,20 @@ module.exports = exports;
 
 
 /**
+  Designed to be overwritten
+
+  @param {String} ref Unique key reference to schema
+
+  @throws {Error} Thrown when no accessor method has been provided
+  @returns {Schema} schema object
+*/
+
+exports.accessor = function (ref) {
+  throw new Error('No accessor method found. Cannot load reference: '+ref);
+};
+
+
+/**
   Returns the default value in the schema if no `value` present
 
   @param {Mixed} v The value to default
@@ -298,6 +312,10 @@ exports.validate = function (data, schema, _noCheck) {
 
     // Recursively Validate sub-schema
     if (scm.schema) {
+
+      // Load a string referenced schema from an accessor
+      if ('string' === typeof scm.schema)
+        scm.schema = exports.accessor( scm.schema );
 
       // Arrays can be either raw 'values' or complex 'objects'
       if (scm.type === 'array' || v instanceof Array) {

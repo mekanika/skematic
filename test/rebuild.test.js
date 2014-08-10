@@ -271,6 +271,26 @@ describe('Validate', function () {
 
   describe('subschema', function () {
 
+    describe('string reference', function () {
+
+      it('accessor throws if not overwritten', function () {
+        var err;
+        try { schema.validate({go:'boo'}, {go:{schema:'yo'}}); }
+        catch (e) { err = e; }
+        expect( err ).to.be.an.instanceof( Error );
+      })
+
+      it('accessor can return working schema', function () {
+        var hero = {name:{type:'string'}, power:{type:'integer'}};
+        schema.accessor = function () { return hero; };
+        var s = {group:{type:'array', schema:'hero'}};
+        var res = schema.validate( {group: [{name:'gir', power:'3'}]}, s );
+        expect( res.valid ).to.be.false;
+        expect( res.errors.group[0].power ).to.have.length(1);
+      });
+
+    });
+
     describe('objects', function () {
       it('can validate complex subschema', function () {
         var s = { bigsub: {schema:{
