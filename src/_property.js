@@ -261,9 +261,51 @@ exports.test = function (val, schema) {
   @return the cast value
 */
 
-function _cast (val, schema) {
-  return exports.filter( exports.default( val, schema ), schema.filters );
+var _cast = exports.cast = function (val, schema) {
+  // return exports.filter( exports.default( val, schema ), schema.filters );
+  return schema.schema
+    ? _deepcast( val, schema )
+    : exports.filter( exports.default( val, schema ), schema.filters );
 }
+
+
+/**
+  Casts (default+filter) arrays and objects that are described by sub-schema
+
+  @param {Object|Array} data
+  @param {Schema} schema containing sub-schema declarations
+
+  @return cast values
+*/
+
+var _deepcast = function (data, schema) {
+  var ret;
+
+  // No sub=schema to deepcast, just do a normal cast
+  if (!schema.schema) return _cast(data, schema);
+
+  var setO = function ( obj, scm, ret ) {
+    for (var key in scm) {
+      var cast = _deepcast( obj[key], scm[key] );
+      if (typeof cast !== 'undefined') ret[key] = cast;
+    }
+    return ret;
+  }
+
+  switch (toType(data)) {
+    case 'array':
+      ret = [];
+      for (var i=0; i<data.length; i++)
+        ret[i] = setO( data[i], schema.schema, data[i] );
+      break;
+
+    case 'object':
+      ret = setO( data, schema.schema, {} );
+      break;
+  }
+
+  return ret;
+};
 
 
 /**
