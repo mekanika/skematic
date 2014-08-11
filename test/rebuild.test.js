@@ -127,7 +127,15 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck(false, b) ).to.have.length(0);
     });
 
-    it('should test number');
+    it('number', function () {
+      var n = 'number';
+      expect( schema.typeCheck('1', n) ).to.have.length(1);
+      expect( schema.typeCheck(true, n) ).to.have.length(1);
+      expect( schema.typeCheck(false, n) ).to.have.length(1);
+      expect( schema.typeCheck(NaN, n) ).to.have.length(1);
+      expect( schema.typeCheck(1, n) ).to.have.length(0);
+      expect( schema.typeCheck(1.1, n) ).to.have.length(0);
+    });
 
   });
 });
