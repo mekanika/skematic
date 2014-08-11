@@ -4,7 +4,6 @@
  */
 
 var expect = require('chai').expect
-  , AuxArray = require('../src/property/array')
   , Cast = require('../src/cast');
 
 
@@ -18,27 +17,6 @@ describe('Cast Types', function() {
     expect( Cast.toFloat.name ).to.equal( 'toFloat' );
     expect( Cast.toBoolean.name ).to.equal( 'toBoolean' );
     expect( Cast.toDate.name ).to.equal( 'toDate' );
-
-  });
-
-
-  describe('.toAuxArray( val, schema )', function() {
-
-    it('casts value to an AuxArray', function() {
-      expect( Cast.toAuxArray() instanceof AuxArray ).to.true;
-      expect( Cast.toAuxArray( null ) instanceof AuxArray ).to.true;
-      expect( Cast.toAuxArray( [] ) instanceof AuxArray ).to.true;
-    });
-
-    it('throws if it cannot convert', function() {
-      var err;
-      try {
-        Cast.toAuxArray( ':(' );
-      }
-      catch( e ) { err = e; }
-      expect( err ).to.be.an.instanceof( Error );
-      expect( err.message ).to.match( /failed.*cast/i );
-    });
 
   });
 

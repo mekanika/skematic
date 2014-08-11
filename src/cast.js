@@ -7,44 +7,6 @@ module.exports = exports;
 
 
 /**
- * Convert to an AuxArray
- *
- * Returns the following conversions:
- *   undefined -> AuxArray: undefined -> []
- *   null     -> AuxArray: null -> []
- *   string   -> throws Error
- *   number   -> throws Error
- *   boolean  -> throws Error
- *   function -> throws Error
- *   Date     -> throws Error
- *   object   -> throws Error
- *   array    -> AuxArray: [1,'2',true] -> [1,'2',true]
- *
- *
- * @param {Mixed} val to convert
- * @param {String|Schema} type Used to cast array values (to schema)
- *
- * @throws Conversion failure error
- * @returns converted value
- */
-
-exports.toAuxArray = function toArray( val, type ) {
-
-  var AuxArray = require('./property/array');
-
-  if (val instanceof AuxArray) return val;
-
-  try {
-    val = new AuxArray( val, type );
-  }
-  catch( e ) { throw new Error('Failed to cast'); }
-
-  return val;
-
-};
-
-
-/**
  * Convert to a string
  *
  * Returns the following conversions:
