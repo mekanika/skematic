@@ -95,13 +95,12 @@ exports.filter = function (val, filters) {
   if (typeof filters === 'string') filters = [filters];
 
   filters.forEach( function (key) {
+    // Try-catch is to make it CLEAR that this can throw
+    // May be useful in future to do more than propagate throw
     try {
       if ( _filters[key] ) val = _filters[key]( val );
     }
-    catch( e ) {
-      console.log('Cannot apply filter: '+key);
-      throw e;
-    }
+    catch( e ) { throw e; }
   });
 
   return val;
@@ -204,7 +203,12 @@ exports.test = function (val, schema) {
   val = exports.default( val, schema );
 
   // 1. Apply transforms (filters)
-  if (schema.filters) val = exports.filter( val, schema.filters );
+  try {
+    if (schema.filters) val = exports.filter( val, schema.filters );
+  }
+  catch(e) {
+    return ['Failed to apply filter'];
+  }
 
 
   // Check required...
@@ -259,14 +263,18 @@ exports.test = function (val, schema) {
   @param {Mixed} val The value to cast
   @param {Schema} schema The schema to apply to the value
 
+  @throws {Error} on failed filter
   @return the cast value
 */
 
 var _cast = exports.cast = function (val, schema) {
-  // return exports.filter( exports.default( val, schema ), schema.filters );
-  return schema.schema
-    ? _deepcast( val, schema )
-    : exports.filter( exports.default( val, schema ), schema.filters );
+  // Clarify that cast can throw (filters failing)
+  try {
+    return schema.schema
+      ? _deepcast( val, schema )
+      : exports.filter( exports.default( val, schema ), schema.filters );
+  }
+  catch(e) { throw e; }
 }
 
 

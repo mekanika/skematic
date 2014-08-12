@@ -199,6 +199,11 @@ describe('test(val, schema)', function () {
     expect( schema.test('', s) ).to.have.length( 0 );
   });
 
+  it('immediately returns if filters failed', function () {
+    var res = schema.test(1, {filters:'trim'});
+    expect( res ).to.have.length(1);
+  });
+
   it('applies filters after default and prior to rule check', function () {
     var s = {default:' zim ', filters:['trim'], rules:{in:['zim']}};
     expect( schema.test( '', s) ).to.have.length( 0 );
