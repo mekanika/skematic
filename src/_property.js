@@ -326,10 +326,10 @@ var _deepcast = function (data, schema) {
   The schema for a valid schema (used to validate schema objects)
 */
 
-var validSchema = {
+var validSchema = exports.validSchema = {
   type: {type:'string', rules:{in:Object.keys(is)}},
   required: {type:'boolean'},
-  rules: {type:'object', schema: {wat:'????'}},
+  rules: {type:'object'},
   filters: {schema:{type:'string'}},
   array: {type:'boolean'},
   default: {},

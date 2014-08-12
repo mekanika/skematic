@@ -276,6 +276,10 @@ describe('test(val, schema)', function () {
 
 
 describe('Validate', function () {
+  it('exposes .validSchema', function () {
+    expect( schema.validSchema ).to.exist;
+  });
+
   it('throws on invalid schema', function (done) {
     var s = {name:{type:true}};
     try {
