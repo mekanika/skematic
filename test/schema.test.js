@@ -235,23 +235,6 @@ describe('Schema', function() {
   });
 
 
-  describe.skip('.new()', function () {
-    it('fails if `Record` not available', function () {
-      var err;
-      try { schema.new('x').new(); }
-      catch (e) { err = e; }
-      expect( err ).to.be.an.instanceof( Error );
-      expect( err.message ).to.match( /no record/ig );
-    });
-
-    it('instantiates new Record() if present', function () {
-      GLOBAL.Record = function () {};
-      expect( schema.new('x').new() ).to.be.an.instanceof( Record );
-      delete GLOBAL.Record;
-    });
-  });
-
-
   describe('Adapter - .useAdapter(a)', function () {
 
     var stubAdapter = {exec: function( q, cb ) { return cb(); }};

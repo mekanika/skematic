@@ -376,20 +376,3 @@ Schema.prototype.method = function( methodName, fn ) {
   this.methods.push( {key:methodName, fn:fn} );
   return this;
 };
-
-
-/**
- * Instance a new record based on this Schema
- *
- * @param {Object} attributes An object of property key:values
- * @param {Object} [options] A hash of override options to pass to new Record
- *
- * @return {Record} A new record with populated attributes
- */
-
-Schema.prototype.new = function( attributes, options ) {
-  if (typeof Record === 'undefined') throw new Error('No Record class');
-  else return new Record( this, attributes );
-};
-
-
