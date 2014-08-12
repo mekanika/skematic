@@ -1,5 +1,5 @@
-var Property = require( './property' );
 
+var ms = require('./_property');
 
 /**
  * Expose `schema`
@@ -57,10 +57,10 @@ function Schema( key, adapter, options ) {
   /**
    * Properties
    *
-   * @type {Property[]}
+   * @type {Schema}
    */
 
-  this.properties = [];
+  this.properties = {};
 
   /**
    * Methods
@@ -197,14 +197,7 @@ Schema.prototype.useAdapter = function( adapter ) {
  */
 
 Schema.prototype.path = function( key ) {
-  var len = this.properties.length;
-
-  while ( len-- ) {
-    if ( this.properties[ len ].key === key )
-      return this.properties[ len ];
-  }
-
-  return undefined;
+  return this.properties[key];
 };
 
 
@@ -215,13 +208,9 @@ Schema.prototype.path = function( key ) {
  */
 
 Schema.prototype.getPaths = function() {
-  var len = this.properties.length,
-    ps = [];
-
-  while ( len -- )
-    ps.push( this.properties[len].key );
-
-  return ps;
+  var keys = [];
+  for (var key in this.properties) keys.push( key );
+  return keys;
 };
 
 
@@ -233,11 +222,9 @@ Schema.prototype.getPaths = function() {
 
 Schema.prototype.getRequiredPaths = function() {
   var p = this.properties,
-      len = p.length,
       rp = [];
 
-  while ( len -- )
-    if ( p[ len ].required() ) rp.push( p[ len ].key );
+  for (var key in p) if (p[key].required) rp.push( key );
 
   return rp;
 };
@@ -300,39 +287,16 @@ var _normaliseType = Schema.normaliseType = function ( type ) {
  * Overwrites is property is already defined
  *
  * @param {String} key
- * @param {Object} [options] Mekanika Property options
+ * @param {Schema} [schema] Mekanika schema options
  *
  * @return {Schema}
  */
 
-Schema.prototype.prop = function( key, options ) {
-  var len = this.properties.length;
-
-  if (options && options.type) {
-    // Normalise native and 'special' types to lowercase string
-    var nml = _normaliseType( options.type );
-    if (nml) options.type = nml;
-
-    // Otherwise check that it's a schema
-    else {
-      var _s = require('../index');
-      if (!_s.has( options.type ))
-        throw new Error('Cannot find schema: '+options.type);
-      else options.type = _s( options.type );
-    }
-
-  }
-
-  // Overwrite property if it already exists
-  var index = this.properties.length;
-  this.properties.forEach( function (p, i, ar) {
-    if (p.key === key) ar.splice( (index = i), 1 );
-  });
-
-  this.properties.splice( index, 0, new Property( key, options ) );
+Schema.prototype.prop = function( key, schema ) {
+  schema || (schema = {});
+  this.properties[key] = schema;
   return this;
 };
-
 
 Schema.prototype.property = Schema.prototype.attr = Schema.prototype.prop;
 
@@ -347,10 +311,10 @@ Schema.prototype.property = Schema.prototype.attr = Schema.prototype.prop;
  */
 
 Schema.prototype.validate = function (property, value) {
-  var p = this.path( property );
-  if (!p) throw new Error('No such property defined: '+property);
+  var scm = this.path( property );
+  if (!scm) throw new Error('No such property defined: '+property);
 
-  return p.validate( value );
+  return ms.test( value, scm );
 };
 
 
