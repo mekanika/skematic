@@ -285,6 +285,10 @@ var _deepcast = function (data, schema) {
   // No sub=schema to deepcast, just do a normal cast
   if (!schema.schema) return _cast(data, schema);
 
+  // Load a string referenced schema from an accessor (expects a SCHEMA)
+  if ('string' === typeof schema.schema)
+    schema.schema = exports.accessor( schema.schema );
+
   var setO = function ( obj, scm, ret ) {
     for (var key in scm) {
       var cast = _deepcast( obj[key], scm[key] );
