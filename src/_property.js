@@ -151,7 +151,8 @@ var is = {
   integer: function (v) { return typeof v === 'number' && v%1 === 0 && !isNaN(v);},
   number: function (v) { return toType(v) === 'number' && !isNaN(v) },
   array: function (v) { return toType(v) === 'array'; },
-  boolean: function (v) { return toType(v) === 'boolean'; }
+  boolean: function (v) { return toType(v) === 'boolean'; },
+  object: function (v) { return toType(v) === 'object'; }
 };
 
 

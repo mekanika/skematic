@@ -137,6 +137,16 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck(1.1, n) ).to.have.length(0);
     });
 
+    it('object', function () {
+      var o = 'object';
+      expect( schema.typeCheck([], o) ).to.have.length(1);
+      expect( schema.typeCheck('object', o) ).to.have.length(1);
+      expect( schema.typeCheck(new Date(), o) ).to.have.length(1);
+      expect( schema.typeCheck(new Function(), o) ).to.have.length(1);
+      expect( schema.typeCheck(new Object(), o) ).to.have.length(0);
+      expect( schema.typeCheck({}, o) ).to.have.length(0);
+    });
+
   });
 });
 
