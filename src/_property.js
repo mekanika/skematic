@@ -326,7 +326,10 @@ var validSchema = {
 
 /**
   Validates complex data objects
-  @return {Array} errors
+
+  @throws {Error} when provided invalid schema to validate against
+
+  @return {Object} Validation object `{$dataObj, $validBool, $errorsObj}`
 */
 
 exports.validate = function (data, schema, _noCheck) {
@@ -356,7 +359,7 @@ exports.validate = function (data, schema, _noCheck) {
     // Recursively Validate sub-schema
     if (scm.schema) {
 
-      // Load a string referenced schema from an accessor
+      // Load a string referenced schema from an accessor (expects a SCHEMA)
       if ('string' === typeof scm.schema)
         scm.schema = exports.accessor( scm.schema );
 
