@@ -272,6 +272,8 @@ var _cast = exports.cast = function (val, schema) {
 
 /**
   Casts (default+filter) arrays and objects that are described by sub-schema
+  Destructively operates on the data provided (ie. overwrites provided values)
+  (Useful when being passed custom Class objects and not simple primitives)
 
   @param {Object|Array} data
   @param {Schema} schema containing sub-schema declarations
@@ -280,8 +282,6 @@ var _cast = exports.cast = function (val, schema) {
 */
 
 var _deepcast = function (data, schema) {
-  var ret;
-
   // No sub=schema to deepcast, just do a normal cast
   if (!schema.schema) return _cast(data, schema);
 
@@ -295,17 +295,17 @@ var _deepcast = function (data, schema) {
 
   switch (toType(data)) {
     case 'array':
-      ret = [];
+      // Array 'data' is actually a Collection.
       for (var i=0; i<data.length; i++)
-        ret[i] = setO( data[i], schema.schema, data[i] );
+        data[i] = setO( data[i], schema.schema, data[i] );
       break;
 
     case 'object':
-      ret = setO( data, schema.schema, {} );
+      data = setO( data, schema.schema, data );
       break;
   }
 
-  return ret;
+  return data;
 };
 
 
