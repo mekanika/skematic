@@ -50,20 +50,22 @@ describe('filters', function () {
     });
   });
 
-  it('.available provides list of available filters', function () {
-    expect( schema.filter.available ).to.have.length.gt( 0 );
+  it('.available() provides list of available filters', function () {
+    expect( schema.filter.available() ).to.have.length.gt( 0 );
   });
 
   it('.add(key,fn) adds a filter to be used', function () {
+    var len = schema.filter.available().length;
     schema.filter.add('go', function(v){ return v+'go!';} );
     expect( schema.filter( '!', ['go'] ) ).to.equal( '!go!' );
+    expect( schema.filter.available().length ).to.equal( len + 1 );
   });
 
   it('to$Cast available filters [see cast tests]', function () {
     var keys = Object.keys( Cast );
     keys.forEach( function (key) {
       if (key.substr(0,2) === 'to')
-        expect( schema.filter.available.indexOf(key) ).to.be.gt(-1);
+        expect( schema.filter.available().indexOf(key) ).to.be.gt(-1);
     });
   });
 

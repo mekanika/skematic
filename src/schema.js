@@ -110,10 +110,12 @@ exports.filter = function (val, filters) {
 /**
   Exposes the available filters as an array
 
-  @type Array
+  @return {Array}
 */
 
-exports.filter.available = Object.keys(_filters);
+exports.filter.available = function () {
+  return Object.keys(_filters);
+};
 
 
 /**
