@@ -1,10 +1,11 @@
-var Model = require( './src/model');
+var Model = require( './src/model')
+  , schema = require( './src/schema' );
 
 /**
- * Expose `schema`
+ * Expose module
  */
 
-module.exports = schema;
+module.exports = exports = models;
 
 
 /**
@@ -16,8 +17,9 @@ module.exports = schema;
 
 var cache = {};
 
+
 /**
- * Adapter to use for all schema with no explicit adapter declared
+ * Adapter to use for all models with no explicit adapter declared
  *
  * @private
  */
@@ -26,14 +28,16 @@ var adapter;
 
 
 /**
- * Return a cached `schema` instance identified by `key`
+ * Return a cached `Model` instance identified by `key`
  *
  * @param {String} key
- * @module schema
+ * @module models
  * @borrows load as load
+ *
+ * @return {Model}
  */
 
-function schema( key ) {
+function models( key ) {
   if (!key) throw new Error('schema( key ) requires a key to lookup');
 
   if (cache[ key ]) return cache[ key ];
@@ -42,27 +46,34 @@ function schema( key ) {
 
 
 /**
- * Expose `Model` Class constructor via schema.Model
+ * Expose `Model` Class constructor
  *
  * @member Model
  * @static
  */
 
-schema.Model = Model;
+exports.Model = Model;
 
 
 /**
- * Create a new schema
+ * Expose `schema` library
+ */
+
+exports.schema = schema;
+
+
+/**
+ * Create a new Model
  *
  * @param {String} key
- * @param {Object} [options] Options to initialise schema
+ * @param {Object} [options] Options to initialise new Model
  *
  * @return {Model}
  * @method new
  * @static
  */
 
-schema.new = function (key, options) {
+exports.new = function (key, options) {
   if (!key) throw new Error('Requires a key to create');
   if (cache[ key ]) throw new Error( 'Already exists: '+key );
 
@@ -75,11 +86,11 @@ schema.new = function (key, options) {
  * Expose .load( schemaConfig ) loader
  */
 
-schema.load = require('./src/load.js');
+exports.load = require('./src/load.js');
 
 
 /**
- * Removes a schema from the internal cache
+ * Removes a Model from the internal cache
  *
  * @param {String} id
  *
@@ -87,7 +98,7 @@ schema.load = require('./src/load.js');
  * @static
  */
 
-schema.unload = function (id) {
+exports.unload = function (id) {
   return cache[ id ]
     ? delete cache[ id ]
     : false;
@@ -95,14 +106,14 @@ schema.unload = function (id) {
 
 
 /**
- * Returns a list of keys for all declared schema
+ * Returns a list of keys for all declared Models
  *
  * @method list
  * @returns {Array}
  * @static
  */
 
-schema.list = function() {
+exports.list = function() {
   var ret = [];
   for (var s in cache)
     if (s !== 'undefined') ret.push( s );
@@ -112,36 +123,36 @@ schema.list = function() {
 
 
 /**
- * Existence operator (does schema `id` exist)
+ * Existence operator (does Model `id` exist)
  *
- * @param {String} id Named identifier for the schema
+ * @param {String} id Named identifier for the Model
  *
  * @method has
  * @returns {Boolean}
  * @static
  */
 
-schema.has = function ( id ) {
+exports.has = function ( id ) {
   return cache[ id ] ? true : false;
 };
 
 
 /**
- * Reset entire schema class - nukes the internal `cache` and `adapter`
+ * Reset entire models accessors - nukes the internal `cache` and `adapter`
  *
  * @method reset
  * @alias flush
  * @static
  */
 
-schema.flush = schema.reset = function() {
+exports.flush = models.reset = function() {
   cache = {};
   adapter = undefined;
 };
 
 
 /**
- * Applies a global adapter to use for schemas with none
+ * Applies a global adapter to use for Models with none
  *
  * @param {Adapter} ad The adapter to use
  *
@@ -149,7 +160,7 @@ schema.flush = schema.reset = function() {
  * @static
  */
 
-schema.useAdapter = function( ad ) {
+exports.useAdapter = function( ad ) {
   // Set the internal reference
   adapter = ad;
 

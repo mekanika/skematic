@@ -3,37 +3,37 @@
  */
 
 var expect = require('chai').expect
-  , schema = require('../index');
+  , accessor = require('../index');
 
 
 describe('Model', function() {
 
-  beforeEach( function () { schema.reset(); });
+  beforeEach( function () { accessor.reset(); });
 
   describe('Class', function() {
 
     it('sets Model#resource as lowercased key (id)', function(){
-        expect( schema.new('Xbox').resource ).to.equal( 'xbox' );
+        expect( accessor.new('Xbox').resource ).to.equal( 'xbox' );
       });
 
     it('exposes .properties and .methods props', function() {
-      var s = schema.new( '^' );
+      var s = accessor.new( '^' );
       expect( s.properties ).to.exist;
       expect( s.methods ).to.be.an.instanceof( Array );
     });
 
     it('initialises (passthru) adapter if passed', function() {
-      var O_o = new schema.Model( '^_^', 'faux' );
+      var O_o = new accessor.Model( '^_^', 'faux' );
       expect( O_o.adapter ).to.equal( 'faux' );
     });
 
     it('can pass initialisation options', function () {
-      var s = schema.new('!', {validateOnSet: true} );
+      var s = accessor.new('!', {validateOnSet: true} );
       expect( s.config.validateOnSet ).to.equal( true );
     });
 
     it('defaults .idAttribute to `id`', function () {
-      var s = schema.new('!');
+      var s = accessor.new('!');
       expect( s.idAttribute ).to.equal( 'id' );
     });
 
@@ -43,11 +43,11 @@ describe('Model', function() {
   describe('.config', function() {
     describe('defaults', function () {
       it('validateOnSet: false', function () {
-        expect( schema.new('!').config.validateOnSet ).to.be.false;
+        expect( accessor.new('!').config.validateOnSet ).to.be.false;
       });
 
       it('castOnSet: true', function () {
-        expect( schema.new('!').config.castOnSet ).to.be.true;
+        expect( accessor.new('!').config.castOnSet ).to.be.true;
       });
     });
   });
@@ -58,7 +58,7 @@ describe('Model', function() {
     var Dude;
 
     before( function () {
-      Dude = schema.new('Dude').prop('name').prop('age').prop('cool');
+      Dude = accessor.new('Dude').prop('name').prop('age').prop('cool');
     });
 
     it('.path(key) returns the Property identified by `key`', function() {
@@ -88,37 +88,23 @@ describe('Model', function() {
 
   describe('.prop( Property ) [see Property tests]', function() {
 
-    beforeEach( function () { schema.reset(); } );
+    beforeEach( function () { accessor.reset(); } );
 
     it('enables setting new properties', function() {
-      var model = schema.new( 'Play' );
+      var model = accessor.new( 'Play' );
       model.prop( 'errorcode', {type:'integer', required:true} );
 
       expect( model.properties.errorcode ).to.exist;
     });
 
-    it('supports {type: $schemaKey} to set type as other schema', function () {
-      schema.new('xman');
-      schema.new('play').prop('test', {type:'xman'});
-    });
-
-    // @todo
-    it.skip('validates schema on setting property', function () {
-      var err;
-      try { schema.new('play').prop('test', {type:'xman'}); }
-      catch (e) { err = e; }
-      expect( err ).to.be.an.instanceof( Error );
-      expect( err.message ).to.match( /find schema/ig );
-    });
-
     it('aliases as .property() and .attr()', function() {
-      var model = schema.new('Play');
+      var model = accessor.new('Play');
       expect( model.property ).to.equal( model.prop );
       expect( model.attr ).to.equal( model.prop );
     });
 
     it('overwrites a property that already exists', function() {
-      var test = schema.new('Doubleset').prop('onlyone', {required:true});
+      var test = accessor.new('Doubleset').prop('onlyone', {required:true});
       expect( test.path('onlyone').required ).to.be.true;
       test.prop('onlyone');
       expect( test.path('onlyone').required ).to.be.undefined;
@@ -127,8 +113,8 @@ describe('Model', function() {
     describe('Property options', function () {
 
       it('set a foreign key reference as {ref:"Model.prop"}', function () {
-        schema.new('^_^').prop('post_id', {ref:'Post.id'});
-        expect( schema('^_^').path('post_id').ref ).to.equal( 'Post.id' );
+        accessor.new('^_^').prop('post_id', {ref:'Post.id'});
+        expect( accessor('^_^').path('post_id').ref ).to.equal( 'Post.id' );
       });
 
     });
@@ -138,10 +124,10 @@ describe('Model', function() {
 
   describe('.validate( property, value )', function () {
     it('throws an error if the `property` does not resolve', function () {
-      schema.new('^_^').prop('!', {required:true});
+      accessor.new('^_^').prop('!', {required:true});
       var err;
       try {
-        schema('^_^').validate('fakey!', 'ermehgerd!');
+        accessor('^_^').validate('fakey!', 'ermehgerd!');
       }
       catch (e) { err = e; }
       expect( err ).to.be.an.instanceof( Error );
@@ -149,15 +135,15 @@ describe('Model', function() {
     });
 
     it('returns error array from property validation', function () {
-      schema.new('^_^').prop('!', {required:true});
-      var errs = schema('^_^').validate('!', undefined);
+      accessor.new('^_^').prop('!', {required:true});
+      var errs = accessor('^_^').validate('!', undefined);
       expect( errs ).to.be.an.instanceof( Array );
       expect( errs ).to.have.length( 1 );
     });
 
     it('returns empty array on all conditions passing rules', function () {
-      schema.new('^_^').prop('!', {required:true});
-      var errs = schema('^_^').validate('!', 'WOOO!');
+      accessor.new('^_^').prop('!', {required:true});
+      var errs = accessor('^_^').validate('!', 'WOOO!');
       expect( errs ).to.have.length( 0 );
     });
   });
@@ -166,11 +152,11 @@ describe('Model', function() {
   describe('.method( methodName, fn )', function() {
 
     beforeEach( function () {
-      schema.reset();
+      accessor.reset();
     });
 
     it('fails to set method if not passed both parameters', function() {
-      var model = schema.new( 'Play' );
+      var model = accessor.new( 'Play' );
 
       var err;
       // Check with no paramters
@@ -201,7 +187,7 @@ describe('Model', function() {
     });
 
     it('fails if not passed `string`, `function`', function() {
-      var model = schema.new('Play');
+      var model = accessor.new('Play');
       var err;
 
       // Pass a non string
@@ -222,8 +208,8 @@ describe('Model', function() {
       expect( err.message ).to.match( /must be a Function/ );
     });
 
-    it('enables setting new schema methods', function() {
-      var model = schema.new( 'Play' );
+    it('enables setting new model methods', function() {
+      var model = accessor.new( 'Play' );
 
       var fn = function() {};
       model.method( 'moonShot', fn );
@@ -238,19 +224,19 @@ describe('Model', function() {
   describe('Adapter - .useAdapter(a)', function () {
 
     var stubAdapter = {exec: function( q, cb ) { return cb(); }};
-    beforeEach( function () { schema.reset(); } );
+    beforeEach( function () { accessor.reset(); } );
 
     it('throws if adapter has no .exec() default', function () {
       var err;
-      try { schema.new('!').useAdapter( {} ); }
+      try { accessor.new('!').useAdapter( {} ); }
       catch (e) { err = e; }
 
       expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /valid adapter/ig );
     });
 
-    it('applies an adapter to the schema', function () {
-      schema.new('!').useAdapter( stubAdapter );
+    it('applies an adapter to the model', function () {
+      accessor.new('!').useAdapter( stubAdapter );
 
     });
   });
@@ -259,7 +245,7 @@ describe('Model', function() {
   describe('Middleware', function() {
 
     var Hero;
-    beforeEach( function() { schema.reset(); Hero = schema.new('Hero'); } );
+    beforeEach( function() { accessor.reset(); Hero = accessor.new('Hero'); } );
 
     it('.pre( event, fn ) adds "named" pre middleware to stack', function() {
       Hero.pre( 'save', function() { return 'yo'; } );

@@ -3,66 +3,70 @@
  */
 
 var expect = require('chai').expect
-  , schema = require('../index');
+  , accessor = require('../index');
 
 
 
-describe('Core - schema', function() {
+describe('Core - accessor()', function() {
 
-  beforeEach( function() { schema.reset(); } );
+  beforeEach( function() { accessor.reset(); } );
 
-  it('loads the schema library', function() {
-    expect( schema ).to.be.a( "function" );
+  it('loads the accessor library', function() {
+    expect( accessor ).to.be.a( "function" );
   });
 
-  it('exposes Model constructor as schema.Model', function() {
-    expect( schema.Model ).to.be.a( "function" );
+  it('exposes Model constructor as accessor.Model', function() {
+    expect( accessor.Model ).to.be.a( "function" );
   });
 
-  it('.list() returns all declared schema keys', function() {
-    expect( schema.list() ).to.be.empty;
-
-    schema.new('^_^');
-    schema.new('o_O');
-
-    expect( schema.list() ).to.contain( '^_^', 'o_O' );
+  it('exposes schema library', function() {
+    expect( accessor.schema ).to.exist;
   });
 
-  it('.has( id ) returns boolean existence of schema `id`', function () {
-    schema.new('mega');
-    expect( schema.has( 'mega' ) ).to.be.true;
-    expect( schema.has( 'nope' ) ).to.be.false;
+  it('.list() returns all declared model keys', function() {
+    expect( accessor.list() ).to.be.empty;
+
+    accessor.new('^_^');
+    accessor.new('o_O');
+
+    expect( accessor.list() ).to.contain( '^_^', 'o_O' );
   });
 
-  it('.unload( id ) removes the `id` from schema cache', function () {
-    schema.new('deleteme');
-    expect( schema.list() ).to.contain( 'deleteme' );
-    var retval = schema.unload( 'deleteme' );
-    expect( schema.list() ).to.not.contain( 'deleteme' );
+  it('.has( id ) returns boolean existence of modle `id`', function () {
+    accessor.new('mega');
+    expect( accessor.has( 'mega' ) ).to.be.true;
+    expect( accessor.has( 'nope' ) ).to.be.false;
+  });
+
+  it('.unload( id ) removes the `id` from model cache', function () {
+    accessor.new('deleteme');
+    expect( accessor.list() ).to.contain( 'deleteme' );
+    var retval = accessor.unload( 'deleteme' );
+    expect( accessor.list() ).to.not.contain( 'deleteme' );
     expect( retval ).to.be.true;
   });
 
   it('.unload( id ) returns false if no `id` found', function () {
-    expect( schema.unload('blah') ).to.be.false;
+    expect( accessor.unload('blah') ).to.be.false;
   });
 
 
-  describe('accessor - schema(key)', function () {
+  describe('accessor(key)', function () {
     it('throws if no key provided', function () {
-      expect( schema ).to.throw( Error );
+      expect( accessor ).to.throw( Error );
     });
 
-    it('throws error if schema key not found', function () {
+    it('throws error if model key not found', function () {
       var err;
-      try { schema('derp'); }
+      try { accessor('derp'); }
       catch (e) { err = e; }
       expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /find.*?schema/ig );
     });
 
     it('returns a cached Model if one exists', function() {
-      schema.new('Demo');
-      expect( schema( 'Demo' ) ).to.equal( schema('Demo') );
+      accessor.new('Demo');
+      expect( accessor( 'Demo' ) ).to.equal( accessor('Demo') );
     });
   });
 
@@ -70,21 +74,21 @@ describe('Core - schema', function() {
   describe('.reset()', function() {
 
     it('unassigns any declared global adapter', function() {
-      expect( schema.new('^_^').adapter ).to.be.undefined;
-      schema.useAdapter( {exec:function(){}});
-      expect( schema.new('O_o').adapter ).to.be.ok;
+      expect( accessor.new('^_^').adapter ).to.be.undefined;
+      accessor.useAdapter( {exec:function(){}});
+      expect( accessor.new('O_o').adapter ).to.be.ok;
 
-      schema.reset();
-      expect( schema.new('_!_').adapter ).to.be.undefined;
+      accessor.reset();
+      expect( accessor.new('_!_').adapter ).to.be.undefined;
     });
 
-    it('is able to schema.reset() internal cache', function() {
-      expect( schema.list() ).to.have.length( 0 );
-      schema.new('^_^');
-      expect( schema.list() ).to.have.length( 1 );
-      schema.reset();
+    it('is able to .reset() internal cache', function() {
+      expect( accessor.list() ).to.have.length( 0 );
+      accessor.new('^_^');
+      expect( accessor.list() ).to.have.length( 1 );
+      accessor.reset();
 
-      expect( schema.list() ).to.have.length( 0 );
+      expect( accessor.list() ).to.have.length( 0 );
     });
 
   });
@@ -94,27 +98,27 @@ describe('Core - schema', function() {
 
     var _a = {exec: function(){}};
 
-    beforeEach( function() { schema.reset(); } );
+    beforeEach( function() { accessor.reset(); } );
 
-    it('sets adapter for new schemas', function() {
-      expect( schema.new('first').adapter ).to.be.undefined;
-      schema.useAdapter( _a );
-      expect( schema.new('second').adapter ).to.equal( _a ) ;
+    it('sets adapter for new Models', function() {
+      expect( accessor.new('first').adapter ).to.be.undefined;
+      accessor.useAdapter( _a );
+      expect( accessor.new('second').adapter ).to.equal( _a ) ;
     });
 
-    it('does not override existing schema declared adapters', function() {
-      schema.new('^_^').useAdapter( {exec:function(){ return false; }} );
+    it('does not override existing model declared adapters', function() {
+      accessor.new('^_^').useAdapter( {exec:function(){ return false; }} );
 
-      schema.useAdapter( _a );
-      expect( schema('^_^').adapter ).to.not.equal( _a );
+      accessor.useAdapter( _a );
+      expect( accessor('^_^').adapter ).to.not.equal( _a );
     });
 
-    it('applies adapter to existing schemas that have none', function() {
-      schema.new('^_^');
-      expect( schema('^_^').adapter ).to.be.undefined;
+    it('applies adapter to existing models that have none', function() {
+      accessor.new('^_^');
+      expect( accessor('^_^').adapter ).to.be.undefined;
 
-      schema.useAdapter( _a );
-      expect( schema('^_^').adapter ).to.equal( _a );
+      accessor.useAdapter( _a );
+      expect( accessor('^_^').adapter ).to.equal( _a );
     });
 
   });
@@ -123,18 +127,18 @@ describe('Core - schema', function() {
   describe('instantiation: .new(key)', function() {
 
     beforeEach( function () {
-      schema.new('Demo');
+      accessor.new('Demo');
     });
 
     it('creates a new Model# object', function() {
-      expect( schema('Demo') ).to.be.an.instanceof( schema.Model );
+      expect( accessor('Demo') ).to.be.an.instanceof( accessor.Model );
     });
 
-    it('fails to create if schema key already exists', function () {
+    it('fails to create if model key already exists', function () {
       var err;
-      schema.new('!');
+      accessor.new('!');
 
-      try { schema.new('!'); }
+      try { accessor.new('!'); }
       catch (e) { err = e; }
       expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /Already.*?exists/ig );
@@ -143,15 +147,15 @@ describe('Core - schema', function() {
     it('fails to initialise if not passed a name property', function() {
       var err;
       try {
-        schema.new();
+        accessor.new();
       }
       catch( e ) { err = e; }
       expect( err ).to.be.an.instanceof( Error );
       expect( err.message ).to.match( /requires.*key/i );
     });
 
-    it('applies the schema( key ) as Model#key', function() {
-      expect( schema( 'Demo' ).key ).to.equal( 'Demo' );
+    it('applies the accessor( key ) as Model#key', function() {
+      expect( accessor( 'Demo' ).key ).to.equal( 'Demo' );
     });
   });
 
