@@ -15,8 +15,8 @@ describe('Core - schema', function() {
     expect( schema ).to.be.a( "function" );
   });
 
-  it('exposes Schema constructor as schema.Schema', function() {
-    expect( schema.Schema ).to.be.a( "function" );
+  it('exposes Model constructor as schema.Model', function() {
+    expect( schema.Model ).to.be.a( "function" );
   });
 
   it('.list() returns all declared schema keys', function() {
@@ -60,7 +60,7 @@ describe('Core - schema', function() {
       expect( err.message ).to.match( /find.*?schema/ig );
     });
 
-    it('returns a cached Schema if one exists', function() {
+    it('returns a cached Model if one exists', function() {
       schema.new('Demo');
       expect( schema( 'Demo' ) ).to.equal( schema('Demo') );
     });
@@ -126,8 +126,8 @@ describe('Core - schema', function() {
       schema.new('Demo');
     });
 
-    it('creates a new Schema# object', function() {
-      expect( schema('Demo') ).to.be.an.instanceof( schema.Schema );
+    it('creates a new Model# object', function() {
+      expect( schema('Demo') ).to.be.an.instanceof( schema.Model );
     });
 
     it('fails to create if schema key already exists', function () {
@@ -150,7 +150,7 @@ describe('Core - schema', function() {
       expect( err.message ).to.match( /requires.*key/i );
     });
 
-    it('applies the schema( key ) as Schema#key', function() {
+    it('applies the schema( key ) as Model#key', function() {
       expect( schema( 'Demo' ).key ).to.equal( 'Demo' );
     });
   });

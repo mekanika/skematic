@@ -5,23 +5,23 @@ var ms = require('./_property');
  * Expose `schema`
  */
 
-module.exports = Schema;
+module.exports = Model;
 
 
 /**
- * Create a Schema# **object** accessed as `schema(key)`
+ * Create a Model# **object** accessed as `schema(key)`
  *
- * **Schemas** describe Object instances comprised of properties and methods
+ * **Models** describe resources comprised of properties and methods
  *
- * @param {String} key The unique identifier for the Schema#
- * @param {Adapter} [adapter] Optional adapter to use for this new Schema#
+ * @param {String} key The unique identifier for the Model#
+ * @param {Adapter} [adapter] Optional adapter to use for this new Model#
  * @param {Object} [options]
  *
- * @class Schema
+ * @class Model
  * @constructor
  */
 
-function Schema( key, adapter, options ) {
+function Model( key, adapter, options ) {
 
   /**
    * Unique identifying key to reference schema( key )
@@ -44,7 +44,7 @@ function Schema( key, adapter, options ) {
   /**
    * The `resource` used by an adapter to reference this type of model
    * In effect this is the 'table' or 'document' reference in the datastore
-   * Defaults to lowercase `Schema.key`
+   * Defaults to lowercase `Model.key`
    *
    * eg. "User" -> "user"
    *
@@ -57,7 +57,7 @@ function Schema( key, adapter, options ) {
   /**
    * Properties
    *
-   * @type {Schema}
+   * @type {Model}
    */
 
   this.properties = {};
@@ -126,7 +126,7 @@ function middleware( stack, event, fn ) {
 
   if (!stack[ _act ]) stack[ _act ] = [];
 
-  // Fold in reference to `this` Schema# in the middleware `fn`
+  // Fold in reference to `this` Model# in the middleware `fn`
   function _fn() {
     var self = this;
     return function() {
@@ -140,7 +140,7 @@ function middleware( stack, event, fn ) {
 
 
 /**
- * Delegation method to setup pre middleware to the Schema#query()
+ * Delegation method to setup pre middleware to the Model#query()
  *
  * @param {String|Function} event The name of the event to apply middleware on (assumes `all` if passed a function)
  * @param {Function} fn The method to run, passed ( Query# )
@@ -148,13 +148,13 @@ function middleware( stack, event, fn ) {
  * @return {this}
  */
 
-Schema.prototype.pre = function( event, fn ) {
+Model.prototype.pre = function( event, fn ) {
   middleware.call( this, this._pre, event, fn );
 };
 
 
 /**
- * Delegation method to setup post middleware to the Schema#query()
+ * Delegation method to setup post middleware to the Model#query()
  *
  * @param {String|Function} event The name of the event to apply middleware on (assumes `all` if passed a function)
  * @param {Function} fn The method to run, passed ( err, res )
@@ -162,7 +162,7 @@ Schema.prototype.pre = function( event, fn ) {
  * @return {this}
  */
 
-Schema.prototype.post = function( event, fn ) {
+Model.prototype.post = function( event, fn ) {
   middleware.call( this, this._post, event, fn );
 };
 
@@ -170,14 +170,14 @@ Schema.prototype.post = function( event, fn ) {
 /**
  * Set an explicit adapter to use with this schema
  *
- * Updates an internal pointer to a given `adapter`, used by `Schema.prototype.query()`
+ * Updates an internal pointer to a given `adapter`, used by `Model.prototype.query()`
  *
  * @param {Adapter} adapter An Adapter# instance
  *
- * @return {Schema} This schema
+ * @return {Model} This schema
  */
 
-Schema.prototype.useAdapter = function( adapter ) {
+Model.prototype.useAdapter = function( adapter ) {
   // Ensure we have an approximately valid adapter
   var adapterError = new Error( 'Must supply valid adapter');
   if (!adapter || !adapter.exec) throw adapterError;
@@ -196,18 +196,18 @@ Schema.prototype.useAdapter = function( adapter ) {
  * @return {Property|undefined}
  */
 
-Schema.prototype.path = function( key ) {
+Model.prototype.path = function( key ) {
   return this.properties[key];
 };
 
 
 /**
- * Schema properties returned as flat array
+ * Model properties returned as flat array
  *
  * @return {Array}
  */
 
-Schema.prototype.getPaths = function() {
+Model.prototype.getPaths = function() {
   var keys = [];
   for (var key in this.properties) keys.push( key );
   return keys;
@@ -215,12 +215,12 @@ Schema.prototype.getPaths = function() {
 
 
 /**
- * Schema required properties returned as flat array
+ * Model required properties returned as flat array
  *
  * @return {Array}
  */
 
-Schema.prototype.getRequiredPaths = function() {
+Model.prototype.getRequiredPaths = function() {
   var p = this.properties,
       rp = [];
 
@@ -235,18 +235,18 @@ Schema.prototype.getRequiredPaths = function() {
  * Overwrites is property is already defined
  *
  * @param {String} key
- * @param {Schema} [schema] Mekanika schema options
+ * @param {Model} [schema] Mekanika schema options
  *
- * @return {Schema}
+ * @return {Model}
  */
 
-Schema.prototype.prop = function( key, schema ) {
+Model.prototype.prop = function( key, schema ) {
   schema || (schema = {});
   this.properties[key] = schema;
   return this;
 };
 
-Schema.prototype.property = Schema.prototype.attr = Schema.prototype.prop;
+Model.prototype.property = Model.prototype.attr = Model.prototype.prop;
 
 
 /**
@@ -258,7 +258,7 @@ Schema.prototype.property = Schema.prototype.attr = Schema.prototype.prop;
  * @return {Array} of errors (empty if none)
  */
 
-Schema.prototype.validate = function (property, value) {
+Model.prototype.validate = function (property, value) {
   var scm = this.path( property );
   if (!scm) throw new Error('No such property defined: '+property);
 
@@ -272,10 +272,10 @@ Schema.prototype.validate = function (property, value) {
  * @param {String} methodName An identifier for the method
  * @param {Function} fn The Function defining the method
  *
- * @return {Schema}
+ * @return {Model}
  */
 
-Schema.prototype.method = function( methodName, fn ) {
+Model.prototype.method = function( methodName, fn ) {
   if (!methodName || !fn)
     throw new Error('Must define both `methodName` and `fn`');
 

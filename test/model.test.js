@@ -6,13 +6,13 @@ var expect = require('chai').expect
   , schema = require('../index');
 
 
-describe('Schema', function() {
+describe('Model', function() {
 
   beforeEach( function () { schema.reset(); });
 
   describe('Class', function() {
 
-    it('sets Schema#resource as lowercased key (id)', function(){
+    it('sets Model#resource as lowercased key (id)', function(){
         expect( schema.new('Xbox').resource ).to.equal( 'xbox' );
       });
 
@@ -23,7 +23,7 @@ describe('Schema', function() {
     });
 
     it('initialises (passthru) adapter if passed', function() {
-      var O_o = new schema.Schema( '^_^', 'faux' );
+      var O_o = new schema.Model( '^_^', 'faux' );
       expect( O_o.adapter ).to.equal( 'faux' );
     });
 
@@ -69,7 +69,7 @@ describe('Schema', function() {
       expect( Dude.path('random') ).to.equal( undefined );
     });
 
-    it('.getPaths() returns flat array of Schema# properties', function() {
+    it('.getPaths() returns flat array of Model# properties', function() {
       expect( Dude.getPaths() ).to.be.an.instanceof( Array );
       expect( Dude.getPaths() ).to.contain( 'name', 'age', 'cool' );
     });
@@ -126,7 +126,7 @@ describe('Schema', function() {
 
     describe('Property options', function () {
 
-      it('set a foreign key reference as {ref:"Schema.prop"}', function () {
+      it('set a foreign key reference as {ref:"Model.prop"}', function () {
         schema.new('^_^').prop('post_id', {ref:'Post.id'});
         expect( schema('^_^').path('post_id').ref ).to.equal( 'Post.id' );
       });

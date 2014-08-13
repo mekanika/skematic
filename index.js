@@ -1,4 +1,4 @@
-var Schema = require( './src/model');
+var Model = require( './src/model');
 
 /**
  * Expose `schema`
@@ -8,7 +8,7 @@ module.exports = schema;
 
 
 /**
- * Stores all created Schemas
+ * Stores all created Models
  *
  * @type {Object}
  * @private
@@ -42,13 +42,13 @@ function schema( key ) {
 
 
 /**
- * Expose `Schema` Class constructor via schema.Schema
+ * Expose `Model` Class constructor via schema.Model
  *
- * @member Schema
+ * @member Model
  * @static
  */
 
-schema.Schema = Schema;
+schema.Model = Model;
 
 
 /**
@@ -57,6 +57,7 @@ schema.Schema = Schema;
  * @param {String} key
  * @param {Object} [options] Options to initialise schema
  *
+ * @return {Model}
  * @method new
  * @static
  */
@@ -66,7 +67,7 @@ schema.new = function (key, options) {
   if (cache[ key ]) throw new Error( 'Already exists: '+key );
 
   // Store a named reference in cache and return it
-  return ( cache[ key ] = new Schema( key, adapter, options ) );
+  return ( cache[ key ] = new Model( key, adapter, options ) );
 };
 
 
