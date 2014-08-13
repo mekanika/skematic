@@ -90,7 +90,7 @@ function Model( key, adapter, options ) {
   };
 
   // Apply options
-  if (options) for (var key in options) this.config[key] = options[key];
+  if (options) for (var k in options) this.config[k] = options[k];
 
 
   /**

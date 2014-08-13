@@ -151,7 +151,7 @@ var toType = function(obj) {
 var is = {
   string: function (v) { return typeof v === 'string'; },
   integer: function (v) { return typeof v === 'number' && v%1 === 0 && !isNaN(v);},
-  number: function (v) { return toType(v) === 'number' && !isNaN(v) },
+  number: function (v) { return toType(v) === 'number' && !isNaN(v); },
   array: function (v) { return toType(v) === 'array'; },
   boolean: function (v) { return toType(v) === 'boolean'; },
   object: function (v) { return toType(v) === 'object'; }
@@ -278,7 +278,7 @@ var _cast = exports.cast = function (val, schema) {
       : exports.filter( exports.default( val, schema ), schema.filters );
   }
   catch(e) { throw e; }
-}
+};
 
 
 /**
@@ -306,7 +306,7 @@ var _deepcast = function (data, schema) {
       if (typeof cast !== 'undefined') ret[key] = cast;
     }
     return ret;
-  }
+  };
 
   switch (toType(data)) {
     case 'array':

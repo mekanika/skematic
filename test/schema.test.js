@@ -143,8 +143,8 @@ describe('typeCheck(val, type)', function () {
       expect( schema.typeCheck([], o) ).to.have.length(1);
       expect( schema.typeCheck('object', o) ).to.have.length(1);
       expect( schema.typeCheck(new Date(), o) ).to.have.length(1);
+      /* jshint evil: true */
       expect( schema.typeCheck(new Function(), o) ).to.have.length(1);
-      expect( schema.typeCheck(new Object(), o) ).to.have.length(0);
       expect( schema.typeCheck({}, o) ).to.have.length(0);
     });
 
@@ -342,7 +342,7 @@ describe('Validate', function () {
         try { schema.validate({go:'boo'}, {go:{schema:'yo'}}); }
         catch (e) { err = e; }
         expect( err ).to.be.an.instanceof( Error );
-      })
+      });
 
       it('accessor can return working schema', function () {
         var hero = {name:{type:'string'}, power:{type:'integer'}};
