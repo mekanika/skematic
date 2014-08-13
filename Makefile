@@ -16,7 +16,7 @@ test:
 
 lint:
 	@echo "Linting..."
-	@./node_modules/jshint/bin/jshint \
+	@jshint \
 	  --config .jshintrc \
 	  index.js src/*.js test/*.js
 
