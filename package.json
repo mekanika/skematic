@@ -18,6 +18,6 @@
   "devDependencies": {
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
-    "jshint": "~2.5.2"
+    "jshint": "~2.5.3"
   }
 }
