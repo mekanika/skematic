@@ -1,4 +1,4 @@
-var Schema = require( './src/schema');
+var Schema = require( './src/model');
 
 /**
  * Expose `schema`

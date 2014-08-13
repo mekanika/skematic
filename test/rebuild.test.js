@@ -1,7 +1,6 @@
 
 
 var expect = require('chai').expect
-  , Schema = require('../src/schema')
   , Cast = require('../src/cast')
   , schema = require('../src/_property');
 
@@ -16,7 +15,7 @@ describe('default', function () {
     expect( schema.default('hi', {default:'yes'})).to.equal('hi');
   });
 
-  it('returns the value if no Schema.default', function () {
+  it('returns the value if no .default', function () {
     expect( schema.default( '' ) ).to.equal('');
     expect( schema.default('hi') ).to.equal('hi');
   });
