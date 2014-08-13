@@ -2,7 +2,7 @@
 
 var expect = require('chai').expect
   , Cast = require('../src/cast')
-  , schema = require('../src/_property');
+  , schema = require('../src/schema');
 
 
 describe('default', function () {

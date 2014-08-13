@@ -1,5 +1,5 @@
 
-var ms = require('./_property');
+var ms = require('./schema');
 
 /**
  * Expose `schema`
