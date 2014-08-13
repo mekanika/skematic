@@ -15,7 +15,7 @@ module.exports = Model;
  *
  * @param {String} key The unique identifier for the Model#
  * @param {Adapter} [adapter] Optional adapter to use for this new Model#
- * @param {Object} [options]
+ * @param {Object} [options] Referenced by instantiators (ie. Record)
  *
  * @class Model
  * @constructor
