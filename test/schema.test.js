@@ -69,16 +69,22 @@ describe('filters', function () {
     });
   });
 
-  it('"trim" strings', function () {
-    expect( schema.filter( ' ! .. 2 ', ['trim']) ).to.equal( '! .. 2' );
-  });
+  describe('method', function () {
+    it('"trim" strings', function () {
+      expect( schema.filter( ' ! .. 2 ', ['trim']) ).to.equal( '! .. 2' );
+    });
 
-  it('"uppercase" strings', function () {
-    expect( schema.filter( 'abc', ['uppercase']) ).to.equal( 'ABC' );
-  });
+    it('"uppercase" strings', function () {
+      expect( schema.filter( 'abc', ['uppercase']) ).to.equal( 'ABC' );
+    });
 
-  it('"lowercase" strings', function () {
-    expect( schema.filter( 'AbC', ['lowercase']) ).to.equal( 'abc' );
+    it('"lowercase" strings', function () {
+      expect( schema.filter( 'AbC', ['lowercase']) ).to.equal( 'abc' );
+    });
+
+    it('"nowhite" removes whitespace from strings', function () {
+      expect( schema.filter(' c o  o  l  ', ['nowhite']) ).to.equal('cool');
+    });
   });
 
 });

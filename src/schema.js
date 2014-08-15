@@ -70,6 +70,7 @@ exports.default = function (v, schema) {
 
 var _filters = {
   trim: function(v) { return v.trim(); },
+  nowhite: function (v) { return v.replace( / /g, ''); },
   uppercase: function (v) { return v.toUpperCase(); },
   lowercase: function (v) { return v.toLowerCase(); }
 };
