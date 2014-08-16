@@ -21,7 +21,13 @@ module.exports = Model;
  * @constructor
  */
 
-function Model( key, adapter, options ) {
+function Model (key, opts) {
+
+  /**
+   * Default options as empty object
+   */
+
+  opts || (opts = {});
 
   /**
    * Unique identifying key to reference schema( key )
@@ -38,7 +44,7 @@ function Model( key, adapter, options ) {
    * Modify this if your datasource uses an alternative form ('_id' for Mongo)
    */
 
-  this.idAttribute = 'id';
+  this.idAttribute = opts.idAttribute || 'id';
 
 
   /**
@@ -51,7 +57,7 @@ function Model( key, adapter, options ) {
    * @type {String}
    */
 
-  this.resource = key.toLowerCase();
+  this.resource = opts.resource || key.toLowerCase();
 
 
   /**
@@ -60,7 +66,7 @@ function Model( key, adapter, options ) {
    * @type {Model}
    */
 
-  this.properties = {};
+  this.properties = opts.properties || {};
 
   /**
    * Methods
@@ -68,7 +74,7 @@ function Model( key, adapter, options ) {
    * @type {Array}
    */
 
-  this.methods = [];
+  this.methods = opts.methods || [];
 
 
   /**
@@ -90,7 +96,7 @@ function Model( key, adapter, options ) {
   };
 
   // Apply options
-  if (options) for (var k in options) this.config[k] = options[k];
+  if (opts.config) for (var k in opts.config) this.config[k] = opts.config[k];
 
 
   /**
@@ -100,7 +106,7 @@ function Model( key, adapter, options ) {
    * @see https://github.com/mekanika/adapter
    */
 
-  this.adapter = adapter;
+  this.adapter = opts.adapter || undefined;
 }
 
 

@@ -23,12 +23,29 @@ describe('Model', function() {
     });
 
     it('initialises (passthru) adapter if passed', function() {
-      var O_o = new accessor.Model( '^_^', 'faux' );
+      var O_o = new accessor.Model( '^_^', {adapter:'faux'} );
       expect( O_o.adapter ).to.equal( 'faux' );
     });
 
+    it('assigns passed options on Model', function () {
+      var m = new accessor.Model(':)', {
+        idAttribute: 'smoking',
+        resource: 'hobo',
+        adapter: 'meep',
+        config: {validateOnSet:'deadly'},
+        properties: {hello:{type:'boolean'}},
+        methods: [{key:'yes', fn:function(){return 'yes';}}]
+      });
+
+      expect( m.idAttribute ).to.equal('smoking');
+      expect( m.resource ).to.equal('hobo');
+      expect( m.adapter ).to.equal('meep');
+      expect( m.properties.hello ).to.exist;
+      expect( m.methods[0].key ).to.equal('yes');
+    });
+
     it('can pass initialisation options', function () {
-      var s = accessor.new('!', {validateOnSet: true} );
+      var s = accessor.new('!', {config:{validateOnSet: true}} );
       expect( s.config.validateOnSet ).to.equal( true );
     });
 

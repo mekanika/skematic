@@ -66,19 +66,23 @@ exports.schema = schema;
  * Create a new Model
  *
  * @param {String} key
- * @param {Object} [options] Options to initialise new Model
+ * @param {Object} [opts] Options to initialise new Model
  *
  * @return {Model}
  * @method new
  * @static
  */
 
-exports.new = function (key, options) {
+exports.new = function (key, opts) {
   if (!key) throw new Error('Requires a key to create');
   if (cache[ key ]) throw new Error( 'Already exists: '+key );
 
+  opts || (opts = {});
+  // Set the adapter to the global adapter if one is not defined
+  if (adapter && !opts.adapter) opts.adapter = adapter;
+
   // Store a named reference in cache and return it
-  return ( cache[ key ] = new Model( key, adapter, options ) );
+  return ( cache[ key ] = new Model( key, opts ) );
 };
 
 
