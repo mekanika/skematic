@@ -33,7 +33,14 @@ module.exports = exports;
 
 
 /**
-  Designed to be overwritten
+  Mechanism to load a 'schema' by a String reference
+
+  Used by `.deepcast()` and `.validate()` when these are presented with
+  subschema that are not resolved, but referenced by a string. These methods
+  call `schema.accessor(ref)` to attempt to load the schema.
+
+  This method is designed to be overwritten by a wrapper library that stores
+  schema by 'string' reference.
 
   @param {String} ref Unique key reference to schema
 
@@ -294,7 +301,7 @@ var _cast = exports.cast = function (val, schema) {
 */
 
 var _deepcast = function (data, schema) {
-  // No sub=schema to deepcast, just do a normal cast
+  // No sub-schema to deepcast, just do a normal cast
   if (!schema.schema) return _cast(data, schema);
 
   // Load a string referenced schema from an accessor (expects a SCHEMA)
