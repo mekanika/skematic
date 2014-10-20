@@ -1,3 +1,21 @@
+0.8.0 - 20 October 2014
+=====
+
+Reducing this library to a pure data structure engine by pulling out wrappers, loaders and extraneous classes.
+
+Added:
+
+- 'nowhite' filter to remove whitespace
+
+Removed:
+
+- Model class
+- 'Core' index accessor
+- toJSON utility
+- "load" class
+
+
+
 0.7.0 - 13 August 2014
 =====
 
