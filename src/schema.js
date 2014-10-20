@@ -33,11 +33,13 @@ module.exports = exports;
 
 
 /**
-  Mechanism to load a 'schema' by a String reference
+  Accessor mechanism to load a 'schema' by a String reference
+
+  Method MUST either throw an Error or return a valid **Schema**.
 
   Used by `.deepcast()` and `.validate()` when these are presented with
   subschema that are not resolved, but referenced by a string. These methods
-  call `schema.accessor(ref)` to attempt to load the schema.
+  delegate to `exports.accessor(ref)` to attempt to load the schema.
 
   This method is designed to be overwritten by a wrapper library that stores
   schema by 'string' reference.
