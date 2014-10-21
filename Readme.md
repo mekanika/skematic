@@ -149,3 +149,10 @@ var user = {
 }
 ```
 
+
+## License
+
+Copyright 2013-2014 Clint Walker
+
+Licensed under [LGPL-3.0](http://opensource.org/licenses/LGPL-3.0)
+
