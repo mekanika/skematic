@@ -142,12 +142,14 @@ exports.filter.add = function (key, fn) {
 
 /**
   Cross browser object 'type' checker
-  Helper: returns the [[Class]] subjugate
+  Returns the [[Class]] subjugate
+
+  @param {Mixed} obj The entity to type check
 
   @return {String} type
 */
 
-var toType = function(obj) {
+var toType = exports.toType = function(obj) {
   return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 };
 
