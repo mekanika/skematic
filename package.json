@@ -16,7 +16,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "~1.21.5",
+    "mocha": "~2.0.1",
     "chai": "~1.9.2"
   }
 }
