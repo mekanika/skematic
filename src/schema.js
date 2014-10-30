@@ -364,6 +364,14 @@ exports.validate = function (data, schema, _noCheck) {
   var errs = {};
   var isValid = true;
 
+  // Parse JSON if provided
+  if ('string' === typeof data) {
+    try { data = JSON.parse(data); }
+    catch (e) {
+      throw new Error('schema.validate() requires valid JSON');
+    }
+  }
+
   // Step through ONLY our schema keys
   for (var key in schema) {
     // Only handle own properties
