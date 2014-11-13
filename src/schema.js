@@ -56,20 +56,38 @@ exports.accessor = function (ref) {
 
 
 /**
-  Returns the default value in the schema if no `value` present
+  Sets a default value if specified on empty fields
 
-  @param {Mixed} v The value to default
+  Supports passing an object and complex schema.
+
+  @param {Mixed} v The value or object to default
   @param {Schema} schema The associated schema to check the default value on
 
   @return Value or the default value
 */
 
 exports.default = function (v, schema) {
-  // No default, return the value as is
-  if (!schema || !schema.default) return v;
 
-  // Return the default if `v` is empty (ie. undefined or '')
-  return Rules.empty(v) ? schema.default : v;
+  if (!schema) return v;
+
+  var def = function (v, s) {
+    // No default, return the value as is
+    if (!s.default) return v;
+
+    // Return the default if `v` is empty (ie. undefined or '')
+    return Rules.empty(v) ? s.default : v;
+  };
+
+  // Parse objects
+  if (typeof v === 'object') {
+    for (var k in schema) {
+      v[k] = def( v[k], schema[k] );
+    }
+
+    return v;
+  }
+  // Or simply return defaulted scalars
+  else return def(v, schema);
 };
 
 

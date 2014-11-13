@@ -20,6 +20,14 @@ describe('default', function () {
     expect( schema.default('hi') ).to.equal('hi');
   });
 
+  it('can parse complex objects and return defaults', function () {
+    var s = {
+      name: {default:'Zim'},
+      age: {type:'number'}
+    };
+    expect( schema.default({age:21}, s).name ).to.equal('Zim');
+  });
+
 });
 
 
