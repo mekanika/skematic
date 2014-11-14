@@ -1,28 +1,11 @@
 
 /**
-
-  Schema intends to work as follows:
-
-  0. .default()   - Returns/Applies defaults if no value
-  1. .filter()    - Run filters to transform the value (including casting)
-  2. .typeCheck() - Check value matches expected 'type'
-  3. .test()      - Apply any rules to validate content
-
-  .validate() runs all the above and returns:
-  {
-    valid: true/false
-    errors: [],
-    value: $
-  }
-*/
-
-
-/**
   Dependencies
 */
 
 var Cast = require('./cast');
 var Rules = require('./rules');
+var Compute = require('./compute');
 
 
 /**
@@ -36,7 +19,7 @@ module.exports = exports;
   Apply compute facilities
 */
 
-exports.compute = require('./compute').computeAll;
+exports.compute = Compute.computeAll;
 
 
 /**
@@ -239,77 +222,6 @@ exports.typeCheck = function ( val, type ) {
 };
 
 
-
-// The default "failed validation" message. Appended with ' $key' where
-// `$key` is the key of the validation rule that failed.
-var defaultError = 'Failed:';
-
-function errMsg (key) {
-  return defaultError + ' ' + key;
-}
-
-
-/**
-  Checks a value against the rules defined in `schema`
-
-  @param {Mixed} val The value to test
-  @param {Object} schema The schema to apply the tests against
-
-  @return {Array} errors
-*/
-
-exports.checkValue = function (val, schema) {
-  var errs = [];
-
-  if (!schema) return errs;
-
-
-  // Check required...
-  if (schema.required) {
-    if (!Rules.required( val )) return ['Required to be set'];
-  }
-
-
-  // 2. Check type match
-  // The value type matches its declaration (if any)
-  if (schema.type) {
-    var res = exports.typeCheck(val, schema.type);
-    if (res.length) return res;
-  }
-
-
-  // 3. Validate rules
-  for (var key in schema.rules) {
-    // Build parameters to pass to rule
-    var params = schema.rules[key];
-    if ( !(params instanceof Array) ) params = [params];
-    params.unshift( val );
-
-    // Check that the rule exists to run against
-    if (!Rules[key]) {
-      errs.push('Unknown rule: '+key);
-      continue;
-    }
-
-    // Run validation
-    var isValid = Rules[key].apply( this, params );
-    if (!isValid) {
-      // Failed validation adds error to stack
-      if (schema.errors) {
-        if (typeof schema.errors === 'string') errs.push( schema.errors );
-        else if (schema.errors[key]) errs.push( schema.errors[key] );
-        else if (schema.errors.default) errs.push( schema.errors.default );
-        else errs.push( errMsg(key) );
-      }
-      else errs.push( errMsg(key) );
-    }
-  }
-
-  // Return errors
-  return errs;
-};
-
-
 /**
   Helper method: Applies a default and runs filters on a `val`
 
@@ -410,6 +322,76 @@ var validSchema = exports.validSchema = {
   array: {type:'boolean'},
   default: {},
   allowNull: {type:'boolean'}
+};
+
+
+// The default "failed validation" message. Appended with ' $key' where
+// `$key` is the key of the validation rule that failed.
+var defaultError = 'Failed:';
+
+function errMsg (key) {
+  return defaultError + ' ' + key;
+}
+
+
+/**
+  Checks a value against the rules defined in `schema`
+
+  @param {Mixed} val The value to test
+  @param {Object} schema The schema to apply the tests against
+
+  @return {Array} errors
+*/
+
+exports.checkValue = function (val, schema) {
+  var errs = [];
+
+  if (!schema) return errs;
+
+
+  // Check required...
+  if (schema.required) {
+    if (!Rules.required( val )) return ['Required to be set'];
+  }
+
+
+  // 2. Check type match
+  // The value type matches its declaration (if any)
+  if (schema.type) {
+    var res = exports.typeCheck(val, schema.type);
+    if (res.length) return res;
+  }
+
+
+  // 3. Validate rules
+  for (var key in schema.rules) {
+    // Build parameters to pass to rule
+    var params = schema.rules[key];
+    if ( !(params instanceof Array) ) params = [params];
+    params.unshift( val );
+
+    // Check that the rule exists to run against
+    if (!Rules[key]) {
+      errs.push('Unknown rule: '+key);
+      continue;
+    }
+
+    // Run validation
+    var isValid = Rules[key].apply( this, params );
+    if (!isValid) {
+      // Failed validation adds error to stack
+      if (schema.errors) {
+        if (typeof schema.errors === 'string') errs.push( schema.errors );
+        else if (schema.errors[key]) errs.push( schema.errors[key] );
+        else if (schema.errors.default) errs.push( schema.errors.default );
+        else errs.push( errMsg(key) );
+      }
+      else errs.push( errMsg(key) );
+    }
+  }
+
+  // Return errors
+  return errs;
 };
 
 
