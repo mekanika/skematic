@@ -328,26 +328,6 @@ describe('Validate', function () {
     expect( res ).to.have.keys( 'data', 'valid', 'errors' );
   });
 
-  it('parses data passed as JSON', function () {
-    var json = '{"name":"Jack"}';
-    var s = { name: {type:'string'} };
-    var res = schema.validate( json, s );
-    expect( res ).to.have.keys( 'data', 'valid', 'errors' );
-  });
-
-  it('only parses strings the "look" like JSON objects', function () {
-    var s = {type:'string'};
-    expect( schema.validate('j{oob', s).valid ).to.equal(true);
-  });
-
-  it('throws if JSON parse fails', function (done) {
-    try { schema.validate( "{badjson" ); }
-    catch (e) {
-      expect( e.message ).to.match( /requires.*JSON/g );
-      done();
-    }
-  });
-
   it('casts/filters the values in `data` on valid', function () {
     var record = {power:'40'};
     var s = { power:{type:'integer' } };

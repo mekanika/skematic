@@ -405,14 +405,6 @@ exports.validate = function (data, schema, _noCheck) {
   var errs = {};
   var isValid = true;
 
-  // Parse JSON if provided (duck type first character AS complex JSON obj)
-  if ('string' === typeof data && ['{','['].indexOf(data[0]) > -1) {
-    try { data = JSON.parse(data); }
-    catch (e) {
-      throw new Error('schema.validate() requires valid JSON');
-    }
-  }
-
   // Step through ONLY our schema keys
   for (var key in schema) {
     // Only handle own properties
