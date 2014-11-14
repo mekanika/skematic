@@ -400,7 +400,15 @@ var validSchema = exports.validSchema = {
 
 
 /**
-  Validates complex data objects
+  Validates complex data objects. Casts and defaults returned data.
+
+  Returns:
+
+  {
+    data: {Object},  // Cast and defaults on data (on valid), else passed data
+    isValid: {Boolean},
+    errors: {Object} // Hash of keys for which errors were received
+  }
 
   @throws {Error} when provided invalid schema to validate against
 
@@ -412,6 +420,13 @@ exports.validate = function (data, schema, _noCheck) {
   var errs = {};
   var isValid = true;
 
+  // Self validate schema
+  if (!_noCheck) {
+    var chk = exports.validate( schema, validSchema, true );
+    if (!chk.valid)
+      throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
+  }
+
   // Step through ONLY our schema keys
   for (var key in schema) {
     // Only handle own properties
@@ -420,13 +435,6 @@ exports.validate = function (data, schema, _noCheck) {
     // Shorthand
     var scm = schema[key];
     var v = data[key];
-
-    // Self validate schema
-    if (!_noCheck) {
-      var chk = exports.validate( scm, validSchema, true );
-      if (!chk.valid)
-        throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
-    }
 
     // If it's not required and the default value is 'empty', skip it
     if (!scm.required && Rules.empty( exports.default(v,scm) )) continue;
