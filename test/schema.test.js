@@ -5,6 +5,16 @@ var expect = require('chai').expect
   , schema = require('../src/schema');
 
 
+
+describe('API', function () {
+
+  it('exposes .compute method', function () {
+    expect( schema.compute ).to.be.and.instanceof( Function );
+  });
+
+});
+
+
 describe('default', function () {
 
   it('returns the default value if no val provided', function () {

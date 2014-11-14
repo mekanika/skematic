@@ -33,6 +33,13 @@ module.exports = exports;
 
 
 /**
+  Apply compute facilities
+*/
+
+exports.compute = require('./compute').computeAll;
+
+
+/**
   Accessor mechanism to load a 'schema' by a String reference
 
   Method MUST either throw an Error or return a valid **Schema**.
