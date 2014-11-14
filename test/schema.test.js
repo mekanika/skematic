@@ -247,41 +247,25 @@ describe('test(val, schema)', function () {
     expect( schema.test('abc') ).to.have.length( 0 );
   });
 
-  it('applies default value first', function () {
-    var s = {
-      default: 'zim',
-      rules: {in:['zim']}
-    };
-
-    // The rule tests that the value is 'zim'. Only true if default is applied.
-    expect( schema.test('', s) ).to.have.length( 0 );
-  });
-
-  it('immediately returns if filters failed', function () {
-    var res = schema.test(1, {filters:'trim'});
-    expect( res ).to.have.length(1);
-  });
-
-  it('applies filters after default and prior to rule check', function () {
-    var s = {default:' zim ', filters:['trim'], rules:{in:['zim']}};
-    expect( schema.test( '', s) ).to.have.length( 0 );
-  });
-
   it('then checks that required values are set', function () {
-    var s = {required:true, filters:['trim'], rules:{in:['x']}};
+    var s = {required:true, rules:{in:['x']}};
+    var res = schema.test('', s);
     expect( schema.test('', s) ).to.have.length(1);
     expect( schema.test('', s)[0] ).to.match( /required/ig );
 
-    // Now check sequencing (required should pass because default was set)
-    s = {required:true, default:' zim ', filters:['trim'], rules:{in:['zim']}};
-    expect( schema.test( '', s) ).to.have.length( 0 );
+    // Now check the affirmative case
+    s = {required:true, default:'zim', rules:{in:['zim']}};
+    expect( schema.test( 'zim', s) ).to.have.length( 0 );
   });
 
   it('then checks type matches', function () {
-    var fail = {type:'integer'};
-    var pass = {type:'integer', filters:['toInteger']};
-    expect( schema.test( '1', fail) ).to.have.length( 1 );
-    expect( schema.test( '1', pass) ).to.have.length( 0 );
+    var s = {type:'integer', filters:['toInteger']};
+
+    var data = '1';
+    expect( schema.test( data, s) ).to.have.length( 1 );
+
+    data = schema.cast(data, s);
+    expect( schema.test( data, s) ).to.have.length( 0 );
   });
 
   it('then applies specified rules', function () {

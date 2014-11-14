@@ -263,16 +263,6 @@ exports.test = function (val, schema) {
 
   if (!schema) return errs;
 
-  val = exports.default( val, schema );
-
-  // 1. Apply transforms (filters)
-  try {
-    if (schema.filters) val = exports.filter( val, schema.filters );
-  }
-  catch(e) {
-    return ['Failed to apply filter'];
-  }
-
 
   // Check required...
   if (schema.required) {
