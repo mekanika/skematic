@@ -331,11 +331,26 @@ exports.test = function (val, schema) {
 */
 
 var _cast = exports.cast = function (val, schema) {
-  // Clarify that cast can throw (filters failing)
+
   try {
-    return schema.schema
-      ? _deepcast( val, schema )
-      : exports.filter( exports.default( val, schema ), schema.filters );
+    // Cast objects
+    if (is.object(val) ) {
+      // First check that we're not at a ROOT level schema (which is a
+      // request to deepcast an object, NOT step through keys)
+      if (schema.schema) return _deepcast( val, schema );
+
+      for (var key in schema) {
+        if (val.hasOwnProperty(key))
+          val[key] = _cast( val[key], schema[key] );
+      }
+      return val;
+    }
+    // Cast everything else
+    else {
+      return schema.schema
+        ? _deepcast( val, schema )
+        : exports.filter( exports.default( val, schema ), schema.filters );
+    }
   }
   catch(e) { throw e; }
 };
@@ -370,9 +385,18 @@ var _deepcast = function (data, schema) {
 
   switch (toType(data)) {
     case 'array':
-      // Array 'data' is actually a Collection.
-      for (var i=0; i<data.length; i++)
-        data[i] = setO( data[i], schema.schema, data[i] );
+      // Step through each element
+      for (var i=0; i<data.length; i++) {
+
+        // Array 'data' is actually a Collection.
+        if (is.object(data[i]))
+          data[i] = setO( data[i], schema.schema, data[i] );
+
+        // Treat the contents as scalar values
+        else data[i] = _cast( data[i], schema.schema );
+
+      }
+
       break;
 
     case 'object':

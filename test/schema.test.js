@@ -214,7 +214,15 @@ describe('cast (default + filters)', function () {
     expect( res ).to.equal( '10' );
   });
 
-  it('arrays', function () {
+  it('arrays (of scalars)', function () {
+    var s = {gir:{schema:{type:'string', filters:['toString']}}};
+
+    var data = {gir:['a','b',4]};
+    data = schema.cast( data, s );
+    expect( typeof data.gir[2] ).to.equal( 'string' );
+  });
+
+  it('arrays (of objects)', function () {
     var res = schema.cast( [{smoo:1},{}], s.books );
     expect( res[0] ).to.have.keys( 'smoo', 'title' );
     expect( res[0].title ).to.equal('JRRT');
