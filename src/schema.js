@@ -258,7 +258,7 @@ function errMsg (key) {
   @return {Array} errors
 */
 
-exports.test = function (val, schema) {
+exports.checkValue = function (val, schema) {
   var errs = [];
 
   if (!schema) return errs;
@@ -414,31 +414,24 @@ var validSchema = exports.validSchema = {
 
 
 /**
-  Validates complex data objects. Casts and defaults returned data.
+  Validates `data` against a schema's rules. Does not pre-cast data.
 
   Returns:
 
   {
-    data: {Object},  // Cast and defaults on data (on valid), else passed data
-    isValid: {Boolean},
+    valid: {Boolean},
     errors: {Object} // Hash of keys for which errors were received
   }
 
   @throws {Error} when provided invalid schema to validate against
 
-  @return {Object} Validation object `{$dataObj, $validBool, $errorsObj}`
+  @return {Object} Validation object `{valid:$bool, errors:$errorsObj}`
 */
 
 exports.validate = function (data, schema, _noCheck) {
-  var dx = {};
   var errs = {};
   var isValid = true;
 
-  // Self validate schema
-  if (!_noCheck) {
-    var chk = exports.validate( schema, validSchema, true );
-    if (!chk.valid)
-      throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
   }
 
   // Step through ONLY our schema keys
@@ -449,6 +442,13 @@ exports.validate = function (data, schema, _noCheck) {
     // Shorthand
     var scm = schema[key];
     var v = data[key];
+
+    // Self validate schema
+    if (!_noCheck) {
+      var chk = exports.validate( scm, validSchema, true );
+      if (!chk.valid)
+        throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
+    }
 
     // If it's not required and the default value is 'empty', skip it
     if (!scm.required && Rules.empty( exports.default(v,scm) )) continue;
@@ -469,11 +469,7 @@ exports.validate = function (data, schema, _noCheck) {
           // Array of complex objects
           if (toType(val) === 'object') {
             var arsub = exports.validate( val, scm.schema );
-            if (arsub.valid) {
-              if (!dx[key]) dx[key] = [];
-              dx[ key ][idx] = arsub.data;
-            }
-            else {
+            if (!arsub.valid) {
               isValid = false;
               if (!errs[key]) errs[key] = {};
               errs[key][idx] = arsub.errors;
@@ -482,15 +478,11 @@ exports.validate = function (data, schema, _noCheck) {
 
           // Array of simple types
           else {
-            var er = exports.test( val, scm.schema );
+            var er = exports.checkValue( val, scm.schema );
             if (er.length) {
               isValid = false;
               if (!errs[key]) errs[key] = {};
               errs[key][idx] = er;
-            }
-            else {
-              if (!dx[key]) dx[key] = [];
-              dx[key][idx] = _cast( val, scm.schema );
             }
           }
         });
@@ -499,8 +491,7 @@ exports.validate = function (data, schema, _noCheck) {
       // Otherwise just assume it's an object
       else {
         var sub = exports.validate( v, scm.schema );
-        if (sub.valid) dx[key] = sub.data;
-        else {
+        if (!sub.valid) {
           isValid = false;
           errs[key] = sub.errors;
         }
@@ -509,18 +500,15 @@ exports.validate = function (data, schema, _noCheck) {
 
     // Otherwise NO sub-schema: test the value directly
     else {
-      var errors = exports.test( v, scm );
+      var errors = exports.checkValue( v, scm );
       if (errors.length) {
         isValid = false;
         errs[key] = errors;
       }
-      else
-        dx[key] = _cast( v, scm );
     }
   }
 
   return {
-    data: isValid ? dx : data,
     valid: isValid,
     errors: errs
   };

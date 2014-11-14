@@ -235,72 +235,72 @@ describe('cast (default + filters)', function () {
 });
 
 
-describe('test(val, schema)', function () {
+describe('checkValue(val, schema)', function () {
   it('returns an array of string errors', function () {
-    expect( schema.test ).to.be.an.instanceof( Function );
-    expect( schema.test('abc') ).to.have.length( 0 );
-    expect( schema.test( 1, {type:'string'} ) ).to.have.length(1);
-    expect( schema.test( 1, {type:'string'} )[0] ).to.be.a( 'string' );
+    expect( schema.checkValue ).to.be.an.instanceof( Function );
+    expect( schema.checkValue('abc') ).to.have.length( 0 );
+    expect( schema.checkValue( 1, {type:'string'} ) ).to.have.length(1);
+    expect( schema.checkValue( 1, {type:'string'} )[0] ).to.be.a( 'string' );
   });
 
   it('returns empty array if no schema provided', function () {
-    expect( schema.test('abc') ).to.have.length( 0 );
+    expect( schema.checkValue('abc') ).to.have.length( 0 );
   });
 
   it('then checks that required values are set', function () {
     var s = {required:true, rules:{in:['x']}};
-    var res = schema.test('', s);
-    expect( schema.test('', s) ).to.have.length(1);
-    expect( schema.test('', s)[0] ).to.match( /required/ig );
+    var res = schema.checkValue('', s);
+    expect( schema.checkValue('', s) ).to.have.length(1);
+    expect( schema.checkValue('', s)[0] ).to.match( /required/ig );
 
     // Now check the affirmative case
     s = {required:true, default:'zim', rules:{in:['zim']}};
-    expect( schema.test( 'zim', s) ).to.have.length( 0 );
+    expect( schema.checkValue( 'zim', s) ).to.have.length( 0 );
   });
 
   it('then checks type matches', function () {
     var s = {type:'integer', filters:['toInteger']};
 
     var data = '1';
-    expect( schema.test( data, s) ).to.have.length( 1 );
+    expect( schema.checkValue( data, s) ).to.have.length( 1 );
 
     data = schema.cast(data, s);
-    expect( schema.test( data, s) ).to.have.length( 0 );
+    expect( schema.checkValue( data, s) ).to.have.length( 0 );
   });
 
   it('then applies specified rules', function () {
     var s = {type:'integer', rules:{min:5}};
-    expect( schema.test(1, s) ).to.have.length(1);
-    expect( schema.test(1, s) ).to.match( /min/ig );
+    expect( schema.checkValue(1, s) ).to.have.length(1);
+    expect( schema.checkValue(1, s) ).to.match( /min/ig );
   });
 
   it('adds error if rule is unknown/undeclared', function () {
     var s = {type:'integer', rules:{'attack':true}};
-    expect( schema.test(1, s) ).to.have.length(1);
-    expect( schema.test(1, s) ).to.match( /unknown/ig );
+    expect( schema.checkValue(1, s) ).to.have.length(1);
+    expect( schema.checkValue(1, s) ).to.match( /unknown/ig );
   });
 
   describe('error msgs', function () {
     it('can be set declaritively', function () {
       var s = {rules:{in:['a']}, errors:{in:'Hotdog!'}};
-      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+      expect( schema.checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('can set default error message for schema', function () {
       var s = {rules:{in:['a']}, errors:{default:'Hotdog!'}};
-      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+      expect( schema.checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('can set default msg as string', function () {
       var s = {rules:{in:['a']}, errors:'Hotdog!'};
-      expect( schema.test('b', s)[0] ).to.equal('Hotdog!');
+      expect( schema.checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('uses system default msg if no match', function () {
       var s = {rules:{in:['a']}, errors:{}};
 
       // @note This is HARDCODED to match the 'defaultError'
-      expect( schema.test('b', s) ).to.match( /failed/ig );
+      expect( schema.checkValue('b', s) ).to.match( /failed/ig );
     });
   });
 
@@ -323,23 +323,11 @@ describe('Validate', function () {
     }
   });
 
-  it('returns {data, valid, errors} object', function () {
+  it('returns {valid, errors} object', function () {
     var record = {name:'Jack'};
     var s = { name: {type:'string'} };
     var res = schema.validate( record, s );
-    expect( res ).to.have.keys( 'data', 'valid', 'errors' );
-  });
-
-  it('casts/filters the values in `data` on valid', function () {
-    var record = {power:'40'};
-    var s = { power:{type:'integer' } };
-
-    expect( schema.validate( record, s ).data.power ).to.equal('40');
-
-    s.power.default = '50';
-    s.power.filters = ['toInteger'];
-    var res = schema.validate( {power:''}, s );
-    expect( res.data.power ).to.equal( 50 );
+    expect( res ).to.have.keys( 'valid', 'errors' );
   });
 
   it('provides error arrays keyed to properties', function () {
@@ -354,13 +342,6 @@ describe('Validate', function () {
 
     res = schema.validate({power:1}, {power:{type:'integer'}});
     expect( res.valid ).to.be.true;
-  });
-
-  it('whitelists properties on cast (discards unknowns)', function () {
-    var s = {power:{type:'integer'}};
-    var data = {power:3, jack:'jill'};
-    var res = schema.validate( data, s );
-    expect( res.data ).to.have.keys( 'power' );
   });
 
 
@@ -396,11 +377,7 @@ describe('Validate', function () {
         var res = schema.validate({bigsub:{top:'s'}}, s );
         expect( res.errors ).to.have.keys( 'bigsub' );
         expect( res.errors.bigsub.top ).to.have.length( 1 );
-
-        s.bigsub.schema.top.filters = ['toInteger'];
-        res = schema.validate({bigsub:{top:'11'}}, s );
-        expect( res.valid ).to.be.true;
-        expect( res.data.bigsub.top ).to.equal( 11 );
+        expect( res.errors.bigsub.top[0] ).to.match(/integer/);
       });
 
       it('can recursively validate', function () {
@@ -436,12 +413,6 @@ describe('Validate', function () {
         var res = schema.validate( data, s );
         expect( res.valid ).to.be.false;
         expect( res.errors.books['1'].author ).to.have.length( 1 );
-
-        // Demonstrate PASSING
-        s.books.schema.author.filters = ['toString'];
-        res = schema.validate( data, s );
-        expect( res.valid ).to.be.true;
-        expect( res.data.books[1].author ).to.equal('555');
       });
     });
 
@@ -457,16 +428,19 @@ describe('Validate', function () {
 
       it('detects array values without declaring type:array', function () {
         var s = {gir:{schema:{type:'string', filters:['toString']}}};
-        var res = schema.validate( {gir:['a','b',4]}, s );
+
+        var data = {gir:['a','b','4']};
+
+        var res = schema.validate( data, s );
         expect( res.valid ).to.be.true;
         s.gir.type = 'array';
-        res = schema.validate( {gir:['a','b',4]}, s );
+        res = schema.validate( data, s );
         expect( res.valid ).to.be.true;
       });
 
       it('of simple (primitive) types', function () {
         var s = {gir:{type:'array', schema:{type:'string', filters:['toString']}}};
-        var res = schema.validate( {gir:['a','b',4]}, s );
+        var res = schema.validate( {gir:['a','b','4']}, s );
 
         expect( res.valid ).to.be.true;
       });
