@@ -420,18 +420,32 @@ var validSchema = exports.validSchema = {
 
   {
     valid: {Boolean},
-    errors: {Object} // Hash of keys for which errors were received
+    errors: {Object|Array} // Error object if passed object, array if scalar
   }
 
-  @throws {Error} when provided invalid schema to validate against
+  Example:
 
-  @return {Object} Validation object `{valid:$bool, errors:$errorsObj}`
+  ```
+  schema.validate( '1', {type:'string'} );
+  // -> {valid:true, errors:[]}
+
+  schema.validate( {name:'Zim'}, {name:{type:'string'}});
+  // -> {valid: true, errors:{}}
+  ```
+
+  @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
 */
 
 exports.validate = function (data, schema, _noCheck) {
   var errs = {};
   var isValid = true;
 
+  // Validate scalars
+  if (!is.object(data)) {
+    var res = exports.checkValue( data, schema );
+    return res.length
+      ? {valid:false, errors:res}
+      : {valid:true, errors:[]};
   }
 
   // Step through ONLY our schema keys

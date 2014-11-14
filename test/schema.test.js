@@ -344,6 +344,13 @@ describe('Validate', function () {
     expect( res.valid ).to.be.true;
   });
 
+  it('validates scalars {validBool, errorArray!}', function () {
+    var s = {type:'string', rules:{maxLength:3}};
+
+    expect( schema.validate('123', s).valid ).to.equal(true);
+    expect( schema.validate('1234', s).valid ).to.equal(false);
+    expect ( schema.validate('1234', s).errors ).to.be.an.instanceof( Array );
+  });
 
   describe('subschema', function () {
 
