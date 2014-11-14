@@ -91,6 +91,29 @@ exports.default = function (v, schema) {
 };
 
 
+
+/**
+  Returns an object built on ALL values present in the schema, set to defaults
+
+  @param {Schema} schema To initialise object
+
+  @return {Object}
+*/
+
+exports.createFrom = function (schema) {
+  var o = {};
+
+  if (!schema) return o;
+
+  for (var k in schema) {
+    if (!schema.hasOwnProperty(k)) continue;
+    o[k] = exports.default( undefined, schema[k] );
+  }
+
+  return o;
+};
+
+
 /**
   Available filter functions (modifiers for value)
 */

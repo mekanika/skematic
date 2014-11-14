@@ -31,6 +31,21 @@ describe('default', function () {
 });
 
 
+
+describe('createFrom', function () {
+
+  var _s = { name:{default:'Gir'}, age:{}, power:{}};
+
+  it('builds an object to match the schema keys', function () {
+    expect( schema.createFrom(_s) ).to.have.keys('name','age','power');
+  });
+
+  it('sets intial object defaults', function () {
+    expect( schema.createFrom(_s).name ).to.equal('Gir');
+  });
+});
+
+
 describe('filters', function () {
 
   describe('apply', function () {
