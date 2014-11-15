@@ -41,7 +41,7 @@ exports.toString = function toString( val ) {
     if (val.toString) return val.toString();
   }
 
-  throw new Error('Failed to cast');
+  throw new Error('Failed to cast to String');
 };
 
 
@@ -97,7 +97,7 @@ exports.convertNumber = function convertNumber( val, convertor, radix ) {
     if ( !isNaN(val) && typeof val === 'number') return val;
   }
 
-  throw new Error('Failed to cast');
+  throw new Error('Failed to cast to Number');
 
 };
 
@@ -219,6 +219,6 @@ exports.toDate = function toDate( val ) {
   if (date && date.toString() !== 'Invalid Date')
     return date;
 
-  throw new Error( 'Failed to cast');
+  throw new Error( 'Failed to cast to Date');
 
 };
