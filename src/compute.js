@@ -77,6 +77,12 @@ var computeValue = exports.computeValue = function (ops, fnLib) {
     if (ops[i].params && !(ops[i].params instanceof Array))
       ops[i].params = [ops[i].params];
 
+    // Resolve function parameters to values
+    var k = -1, px = ops[i].params || [];
+    while (++k < px.length) {
+      if (typeof px[k] === 'function') px[k] = px[k]();
+    }
+
     value = runner.apply( this, ops[i].params );
   }
 

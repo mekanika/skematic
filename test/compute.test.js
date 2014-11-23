@@ -72,4 +72,17 @@ describe('Computed value generator', function () {
     expect( _set ).to.equal( 1 );
   });
 
+  it('resolves parameters provided as functions prior to passing', function () {
+    var _get = function (p) {
+      return 'hello '+p;
+    }
+    var s = {name: {
+      generate:{ ops:[ {fn:'next', params:[ _get.bind(this,'world') ]}]}}
+    };
+
+    var res = computeAll({}, s, fnLib);
+
+    expect( res.name ).to.equal('hello world no');
+  });
+
 });
