@@ -1,3 +1,24 @@
+0.9.0 - 26 November 2014
+=====
+
+Added:
+
+- Export the `toType()` general helper method
+- `.createFrom()` instantiates a new defaulted object based on schema
+- Computed values moved into repo `.computeAll()` and `.computeValue()`
+- computeValue resolves function parameters
+
+Changed:
+
+- `.default()` now applies values to objects (not just scalars)
+- `.test()` no longer defaults and casts, it ONLY tests data
+- Update cast to work with arrays of scalars
+- Validate does NOT filter/default. test->checkValue
+- Validate can test scalars directly
+- Clarify error message on cast to<Type>
+
+
+
 0.8.0 - 20 October 2014
 =====
 
