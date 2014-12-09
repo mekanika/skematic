@@ -1,3 +1,16 @@
+0.10.0 - 9 December 2014
+=====
+
+Changed:
+
+- License to MPLv2
+
+Internal:
+
+- Updated case for boilerplate files
+
+
+
 0.9.0 - 26 November 2014
 =====
 
