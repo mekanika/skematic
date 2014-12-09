@@ -154,5 +154,5 @@ var user = {
 
 Copyright 2013-2014 Clint Walker
 
-Licensed under [LGPL-3.0](http://opensource.org/licenses/LGPL-3.0)
+Licensed under [MPL-2.0](http://mozilla.org/MPL/2.0/)
 
