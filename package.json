@@ -4,7 +4,10 @@
   "description": "Data structure and rule engine",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "mocha -R spec test/",
+    "docs": "jsdoc -c .jsdoc.conf --destination docs/ index.js src/ Readme.md",
+    "lint": "jshint --config .jshintrc index.js src/*.js test/*.js",
+    "coverage": "istanbul cover _mocha"
   },
   "repository": {
     "type": "git",
