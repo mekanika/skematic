@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec test/",
+    "browser": "browserify index.js -o build/mekanika-schema.js -s schema",
+    "compress": "uglifyjs build/mekanika-schema.js -cm -o build/mekanika-schema.min.js",
+    "build": "npm run browser && npm run compress",
     "docs": "jsdoc -c .jsdoc.conf --destination docs/ index.js src/ Readme.md",
     "lint": "jshint --config .jshintrc index.js src/*.js test/*.js",
     "coverage": "istanbul cover _mocha"
