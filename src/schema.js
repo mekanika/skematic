@@ -62,7 +62,7 @@ exports.default = function (v, schema) {
 
   var def = function (v, s) {
     // No default, return the value as is
-    if (!s.default) return v;
+    if (s.default === undefined) return v;
 
     // Return the default if `v` is empty (ie. undefined or '')
     return Rules.empty(v) ? s.default : v;

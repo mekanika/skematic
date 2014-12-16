@@ -25,6 +25,10 @@ describe('default', function () {
     expect( schema.default('hi', {default:'yes'})).to.equal('hi');
   });
 
+  it('handles falsey defaults', function () {
+    expect( schema.default('', {default:false})).to.equal(false);
+  });
+
   it('returns the value if no .default', function () {
     expect( schema.default( '' ) ).to.equal('');
     expect( schema.default('hi') ).to.equal('hi');
