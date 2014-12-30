@@ -1,6 +1,6 @@
 {
   "name": "mekanika-schema",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Data structure and rule engine",
   "main": "index.js",
   "scripts": {

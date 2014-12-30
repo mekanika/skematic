@@ -1,3 +1,16 @@
+0.10.1 - 30 December 2014
+======
+
+Changed:
+
+- Updated README docs
+
+Fixed:
+
+- Handle 'falsey' default values
+
+
+
 0.10.0 - 9 December 2014
 =====
 
