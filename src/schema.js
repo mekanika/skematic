@@ -71,7 +71,7 @@ exports.default = function (v, schema) {
   // Parse objects
   if (typeof v === 'object') {
     for (var k in schema) {
-      v[k] = def( v[k], schema[k] );
+      if (schema[k].default) v[k] = def( v[k], schema[k] );
     }
 
     return v;

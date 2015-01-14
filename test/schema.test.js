@@ -42,6 +42,12 @@ describe('default', function () {
     expect( schema.default({age:21}, s).name ).to.equal('Zim');
   });
 
+  it('ignores undefined values where no default specified', function () {
+    var s = {moo: {type:'string'}};
+    var o = schema.default({},s);
+    expect( o ).to.not.have.key('moo');
+  });
+
 });
 
 
