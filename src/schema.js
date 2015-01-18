@@ -210,6 +210,8 @@ var is = {
   Runs `val` against a 'type' function that returns boolean if the
   value meets its criteria.
 
+  Does **NOT** type check undefined values.
+
   @param {Mixed} val The value to test
   @param {String} type The name of the type check to run
 
@@ -219,7 +221,7 @@ var is = {
 exports.typeCheck = function ( val, type ) {
   if (!is[ type ]) return ['Unknown type to check: '+type];
 
-  return is[ type ](val)
+  return val === undefined || is[ type ](val)
     ? []
     : ['Not of type: '+type];
 };

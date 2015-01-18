@@ -148,6 +148,10 @@ describe('typeCheck(val, type)', function () {
     expect( schema.typeCheck(1, 'WOOootss')[0] ).to.match( /unknown/ig );
   });
 
+  it('ignores typechecking `undefined` values', function () {
+    expect( schema.typeCheck(undefined, 'number') ).to.have.length(0);
+  });
+
   describe('types', function () {
     it('string', function () {
       expect( schema.typeCheck('abc', 'string') ).to.have.length(0);
