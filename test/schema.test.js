@@ -93,6 +93,10 @@ describe('filters', function () {
     });
   });
 
+  it('skips filtering on `undefined` values', function () {
+    expect( schema.filter(undefined, 'toNumber') ).to.equal( undefined );
+  });
+
   it('.available() provides list of available filters', function () {
     expect( schema.filter.available() ).to.have.length.gt( 0 );
   });

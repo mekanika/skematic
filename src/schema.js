@@ -132,6 +132,9 @@ exports.filter = function (val, filters) {
   // No-op if no filters
   if (!filters) return val;
 
+  // Do not attempt to filter 'undefined' values
+  if (val === undefined) return val;
+
   // Ensure filters are provided as an array
   if (typeof filters === 'string') filters = [filters];
 
