@@ -76,6 +76,10 @@ describe('Cast Types', function() {
       expect( err ).to.be.an.instanceof( Error );
     });
 
+    it('empty string returns undefined', function () {
+      expect( Cast.convertNumber( '' ) ).to.equal(undefined);
+    });
+
     describe('.toNumber( val )', function() {
 
       it('casts value to a number', function() {

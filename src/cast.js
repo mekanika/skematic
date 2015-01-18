@@ -12,7 +12,7 @@ module.exports = exports;
  * Returns the following conversions:
  *   undefined -> throws Error
  *   null     -> null
- *   string   -> string: 'hi' -> 'hi'
+ *   string   -> string: 'hi' -> 'hi', '' -> ''
  *   number   -> string: 1234 -> '1234'
  *   boolean  -> string: true -> 'true'
  *   function -> string: function(a){} -> 'function(a){}'
@@ -51,7 +51,7 @@ exports.toString = function toString( val ) {
  * Returns the following conversions:
  *   undefined -> throws Error
  *   null     -> null
- *   string   -> number || throws Error: '1234' -> 1234, 'abcd' -> Error
+ *   string   -> number || throws. '1234'->1234, 'abcd'->Err, ''->undefined
  *   number   -> number: 1234 -> 1234
  *   boolean  -> number: true -> 1 (false -> 0)
  *   function -> throws Error
@@ -77,7 +77,7 @@ exports.convertNumber = function convertNumber( val, convertor, radix ) {
 
     // Empty values
     if (null === val) return val;
-    if ('' === val) return null;
+    if ('' === val) return undefined;
 
     // Already a number? Run it through the convertor and return
     if (val instanceof Number || 'number' === typeof val)
