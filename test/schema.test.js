@@ -276,6 +276,10 @@ describe('checkValue(val, schema)', function () {
     expect( schema.checkValue( 'zim', s) ).to.have.length( 0 );
   });
 
+  it('returns unrequired undefined values', function () {
+    expect( schema.checkValue(undefined, {rules:{min:0}}) ).to.have.length(0);
+  });
+
   it('then checks type matches', function () {
     var s = {type:'integer', filters:['toInteger']};
 

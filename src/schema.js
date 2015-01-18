@@ -342,6 +342,8 @@ function errMsg (key) {
 /**
   Checks a value against the rules defined in `schema`
 
+  Does **NOT** apply rules to undefined values that are not `required`
+
   @param {Mixed} val The value to test
   @param {Object} schema The schema to apply the tests against
 
@@ -353,12 +355,13 @@ exports.checkValue = function (val, schema) {
 
   if (!schema) return errs;
 
-
   // Check required...
   if (schema.required) {
     if (!Rules.required( val )) return ['Required to be set'];
   }
 
+  // Not required and unset returns WITHOUT check
+  if (val === undefined) return errs;
 
   // 2. Check type match
   // The value type matches its declaration (if any)
@@ -366,7 +369,6 @@ exports.checkValue = function (val, schema) {
     var res = exports.typeCheck(val, schema.type);
     if (res.length) return res;
   }
-
 
   // 3. Validate rules
   for (var key in schema.rules) {
@@ -434,6 +436,7 @@ exports.validate = function (data, schema, _noCheck) {
       ? {valid:false, errors:res}
       : {valid:true, errors:[]};
   }
+
 
   // Step through ONLY our schema keys
   for (var key in schema) {
