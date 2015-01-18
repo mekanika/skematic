@@ -75,7 +75,7 @@ describe('Computed value generator', function () {
   it('resolves parameters provided as functions prior to passing', function () {
     var _get = function (p) {
       return 'hello '+p;
-    }
+    };
     var s = {name: {
       generate:{ ops:[ {fn:'next', params:[ _get.bind(this,'world') ]}]}}
     };
