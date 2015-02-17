@@ -449,9 +449,11 @@ exports.validate = function (data, schema, _noCheck) {
 
     // Self validate schema
     if (!_noCheck) {
-      var chk = exports.validate( scm, validSchema, true );
+      var chk = exports.validate( JSON.parse(JSON.stringify(scm)), validSchema, true );
       if (!chk.valid)
-        throw new Error('Invalid schema: ' + JSON.stringify(chk.errors));
+        throw new Error('Invalid schema: ' +
+          JSON.stringify(chk.errors) +
+          ' - {"' + key +'":'+ JSON.stringify(scm) + '}' );
     }
 
     // If it's not required and the default value is 'empty', skip it
