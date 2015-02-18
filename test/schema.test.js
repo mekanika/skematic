@@ -486,6 +486,13 @@ describe('Validate', function () {
         expect( res.valid ).to.be.false;
         expect( res.errors.gir['1'].says ).to.have.length(1);
       });
+
+      it('skips undefined arrays that have a schema AND a default', function () {
+        var rec = {mega:'kool'};
+        var s = {jam:{type:'array', default:['moo'], schema:{type:'string'}}};
+        var res = schema.validate( rec, s );
+        expect( res.valid ).to.be.ok;
+      });
     });
 
   });

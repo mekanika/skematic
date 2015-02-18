@@ -469,6 +469,9 @@ exports.validate = function (data, schema, _noCheck) {
       // Arrays can be either raw 'values' or complex 'objects'
       if (scm.type === 'array' || v instanceof Array) {
 
+        // Don't attampt to process 'v' if it's not set
+        if (!v) continue;
+
         // Step through the values in the array
         v.forEach(function(val,idx) {
 
