@@ -523,3 +523,35 @@ exports.validate = function (data, schema, _noCheck) {
   };
 };
 
+
+/**
+  Validates ONLY the keys on the data object, NOT the keys on the schema
+
+  @param {Object} data The keyed data object to validate
+  @param {Schema} schema The schema rules
+
+  @return {Object} Validation object `{valid:$bool, errors:$Object}`
+*/
+
+exports.sparseValidate = function (data, schema) {
+  var isValid = true;
+  var errs = {};
+  var out;
+
+  for (var key in data) {
+    // Only valid with an associated schema
+    if (!schema[key]) continue;
+
+    out = exports.validate(data[key], schema[key]);
+    if (!out.valid) {
+      isValid = false;
+      errs[key] = out.errors;
+    }
+  }
+
+  return {
+    valid: isValid,
+    errors: errs
+  };
+}
+

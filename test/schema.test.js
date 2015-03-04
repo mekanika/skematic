@@ -497,5 +497,15 @@ describe('Validate', function () {
 
   });
 
+  describe('sparseValidate', function () {
+    it('only validates data object fields (not schema)', function () {
+      var rec = {mega:'kool'};
+      var s = {mega:{type:'string'}, cray:{required:true}};
+
+      var res = schema.sparseValidate(rec, s);
+      expect( res.valid ).to.equal( true );
+    });
+  });
+
 });
 
