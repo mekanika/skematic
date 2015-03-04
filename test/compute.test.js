@@ -77,7 +77,7 @@ describe('Computed value generator', function () {
       return 'hello '+p;
     };
     var s = {name: {
-      generate:{ ops:[ {fn:'next', params:[ _get.bind(this,'world') ]}]}}
+      generate:{ ops:[ {fn:'next', args:[ _get.bind(this,'world') ]}]}}
     };
 
     var res = computeAll({}, s, fnLib);

@@ -69,21 +69,21 @@ var computeValue = exports.computeValue = function (ops, fnLib) {
 
     // If a value has been generated (by a previous function)
     // then pass 'value' to the function as its first parameter
-    if (value) ops[i].params
-      ? ops[i].params.unshift(value)
-      : ops[i].params = [value];
+    if (value) ops[i].args
+      ? ops[i].args.unshift(value)
+      : ops[i].args = [value];
 
-    // Ensure params are treated as an array
-    if (ops[i].params && !(ops[i].params instanceof Array))
-      ops[i].params = [ops[i].params];
+    // Ensure args are treated as an array
+    if (ops[i].args && !(ops[i].args instanceof Array))
+      ops[i].args = [ops[i].args];
 
     // Resolve function parameters to values
-    var k = -1, px = ops[i].params || [];
+    var k = -1, px = ops[i].args || [];
     while (++k < px.length) {
       if (typeof px[k] === 'function') px[k] = px[k]();
     }
 
-    value = runner.apply( this, ops[i].params );
+    value = runner.apply( this, ops[i].args );
   }
 
   return value;
