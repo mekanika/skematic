@@ -42,7 +42,7 @@ exports.computeAll = function (obj, s, fnLib) {
     if (!gen) continue;
 
     // Only update the value if it has changed
-    var v = computeValue.call( obj, gen.ops, fnLib );
+    var v = computeValue.call( obj, gen, fnLib );
     if (v !== obj[key]) obj[key] = v;
   }
 
@@ -54,12 +54,14 @@ exports.computeAll = function (obj, s, fnLib) {
   The value of `this` needs to be passed via a `.call()`
 */
 
-var computeValue = exports.computeValue = function (ops, fnLib) {
+var computeValue = exports.computeValue = function (gen, fnLib) {
   var value;
+
+  var ops = gen.ops;
 
   // Ensure we're always dealing with an Array
   // (supports defining a generator as `key:{fns:{FNOBJ}`)
-  if (!ops.length) ops = [ops];
+  if (!ops || !ops.length) ops = [ops];
 
   // Step through ops and generate value
   for (var i=0; i < ops.length; i++) {

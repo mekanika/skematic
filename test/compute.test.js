@@ -14,7 +14,7 @@ describe('Computed value generator', function () {
   var sc = {name:{generate:{ops:{fn:'run'}}}};
 
   it('process a single value via .computeValue()', function () {
-    expect( computeValue(sc.name.generate.ops, fnLib) ).to.equal('yes');
+    expect( computeValue(sc.name.generate, fnLib) ).to.equal('yes');
   });
 
   it('throws if method to generate is not found in fnLib', function (done) {
