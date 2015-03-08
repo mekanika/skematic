@@ -19,11 +19,18 @@ module.exports = exports;
   var myModel = {
     created: {
       generate: {
-        ops: [{fn:'date'}]
+        ops: [{fn:'date'}],
+        preserve: true|false,
+        require: true|false
       }
     }
   }
   ```
+
+  Flags for processing:
+
+  - preserve: If a value is provided DO NOT regenerate, OVERRIDES every
+  - require: Regenerate ONLY WHEN a key is provided (ie. require a provided key)
 
   @param {Object} obj The data object to transform and return
   @param {Schema} s A valid Schema# to parse for generator function references
@@ -41,9 +48,17 @@ exports.computeAll = function (obj, s, fnLib) {
     // Skip if there is no generator
     if (!gen) continue;
 
-    // Only update the value if it has changed
-    var v = computeValue.call( obj, gen, fnLib );
-    if (v !== obj[key]) obj[key] = v;
+    // Has a value been provided by the caller
+    var provided = Object.keys(obj).indexOf(key) > -1;
+
+    var preserve = gen.preserve;
+    var require = gen.require;
+
+    // Don't generate on the following conditions
+    if (provided && preserve) continue;
+    if (require && !provided) continue;
+
+    obj[key] = computeValue.call( obj, gen, fnLib );
   }
 
   return obj;

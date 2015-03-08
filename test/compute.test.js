@@ -48,30 +48,6 @@ describe('Computed value generator', function () {
     expect( computeAll({}, s, fnLib).name ).to.equal('yes no');
   });
 
-  it('only updates a generated value if that value has changed', function () {
-    var core = {};
-    var val;
-    var _set = 0;
-
-    // Increment a counter everytime the 'name' property is set
-    Object.defineProperty( core, 'name', {
-      get: function () { return val; },
-      set: function (v) {
-        _set++;
-        val = v;
-      }
-    });
-
-    // Generate the initial value
-    computeAll(core, sc, fnLib);
-    // Check that the counter was incremented
-    expect( _set ).to.equal( 1 );
-    // Generate again, value is the same
-    computeAll(core, sc, fnLib);
-    // Check counter DID NOT get incremented again
-    expect( _set ).to.equal( 1 );
-  });
-
   it('resolves parameters provided as functions prior to passing', function () {
     var _get = function (p) {
       return 'hello '+p;
@@ -91,6 +67,45 @@ describe('Computed value generator', function () {
 
     var out = computeAll({}, s);
     expect( out.jam ).to.equal('woo!');
+  });
+
+
+  describe('Flags', function () {
+
+    var make = function (x) { return 'swee!' + (x ? x : ''); };
+
+    it('default is generate all', function () {
+      var s = {
+        moo: {generate:{ops:[make]}}
+      };
+
+      var out = computeAll({}, s);
+      expect( out.moo ).to.equal('swee!');
+    });
+
+    it('preserve:true keeps provided values', function () {
+      var s = {
+        moo: {generate:{ops:[make], preserve:true}}
+      };
+
+      var out = computeAll({moo:'moo!'}, s);
+      expect( out.moo ).to.equal('moo!');
+    });
+
+    it('require:true', function () {
+      var s = {
+        moo: {generate:{ops:[make], require:true}},
+        yep: {generate:{ops:[make], require:true, preserve:true}},
+        woo: {generate:{ops:[make], require:true}}
+      };
+
+      var out = computeAll({moo:'!', yep:'woo!'}, s);
+
+      expect( out.moo ).to.equal('swee!');
+      expect( out.yep ).to.equal('woo!');
+      expect( Object.keys(out) ).to.have.length(2);
+    });
+
   });
 
 });
