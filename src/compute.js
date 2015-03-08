@@ -65,7 +65,11 @@ var computeValue = exports.computeValue = function (gen, fnLib) {
 
   // Step through ops and generate value
   for (var i=0; i < ops.length; i++) {
-    var runner = fnLib[ops[i].fn];
+    var runner;
+
+    if (typeof ops[i] === 'function') runner = ops[i];
+    else runner = fnLib[ops[i].fn];
+
     if (!runner)
       throw new Error ('No generator method:'+ops[i].fn);
 

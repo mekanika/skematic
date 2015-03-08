@@ -85,4 +85,12 @@ describe('Computed value generator', function () {
     expect( res.name ).to.equal('hello world no');
   });
 
+  it('runs raw function ops', function () {
+    var woo = function () { return 'woo!'; };
+    var s = {jam: {generate:{ops:[woo]}}};
+
+    var out = computeAll({}, s);
+    expect( out.jam ).to.equal('woo!');
+  });
+
 });
