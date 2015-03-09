@@ -34,13 +34,12 @@ module.exports = exports;
 
   @param {Object} obj The data object to transform and return
   @param {Schema} s A valid Schema# to parse for generator function references
-  @param {Hash} fnLib A named list of functions to call from schema references
 
-  @throws {Error} when a named function is not found in fnLib
+  @throws {Error} when a named function is not found in Schema.lib
   @return {Object} The data object with generated values attached
 */
 
-exports.computeAll = function (obj, s, fnLib) {
+exports.computeAll = function (obj, s) {
   for (var key in s) {
     // Shorthand
     var gen = s[key].generate;
@@ -58,7 +57,7 @@ exports.computeAll = function (obj, s, fnLib) {
     if (provided && preserve) continue;
     if (require && !provided) continue;
 
-    obj[key] = computeValue.call( obj, gen, fnLib );
+    obj[key] = computeValue.call( obj, gen );
   }
 
   return obj;
@@ -69,10 +68,12 @@ exports.computeAll = function (obj, s, fnLib) {
   The value of `this` needs to be passed via a `.call()`
 */
 
-var computeValue = exports.computeValue = function (gen, fnLib) {
+var computeValue = exports.computeValue = function (gen) {
+
   var value;
 
   var ops = gen.ops;
+  var fnLib = require('./schema').lib;
 
   // Ensure we're always dealing with an Array
   // (supports defining a generator as `key:{fns:{FNOBJ}`)

@@ -1,5 +1,6 @@
 
 var expect = require('chai').expect
+  , Schema = require('../src/schema')
   , computeValue = require('../src/compute').computeValue
   , computeAll = require('../src/compute').computeAll;
 
@@ -12,6 +13,25 @@ describe('Computed value generator', function () {
   };
 
   var sc = {name:{generate:{ops:{fn:'run'}}}};
+
+  beforeEach(function () {
+    // Clear the library
+    Schema.loadLib({});
+
+    // Reload the library
+    Schema.loadLib(fnLib);
+  });
+
+  it('can load in an object library of fns', function () {
+    var s = {name: {
+      generate:{ops:[{fn:'run'}]}}
+    };
+    // Clear the library
+    Schema.loadLib({});
+    // Load in the library
+    Schema.loadLib(fnLib);
+    expect( computeAll({}, s).name ).to.equal('yes');
+  });
 
   it('process a single value via .computeValue()', function () {
     expect( computeValue(sc.name.generate, fnLib) ).to.equal('yes');
