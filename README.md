@@ -132,6 +132,8 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.max** - The highest permitted number
 - **.minLength** - The shortest string permitted
 - **.maxLength** - The longest string permitted
+- **.in** - Value must be in the list of elements
+- **.notIn** - Value must NOT be in the list of elements
 - **.isEmail** - no parameters: Is the string an email
 - **.isUrl** - no parameters: Is the string a URL
 - **.match** - String must match regexp
