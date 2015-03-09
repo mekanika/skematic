@@ -39,7 +39,7 @@ module.exports = exports;
   @return {Object} The data object with generated values attached
 */
 
-exports.computeAll = function (obj, s) {
+exports.computeAll = function (obj, s, runOnce) {
   for (var key in s) {
     // Shorthand
     var gen = s[key].generate;
@@ -52,8 +52,10 @@ exports.computeAll = function (obj, s) {
 
     var preserve = gen.preserve;
     var require = gen.require;
+    var once = gen.once;
 
     // Don't generate on the following conditions
+    if (once && !runOnce) continue;
     if (provided && preserve) continue;
     if (require && !provided) continue;
 

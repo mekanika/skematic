@@ -89,6 +89,15 @@ describe('Computed value generator', function () {
     expect( out.jam ).to.equal('woo!');
   });
 
+  it('run once:true only when runOnce flag is provided', function () {
+    var s = { name:{generate:{ops:[{fn:'run'}], once:true}}};
+
+    var out = computeAll({}, s);
+    expect( out.name ).to.equal(undefined);
+    // console.log(Schema.computeOnce);
+    out = Schema.computeOnce({}, s);
+    expect( out.name ).to.equal('yes');
+  });
 
   describe('Flags', function () {
 

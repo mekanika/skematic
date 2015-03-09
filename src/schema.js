@@ -16,10 +16,34 @@ module.exports = exports;
 
 
 /**
+  Set default function library to empty
+*/
+
+exports.lib = {};
+
+
+/**
+  Load in a library of functions
+
+  @param {Object} fno An Object of keyed functions `{key:function()...}`
+  @function
+*/
+
+exports.loadLib = function (fno) { exports.lib = fno; };
+
+
+/**
   Apply compute facilities
 */
 
 exports.compute = Compute.computeAll;
+
+
+/**
+  Apply compute to `{once:true}` fields
+*/
+
+exports.computeOnce = function (d, s) { return Compute.computeAll(d,s,true); };
 
 
 /**
