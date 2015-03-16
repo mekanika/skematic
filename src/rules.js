@@ -136,6 +136,34 @@ exports.notIn = function () {
 
 
 /**
+  Checks that a provided array contains the value `val`
+
+  @param {Array} arr The array to inspect for presence of `val`
+  @param {Mixed} val The value to find
+  @memberOf rules
+  @alias has
+*/
+
+exports.has = function has (arr, val) {
+  return arr.indexOf(val) > -1;
+};
+
+
+/**
+  Checks that a provided array DOES NOT contain the value `val`
+
+  @param {Array} arr The array to inspect for presence of `val`
+  @param {Mixed} val The value to find
+  @memberOf rules
+  @alias hasNot
+*/
+
+exports.hasNot = function hasNot (arr, val) {
+  return arr.indexOf(val) === -1;
+};
+
+
+/**
  * String is a valid email
  *
  * @param {String} str

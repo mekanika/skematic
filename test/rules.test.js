@@ -139,6 +139,30 @@ describe('Rules', function() {
       });
     });
 
+    describe('.has(list, val)', function () {
+      it('passes if list contains val', function () {
+        expect( V.has([1,2,3], 2) ).to.be.true;
+        expect( V.has(['one','two','woo'], 'woo') ).to.be.true;
+      });
+
+      it('fails if list does not contain val', function () {
+        expect( V.has([1,2,3], 5) ).to.be.false;
+        expect( V.has(['one','two','woo']), 3).to.be.false;
+      });
+    });
+
+    describe('.hasNot(list, val)', function () {
+      it('passes if list DOES NOT contain val', function () {
+        expect( V.hasNot([1,2,3], 5) ).to.be.true;
+        expect( V.hasNot(['one','two','woo'], 'BOO') ).to.be.true;
+      });
+
+      it('fails if list DOES contain val', function () {
+        expect( V.hasNot([1,2,3], 2) ).to.be.false;
+        expect( V.hasNot(['one','two','woo'], 'woo') ).to.be.false;
+      });
+    });
+
   });
 
 
