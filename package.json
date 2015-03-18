@@ -20,7 +20,9 @@
   "bugs": {
     "url": "https://github.com/mekanika/schema/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mekanika-lsd": "^0.1.0"
+  },
   "devDependencies": {
     "browserify": "^8.1.0",
     "chai": "^1.10.0",
