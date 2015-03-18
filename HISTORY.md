@@ -1,3 +1,26 @@
+0.11.0 - UNRELEASED
+======
+
+Added:
+
+- .sparseValidate() to only validate provided data keys (not full schema)
+- .has() and .hasNot() to rules
+
+Changed:
+
+- Skip filtering on `undefined` values
+- Ignore type checking `undefined` values
+- Prevent rule checks on unrequired `undefined` values
+- Error on schema validation failure
+- Validate skips `undefined` arrays that have a schema and default
+
+Fixed:
+
+- .default() not setting undefined values
+- 'toNumber' filter converts empty string to `undefined`
+
+
+
 0.10.1 - 30 December 2014
 ======
 
