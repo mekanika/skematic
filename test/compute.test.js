@@ -1,6 +1,6 @@
 
 var expect = require('chai').expect
-  , Schema = require('../lib/schema')
+  , Skematic = require('../lib/schema')
   , computeValue = require('../lib/compute').computeValue
   , computeAll = require('../lib/compute').computeAll;
 
@@ -16,10 +16,10 @@ describe('Computed value generator', function () {
 
   beforeEach(function () {
     // Clear the library
-    Schema.loadLib({});
+    Skematic.loadLib({});
 
     // Reload the library
-    Schema.loadLib(fnLib);
+    Skematic.loadLib(fnLib);
   });
 
   it('can load in an object library of fns', function () {
@@ -27,9 +27,9 @@ describe('Computed value generator', function () {
       generate:{ops:[{fn:'run'}]}}
     };
     // Clear the library
-    Schema.loadLib({});
+    Skematic.loadLib({});
     // Load in the library
-    Schema.loadLib(fnLib);
+    Skematic.loadLib(fnLib);
     expect( computeAll({}, s).name ).to.equal('yes');
   });
 
@@ -94,8 +94,8 @@ describe('Computed value generator', function () {
 
     var out = computeAll({}, s);
     expect( out.name ).to.equal(undefined);
-    // console.log(Schema.computeOnce);
-    out = Schema.computeOnce({}, s);
+    // console.log(Skematic.computeOnce);
+    out = Skematic.computeOnce({}, s);
     expect( out.name ).to.equal('yes');
   });
 
