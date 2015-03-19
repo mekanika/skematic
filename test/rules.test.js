@@ -3,7 +3,7 @@
  */
 
 var expect = require('chai').expect
-  , V = require('../src/rules');
+  , V = require('../lib/rules');
 
 describe('Rules', function() {
 

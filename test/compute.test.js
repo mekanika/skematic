@@ -1,8 +1,8 @@
 
 var expect = require('chai').expect
-  , Schema = require('../src/schema')
-  , computeValue = require('../src/compute').computeValue
-  , computeAll = require('../src/compute').computeAll;
+  , Schema = require('../lib/schema')
+  , computeValue = require('../lib/compute').computeValue
+  , computeAll = require('../lib/compute').computeAll;
 
 
 describe('Computed value generator', function () {

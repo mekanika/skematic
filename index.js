@@ -1,2 +1,2 @@
 
-module.exports = require('./src/schema.js');
+module.exports = require('./lib/schema.js');
