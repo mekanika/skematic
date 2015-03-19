@@ -1,8 +1,8 @@
 
 var expect = require('chai').expect
-  , Schema = require('../index');
+  , Skematic = require('../index');
 
-describe('cast (default + filters)', function () {
+describe('cast (default + transform)', function () {
   var s = {
     name: {type:'string', default:'zim'},
     address: { schema: {
@@ -21,26 +21,26 @@ describe('cast (default + filters)', function () {
   };
 
   it('values', function () {
-    var res = Schema.cast( undefined, {default:10, filters:'toString'});
+    var res = Skematic.cast( undefined, {default:10, transforms:'toString'});
     expect( res ).to.equal( '10' );
   });
 
   it('arrays (of scalars)', function () {
-    var s = {gir:{schema:{type:'string', filters:['toString']}}};
+    var s = {gir:{schema:{type:'string', transforms:['toString']}}};
 
     var data = {gir:['a','b',4]};
-    data = Schema.cast( data, s );
+    data = Skematic.cast( data, s );
     expect( typeof data.gir[2] ).to.equal( 'string' );
   });
 
   it('arrays (of objects)', function () {
-    var res = Schema.cast( [{smoo:1},{}], s.books );
+    var res = Skematic.cast( [{smoo:1},{}], s.books );
     expect( res[0] ).to.have.keys( 'smoo', 'title' );
     expect( res[0].title ).to.equal('JRRT');
   });
 
   it('objects', function () {
-    var res = Schema.cast( {}, s.address );
+    var res = Skematic.cast( {}, s.address );
     expect(res.city).to.equal('nowhere');
   });
 });

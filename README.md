@@ -109,9 +109,9 @@ Additional methods:
 
 - **.checkValue( val, schema )** - runs rule validation against a value - returns an array of errors.
 
-- **.transform( value, filters )**   - Applies `filters` array to `value`
-  - .filter.available() - lists available filters
-  - .filter.add( key, fn ) - adds a filter to the library
+- **.transform( value, transforms )**   - Applies `transforms` array to `value`
+  - .transform.available() - lists available transforms
+  - .transform.add( key, fn ) - adds a transform to the library
 
 
 ## Skematic Structure
@@ -144,11 +144,13 @@ To define a data structure (a 'skematic'), use the following rules:
     - "array"
     - "object"
 - **default** _{any}_ value to apply if no value is set/passed
-- **filters** _{Array}_ string values of filters to apply (transforms)
+- **transforms** _{Array}_ string values of transform to apply (transforms)
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
 - **rules** _{Object}_ hash of validation rules: `{ rules: {min:3, max:11} }` (see below for more)
 - **errors** _{Object|String}_ hash of error messages for rules
 - **schema** _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
+
+> Note: As you can see, keys that can contain many values are always plural, eg. `transforms`, `rules`, etc. Keys that only contain one value or item are always singular, eg. `default`, `required`, `schema`, etc.
 
 Example:
 
@@ -156,7 +158,7 @@ Example:
 var HeroName = {
   type:'string',
   default: 'Genericman',
-  filters: 'toString nowhite',
+  transforms: ['toString','nowhite'],
   required: true,
   rules: {maxLength:140, minLength:4},
   errors: {maxLength:'Too long', minLength:'Shorty!'}
@@ -181,9 +183,9 @@ Skematic.validate( {name:'Spiderman', skill:15} );
 // (note the `errors` in this case is an object)
 ```
 
-## Filters
+## Transforms
 
-The following built-in filters can be used to cast and otherwise transform a provided value:
+The following built-in transforms can be used to type convert and otherwise modify a provided value:
 
 - **trim**- trims whitespace from start and end of string value
 - **nowhite** - removes all whitespace from a string value
@@ -195,6 +197,14 @@ The following built-in filters can be used to cast and otherwise transform a pro
 - **toInteger** - converts value to an Integer
 - **toBoolean** - converts value to a Boolean
 - **toDate** - converts value to a Javascript Date
+
+These are provided as an array on key `transforms`:
+
+```js
+var mySchema = {
+  handle: {transforms:['trim', 'lowercase']}
+};
+```
 
 
 ## Rules
@@ -215,7 +225,7 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.notMatch** - String must NOT match regexp
 - **.empty** - `true` checks the value is empty, `false` checks it's not
 
-Declare rules as follows:
+Declare `rules` key as follows:
 
 ```js
 var User = {

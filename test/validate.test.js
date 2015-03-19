@@ -209,7 +209,7 @@ describe('checkValue(val, schema)', function () {
   });
 
   it('then checks type matches', function () {
-    var s = {type:'integer', filters:['toInteger']};
+    var s = {type:'integer', transforms:['toInteger']};
 
     var data = '1';
     expect( schema.checkValue( data, s) ).to.have.length( 1 );
