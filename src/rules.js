@@ -1,5 +1,5 @@
 /**
-  @namespace rules
+  @namespace Rules
 */
 
 
@@ -15,7 +15,7 @@ module.exports = exports;
  *
  * @param {Mixed} val The value to test
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias required
  */
 
@@ -27,12 +27,14 @@ exports.required = function required( val ) {
 
 
 /**
- * Is the value empty or not
+ * Value is empty (either `''` or `undefined`).
+ *
+ * Set `allowEmpty=false` to return `false` on empty, `true` on set
  *
  * @param {Mixed} val The value to test
- * @param {Boolean} allowEmpty Whether the value can be empty or not
+ * @param {Boolean} allowEmpty [default:true] When `false`, empty values return `false`, set values return `true`
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias empty
  */
 
@@ -47,7 +49,7 @@ exports.empty = function (v, allowEmpty) {
  *
  * @param {String} val The value to test
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias minLength
  */
 
@@ -61,7 +63,7 @@ exports.minLength = function minLength( str, min ) {
  *
  * @param {String} val The value to test
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias maxLength
  */
 
@@ -76,7 +78,7 @@ exports.maxLength = function maxLength( str, max ) {
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias max
  */
 
@@ -91,7 +93,7 @@ exports.max = function max( val, limit ) {
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias min
  */
 
@@ -107,7 +109,7 @@ exports.min = function min( val, limit ) {
  * @param {Number} v The value to test
  * @param {Number} limit The list of values to test against
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias in
  */
 
@@ -126,7 +128,7 @@ exports.in = function (v, list) {
  * @param {Number} v The value to test
  * @param {Number} limit The list of values to test against
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias notIn
  */
 
@@ -140,7 +142,7 @@ exports.notIn = function () {
 
   @param {Array} arr The array to inspect for presence of `val`
   @param {Mixed} val The value to find
-  @memberOf rules
+  @memberOf Rules
   @alias has
 */
 
@@ -154,7 +156,7 @@ exports.has = function has (arr, val) {
 
   @param {Array} arr The array to inspect for presence of `val`
   @param {Mixed} val The value to find
-  @memberOf rules
+  @memberOf Rules
   @alias hasNot
 */
 
@@ -168,7 +170,7 @@ exports.hasNot = function hasNot (arr, val) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias isEmail
  */
 
@@ -182,7 +184,7 @@ exports.isEmail = function isEmail( str ) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias isUrl
  */
 
@@ -197,7 +199,7 @@ exports.isUrl = function isUrl( str ) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias isAlpha
  */
 
@@ -211,7 +213,7 @@ exports.isAlpha = function (v) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @alias isUrl
  */
 
@@ -227,7 +229,7 @@ exports.isAlphaNum = function (v) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @method is
  * @alias regex
  */
@@ -245,7 +247,7 @@ exports.match = function regex( str, exp, flags ) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf rules
+ * @memberOf Rules
  * @method not
  * @alias notRegex
  */
