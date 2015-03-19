@@ -34,12 +34,12 @@ describe('Computed value generator', function () {
   });
 
   it('process a single value via .computeValue()', function () {
-    expect( computeValue(sc.name.generate, fnLib) ).to.equal('yes');
+    expect( computeValue(sc.name, {}) ).to.equal('yes');
   });
 
   it('throws if method to generate is not found in fnLib', function (done) {
     try {
-      computeValue( sc.name.generate.ops, {} );
+      computeValue( {generate:{ops:[{fn:'junk'}]}}, {} );
     }
     catch (e) { done(); }
   });
