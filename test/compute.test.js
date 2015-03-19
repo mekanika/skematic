@@ -68,6 +68,16 @@ describe('Computed value generator', function () {
     expect( computeAll({}, s, fnLib).name ).to.equal('yes no');
   });
 
+  it('passes provided value as first argument on first op', function () {
+    var s = {
+      name:{ generate:{ops:[fnLib.next]}},
+      boo: { generate:{ops:[fnLib.next, fnLib.next]}}
+    };
+    var out = computeAll({name:'!?'}, s);
+    expect( out.name ).to.equal('!? no');
+    expect( out.boo ).to.equal('!? no no');
+  });
+
   it('resolves parameters provided as functions prior to passing', function () {
     var _get = function (p) {
       return 'hello '+p;
@@ -102,6 +112,7 @@ describe('Computed value generator', function () {
   describe('Flags', function () {
 
     var make = function (x) { return 'swee!' + (x ? x : ''); };
+    var swee = function () { return 'swee!'; };
 
     it('default is generate all', function () {
       var s = {
@@ -123,12 +134,12 @@ describe('Computed value generator', function () {
 
     it('require:true', function () {
       var s = {
-        moo: {generate:{ops:[make], require:true}},
+        moo: {generate:{ops:[swee], require:true}},
         yep: {generate:{ops:[make], require:true, preserve:true}},
         woo: {generate:{ops:[make], require:true}}
       };
 
-      var out = computeAll({moo:'!', yep:'woo!'}, s);
+      var out = computeAll({moo:'!?', yep:'woo!'}, s);
 
       expect( out.moo ).to.equal('swee!');
       expect( out.yep ).to.equal('woo!');
