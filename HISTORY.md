@@ -1,4 +1,12 @@
-0.11.0 - UNRELEASED
+0.11.1 - 19 March 2015
+======
+
+MOVE NOTICE: `mekanika-schema` is now `skematic`
+https://github.com/mekanika/skematic
+
+
+
+0.11.0 - 18 March 2015
 ======
 
 Added:
