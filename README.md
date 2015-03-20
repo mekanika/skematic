@@ -1,5 +1,7 @@
 # Skematic
 
+> Note: `Skematic` used to be called `mekanika-schema` (changed 19 March 2015)
+
 > Data structure and rule validation engine
 
 > _In Development_: Skematic is still **beta software**. It has matured in terms of its test coverage and stability, however the API should not be considered stable and is likely to introduce breaking changes prior to a Release Candidate. See [Ticket #3: Lock down API design](https://github.com/mekanika/schema/issues/3)
@@ -29,7 +31,9 @@ Skematic.loadLib({
 var ref = {
   name: {
     type: 'string',
-    default: 'Zim'
+    default: 'Zim',
+    rules: {minLength:3},
+    errors: {minLength:'Too short man!'}
    },
   password: {
     required:true, 
@@ -40,9 +44,10 @@ var ref = {
 
 Skematic.createFrom( ref );
 // {name:'Zim', password:'c92jkvld10'}
-```
 
-> Note: `Skematic` used to be called `mekanika-schema` (as of 19 March 2015)
+Skematic.validate( {name:'X!'}, ref );
+// -> {valid:false, errors:{name:['Too short man!']}}
+```
 
 
 ## Install
@@ -53,6 +58,12 @@ To use in CommonJS (node/iojs) environments:
 
 ```js
 var Skematic = require('skematic');
+```
+
+To use in a browser:
+
+```html
+<script src="node_modules/skematic/build/skematic.min.js"></script>
 ```
 
 
@@ -79,44 +90,9 @@ var results = Skematic.validate( clark, Hero );
 _Note:_ Specifying a `type` is shorthand for adding the rule `is:'$type'`. If you plan to CAST to this type you'll need a filter. For more details on usage, see below.
 
 
-## API
+## Config reference
 
-The *primary* method is:
-
-- **.validate( d,s )** - Rule validation engine (see "Rules"). Returns `{ valid: true/false, errors: {} }`
-
-You may alternatively validate ONLY the fields on the data object (rather than the entire schema), by running `sparseValidate` as follows:
-
-```js
-Skematic.sparseValidate({simple:true}, complexStruct);
-```
-
-To assist in preparing your data:
-
-- **.default( d,s )**  - Returns/applies defaults if no value provided
-- **.compute( d,s,fns )** - Generates a value (see "Computed Values")
-- **.cast( d,s )** - Run filters to transform the value (see "Filters")
-
-> `(d,s)` is shorthand for `(data, schema)` parameters.
->
-> The `d` (data) parameter is either a scalar value or an object of `{key:value}` pairs. If passing a data object, ensure you provide the `s` (schema) parameter as an object hash with the keys you wish to test.
-
-To optionally create a blank object from your schema:
-
-- **createFrom( schema )** - generates a blank object from the provided `schema` running `.default()` and `.compute()`.
-
-Additional methods:
-
-- **.checkValue( val, schema )** - runs rule validation against a value - returns an array of errors.
-
-- **.transform( value, transforms )**   - Applies `transforms` array to `value`
-  - .transform.available() - lists available transforms
-  - .transform.add( key, fn ) - adds a transform to the library
-
-
-## Skematic Structure
-
-A 'skematic' is simply a hash of keys, each key representing a field in your data structure. Each field may optionally have rules attached to it, but this is not required. As such a simple structure looks as follows:
+A data structure 'skematic' is simply a hash of keys, each key representing a field in your data structure. Each field may optionally have rules attached to it, but this is not required. As such, the simplest structure looks as follows:
 
 ```js
 // Your object has only a "name" field
@@ -133,7 +109,6 @@ Skematic.createFrom( myStruct );
 // -> {name: undefined}
 ```
 
-
 To define a data structure (a 'skematic'), use the following rules:
 
 - **type** _{String}_ Checks (but doesn't convert) that a value is of type:
@@ -149,8 +124,100 @@ To define a data structure (a 'skematic'), use the following rules:
 - **rules** _{Object}_ hash of validation rules: `{ rules: {min:3, max:11} }` (see below for more)
 - **errors** _{Object|String}_ hash of error messages for rules
 - **schema** _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
+- **generate** _{Object}_ enables computing a value from functions
 
 > Note: As you can see, keys that can contain many values are always plural, eg. `transforms`, `rules`, etc. Keys that only contain one value or item are always singular, eg. `default`, `required`, `schema`, etc.
+
+
+### A working example
+
+A working example of the configuration options is provided below as code.
+Remember, all structure rules and definitions are _optional_.
+
+```js
+var Schema = {
+  
+  // A key you wish to provide on your data structure, in this case: "name"
+  name: {
+    // Acts as a Rule - fails validation if passed something other than
+    // a "string", unless transformed using `toString`
+    type: 'string',
+
+    // Acts as a Rule - fails if not provided
+    required: true,
+
+    // Formats data - if no value is provided, value is set to this default
+    default: 'User',
+
+    // Formats data - applies modification functions. See "Transforms" in docs
+    transform: ['toString', 'trim'],
+
+    // Rules for validation
+    // See the "Rules" docs for more information
+    rules: {
+      minLength: 3,
+      maxLength: 32
+    },
+
+    // Custom error messages for rule validation failures
+    errors: {
+      // Specific to the `minLength` error
+      minLength: 'Name must be at least 3 characters',
+      // Applies to any failures that do not have a declared error message
+      // (Note: if no `default` is specifed, errors return 'Failed: <rule>')
+      default: 'Name validation failed'
+    }
+  },
+
+  magicNumber: {
+    type:'number',
+
+    // Formats data - generates a computed value for this field `magicNumber`
+    generate: {
+      // The "ops" are named functions that are run one after the other
+      // with the output of each fed as the first parameter of the next call
+      // - Requires loading a named library of functions using `.loadLib()`
+      ops: ['randomNumber'],
+
+      // Can only be run when the `once` flag is specified on `.compute()`
+      once: true,
+
+      // Whether a provided value should be kept (false = overridden)
+      // Default: false (ie. no _need_ to specify this below, but for example)
+      preserve: false,
+
+      // If true, a `magicNumber` key MUST be present on the provided data
+      // in order to generate a new value. `false` means always generate
+      // Default: false (ie. no _need_ to specify this below, but for example)
+      require: false
+    }
+  },
+
+  stringCode: {
+    type: 'array',
+
+    // This structure applies to the contents of the `stringCode` Array
+    schema: {
+      type: 'string',
+      // Ensures the values in `stringCode` array are all one of these 
+      rules: {in:['one','two','three','four','five']},
+      errors: {
+        in: 'stringCodes MUST be a string number between "one" and "five"'
+      }
+    }
+  },
+
+  special: {
+    // This structure applies directly to the `special` property object
+    schema: {
+      style: {type:'string', rules:{in: ['work','play'] }},
+      power: {type:'number', default:5}
+    }
+  }
+}
+```
+
+
 
 Example:
 
@@ -181,6 +248,73 @@ var Hero = {
 Skematic.validate( {name:'Spiderman', skill:15} );
 // -> {valid:true, errors:{}}
 // (note the `errors` in this case is an object)
+
+```
+
+## API
+
+The *primary* method is:
+
+- **.validate( d,s )** - Rule validation engine (see "Rules"). Returns `{ valid: true/false, errors: {} }`
+
+You may alternatively validate ONLY the fields on the data object (rather than the entire schema), by running `sparseValidate` as follows:
+
+```js
+Skematic.sparseValidate({simple:true}, complexStruct);
+```
+
+To format data, use `format( schema, opts, data )`:
+
+```js
+Skematic.format( schema, {
+  // Only process keys on the `data` object (rather than the whole schema)
+  sparse: true,   // default: false
+
+  // Apply any default values
+  defaults: true, // default: true
+
+  // Compute and apply generated values
+  generate: true, // default: true
+
+  // Run tranform functions on values
+  transform: true, // default: true
+}, data );
+```
+
+Format applies these options in significant order:
+
+1. `sparse`: Only processes keys on the provided data (not the whole schema)
+2. `defaults`: Apply default values
+3. `generate`: Compute and apply generated values
+4. `transform`: Run tranform functions on values
+
+Meaning if you have an `uppercase` transform, it will run AFTER your `generate` methods, thus uppercasing whatever they produce.
+
+You may also manually invoke the individual methods:
+
+- **.default( d,s )**  - Returns/applies defaults if no value provided
+- **.compute( d,s )** - Generates a value (see "Computed Values")
+- **.transform( d,s)
+
+
+> `(d,s)` is shorthand for `(data, schema)` parameters.
+>
+> The `d` (data) parameter is either a scalar value or an object of `{key:value}` pairs. If passing a data object, ensure you provide the `s` (schema) parameter as an object hash with the keys you wish to test.
+
+To optionally create a blank object from your schema:
+
+- **createFrom( schema )** - generates a blank object from the provided `schema` running `.default()` and `.compute()`.
+
+Additional methods:
+
+- **.checkValue( val, schema )** - runs rule validation against a value - returns an array of errors.
+
+- **.transform( value, transforms )**   - Applies `transforms` array to `value`
+  - .transform.available() - lists available transforms
+  - .transform.add( key, fn ) - adds a transform to the library
+
+
+
 ```
 
 ## Transforms
@@ -237,6 +371,9 @@ var User = {
 Skematic.validate( 'Zim', User.name );
 // -> {valid:false, errors:['Failed: minLength']}
 ```
+
+
+### Custom **error** messages
 
 Custom error messages can be declared per rule name:
 `{errors: { "$ruleName": "Custom message" }}`

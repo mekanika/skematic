@@ -5,8 +5,12 @@ var expect = require('chai').expect
 
 describe('API', function () {
 
+  it('.format() exists', function () {
+    expect( Skematic.format ).to.be.an.instanceof( Function );
+  });
+
   it('exposes .compute method', function () {
-    expect( Skematic.compute ).to.be.and.instanceof( Function );
+    expect( Skematic.compute ).to.be.an.instanceof( Function );
   });
 
 });
