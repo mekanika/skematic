@@ -208,16 +208,6 @@ describe('checkValue(val, schema)', function () {
     expect( Skematic.checkValue(undefined, {rules:{min:0}}) ).to.have.length(0);
   });
 
-  it('then checks type matches', function () {
-    var s = {type:'integer', transforms:['toInteger']};
-
-    var data = '1';
-    expect( Skematic.checkValue( data, s) ).to.have.length( 1 );
-
-    data = Skematic.cast(data, s);
-    expect( Skematic.checkValue( data, s) ).to.have.length( 0 );
-  });
-
   it('then applies specified rules', function () {
     var s = {type:'integer', rules:{min:5}};
     expect( Skematic.checkValue(1, s) ).to.have.length(1);
