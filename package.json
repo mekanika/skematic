@@ -6,9 +6,12 @@
     "data",
     "format",
     "generate",
+    "mekanika",
+    "mekanika-schema",
     "model",
     "project",
     "schema",
+    "schemajs",
     "validate",
     "validation"
   ],
