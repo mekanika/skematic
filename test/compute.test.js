@@ -30,11 +30,11 @@ describe('Computed value generator', function () {
     Skematic.loadLib({});
     // Load in the library
     Skematic.loadLib(fnLib);
-    expect( computeAll({}, s).name ).to.equal('yes');
+    expect( computeAll(s, {}).name ).to.equal('yes');
   });
 
   it('process a single value via .computeValue()', function () {
-    expect( computeValue(sc.name, {}) ).to.equal('yes');
+    expect( computeValue(sc.name, null, {}) ).to.equal('yes');
   });
 
   it('throws if method to generate is not found in fnLib', function (done) {
@@ -46,7 +46,7 @@ describe('Computed value generator', function () {
 
   it('returns the data object', function () {
     var o = {a:1};
-    expect( computeAll(o) ).to.equal( o );
+    expect( computeAll({}, null, o) ).to.equal( o );
   });
 
   it('generates a value from a named function in schema def', function () {
@@ -54,18 +54,18 @@ describe('Computed value generator', function () {
       generate:{ops:[{fn:'run'}]}}
     };
 
-    expect( computeAll({}, s, fnLib).name ).to.equal('yes');
+    expect( computeAll(s, null, {}).name ).to.equal('yes');
   });
 
   it('supports declaring a single fn in schema', function () {
-    expect( computeAll({}, sc, fnLib).name ).to.equal('yes');
+    expect( computeAll( sc, null, {}).name ).to.equal('yes');
   });
 
   it('chains value as param into arrays of operator functions', function () {
     var s = {name: {
       generate:{ ops:[ {fn:'run'}, {fn:'next'}]}}
     };
-    expect( computeAll({}, s, fnLib).name ).to.equal('yes no');
+    expect( computeAll( s, null, {}).name ).to.equal('yes no');
   });
 
   it('passes provided value as first argument on first op', function () {
@@ -73,7 +73,7 @@ describe('Computed value generator', function () {
       name:{ generate:{ops:[fnLib.next]}},
       boo: { generate:{ops:[fnLib.next, fnLib.next]}}
     };
-    var out = computeAll({name:'!?'}, s);
+    var out = computeAll( s, null, {name:'!?'});
     expect( out.name ).to.equal('!? no');
     expect( out.boo ).to.equal('!? no no');
   });
@@ -86,7 +86,7 @@ describe('Computed value generator', function () {
       generate:{ ops:[ {fn:'next', args:[ _get.bind(this,'world') ]}]}}
     };
 
-    var res = computeAll({}, s, fnLib);
+    var res = computeAll(s, null, {});
 
     expect( res.name ).to.equal('hello world no');
   });
@@ -95,17 +95,17 @@ describe('Computed value generator', function () {
     var woo = function () { return 'woo!'; };
     var s = {jam: {generate:{ops:[woo]}}};
 
-    var out = computeAll({}, s);
+    var out = computeAll(s, null, {});
     expect( out.jam ).to.equal('woo!');
   });
 
   it('run once:true only when runOnce flag is provided', function () {
     var s = { name:{generate:{ops:[{fn:'run'}], once:true}}};
 
-    var out = computeAll({}, s);
+    var out = computeAll(s, null, {});
     expect( out.name ).to.equal(undefined);
-    // console.log(Skematic.computeOnce);
-    out = Skematic.computeOnce({}, s);
+
+    out = computeAll(s, {once:true}, {});
     expect( out.name ).to.equal('yes');
   });
 
@@ -119,7 +119,7 @@ describe('Computed value generator', function () {
         moo: {generate:{ops:[make]}}
       };
 
-      var out = computeAll({}, s);
+      var out = computeAll(s, null, {});
       expect( out.moo ).to.equal('swee!');
     });
 
@@ -127,8 +127,7 @@ describe('Computed value generator', function () {
       var s = {
         moo: {generate:{ops:[make], preserve:true}}
       };
-
-      var out = computeAll({moo:'moo!'}, s);
+      var out = computeAll(s, null, {moo:'moo!'});
       expect( out.moo ).to.equal('moo!');
     });
 
@@ -139,7 +138,7 @@ describe('Computed value generator', function () {
         woo: {generate:{ops:[make], require:true}}
       };
 
-      var out = computeAll({moo:'!?', yep:'woo!'}, s);
+      var out = computeAll(s, null, {moo:'!?', yep:'woo!'});
 
       expect( out.moo ).to.equal('swee!');
       expect( out.yep ).to.equal('woo!');
