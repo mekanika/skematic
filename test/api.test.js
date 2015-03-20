@@ -5,8 +5,22 @@ var expect = require('chai').expect
 
 describe('API', function () {
 
-  it('.format() exists', function () {
-    expect( Skematic.format ).to.be.an.instanceof( Function );
+  var apiMethods = [
+    'accessor',
+    'createFrom',
+    'format',
+    'loadLib',
+    'validate'
+  ]
+
+  // This loops through all the EXPECTED methods to be exposed on the API .
+  // Modify the array above `apiMethods` to add and remove from the API surface.
+  apiMethods.forEach( function (method) {
+
+    it('.'+method+'() exists', function () {
+      expect( Skematic[method] ).to.be.an.instanceof( Function );
+    });
+
   });
 
 });
