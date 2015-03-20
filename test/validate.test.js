@@ -1,16 +1,14 @@
 
 var expect = require('chai').expect
+  , checkValue = require('../lib/validate').checkValue
   , Skematic = require('../index');
 
 describe('Validate', function () {
-  it('exposes .validSchema', function () {
-    expect( Skematic.validSchema ).to.exist;
-  });
 
   it('throws on invalid schema', function (done) {
     var s = {name:{type:true}};
     try {
-      Skematic.validate( {name:'dib'}, s );
+      Skematic.validate( s, {name:'dib'} );
     }
     catch (e) {
       expect( e.message ).to.match( /invalid/ig );
@@ -21,30 +19,30 @@ describe('Validate', function () {
   it('returns {valid, errors} object', function () {
     var record = {name:'Jack'};
     var s = { name: {type:'string'} };
-    var res = Skematic.validate( record, s );
+    var res = Skematic.validate( s, record );
     expect( res ).to.have.keys( 'valid', 'errors' );
   });
 
   it('provides error arrays keyed to properties', function () {
-    var res = Skematic.validate({power:'1'}, {power:{type:'integer'}});
+    var res = Skematic.validate({power:{type:'integer'}}, {power:'1'});
     expect( res.errors ).to.have.keys( 'power' );
     expect( res.errors.power ).to.have.length.gt( 0 );
   });
 
   it('sets .valid boolean based on validation result', function () {
-    var res = Skematic.validate({power:'1'}, {power:{type:'integer'}});
+    var res = Skematic.validate({power:{type:'integer'}}, {power:'1'});
     expect( res.valid ).to.be.false;
 
-    res = Skematic.validate({power:1}, {power:{type:'integer'}});
+    res = Skematic.validate({power:{type:'integer'}}, {power:1});
     expect( res.valid ).to.be.true;
   });
 
   it('validates scalars {validBool, errorArray!}', function () {
     var s = {type:'string', rules:{maxLength:3}};
 
-    expect( Skematic.validate('123', s).valid ).to.equal(true);
-    expect( Skematic.validate('1234', s).valid ).to.equal(false);
-    expect ( Skematic.validate('1234', s).errors ).to.be.an.instanceof( Array );
+    expect( Skematic.validate(s, '123').valid ).to.equal(true);
+    expect( Skematic.validate(s, '1234').valid ).to.equal(false);
+    expect ( Skematic.validate(s, '1234').errors ).to.be.an.instanceof( Array );
   });
 
   describe('subschema', function () {
@@ -53,7 +51,7 @@ describe('Validate', function () {
 
       it('accessor throws if not overwritten', function () {
         var err;
-        try { Skematic.validate({go:'boo'}, {go:{schema:'yo'}}); }
+        try { Skematic.validate({go:{schema:'yo'}}, {go:'boo'}); }
         catch (e) { err = e; }
         expect( err ).to.be.an.instanceof( Error );
       });
@@ -71,7 +69,7 @@ describe('Validate', function () {
         var hero = {name:{type:'string'}, power:{type:'integer'}};
         Skematic.accessor( function () { return hero; } );
         var s = {group:{type:'array', schema:'hero'}};
-        var res = Skematic.validate( {group: [{name:'gir', power:'3'}]}, s );
+        var res = Skematic.validate( s, {group: [{name:'gir', power:'3'}]} );
         expect( res.valid ).to.be.false;
         expect( res.errors.group[0].power ).to.have.length(1);
       });
@@ -85,7 +83,7 @@ describe('Validate', function () {
           cool:{type:'string'}}
         }};
 
-        var res = Skematic.validate({bigsub:{top:'s'}}, s );
+        var res = Skematic.validate( s, {bigsub:{top:'s'}} );
         expect( res.errors ).to.have.keys( 'bigsub' );
         expect( res.errors.bigsub.top ).to.have.length( 1 );
         expect( res.errors.bigsub.top[0] ).to.match(/integer/);
@@ -121,7 +119,7 @@ describe('Validate', function () {
         };
 
         // Demonstrate error validation
-        var res = Skematic.validate( data, s );
+        var res = Skematic.validate( s, data );
         expect( res.valid ).to.be.false;
         expect( res.errors.books['1'].author ).to.have.length( 1 );
       });
@@ -130,7 +128,7 @@ describe('Validate', function () {
     describe('arrays', function () {
       it('index errors', function () {
         var s = {gir:{schema:{type:'string'}}};
-        var res = Skematic.validate( {gir:['a','b',4]}, s );
+        var res = Skematic.validate( s, {gir:['a','b',4]} );
 
         expect( res.valid ).to.be.false;
         // The 3rd element should have an error `arr['2']`
@@ -142,16 +140,16 @@ describe('Validate', function () {
 
         var data = {gir:['a','b','4']};
 
-        var res = Skematic.validate( data, s );
+        var res = Skematic.validate( s, data );
         expect( res.valid ).to.be.true;
         s.gir.type = 'array';
-        res = Skematic.validate( data, s );
+        res = Skematic.validate( s, data );
         expect( res.valid ).to.be.true;
       });
 
       it('of simple (primitive) types', function () {
         var s = {gir:{type:'array', schema:{type:'string', filters:['toString']}}};
-        var res = Skematic.validate( {gir:['a','b','4']}, s );
+        var res = Skematic.validate( s, {gir:['a','b','4']} );
 
         expect( res.valid ).to.be.true;
       });
@@ -164,7 +162,7 @@ describe('Validate', function () {
           }}
         };
 
-        var res = Skematic.validate({gir:[{age:2, says:'hi'},{age:4,says:1337}]}, s);
+        var res = Skematic.validate(s, {gir:[{age:2, says:'hi'},{age:4,says:1337}]});
         expect( res.valid ).to.be.false;
         expect( res.errors.gir['1'].says ).to.have.length(1);
       });
@@ -172,7 +170,7 @@ describe('Validate', function () {
       it('skips undefined arrays that have a schema AND a default', function () {
         var rec = {mega:'kool'};
         var s = {jam:{type:'array', default:['moo'], schema:{type:'string'}}};
-        var res = Skematic.validate( rec, s );
+        var res = Skematic.validate( s, rec );
         expect( res.valid ).to.be.ok;
       });
     });
@@ -183,64 +181,64 @@ describe('Validate', function () {
 
 describe('checkValue(val, schema)', function () {
   it('returns an array of string errors', function () {
-    expect( Skematic.checkValue ).to.be.an.instanceof( Function );
-    expect( Skematic.checkValue('abc') ).to.have.length( 0 );
-    expect( Skematic.checkValue( 1, {type:'string'} ) ).to.have.length(1);
-    expect( Skematic.checkValue( 1, {type:'string'} )[0] ).to.be.a( 'string' );
+    expect( checkValue ).to.be.an.instanceof( Function );
+    expect( checkValue('abc') ).to.have.length( 0 );
+    expect( checkValue( 1, {type:'string'} ) ).to.have.length(1);
+    expect( checkValue( 1, {type:'string'} )[0] ).to.be.a( 'string' );
   });
 
   it('returns empty array if no schema provided', function () {
-    expect( Skematic.checkValue('abc') ).to.have.length( 0 );
+    expect( checkValue('abc') ).to.have.length( 0 );
   });
 
   it('then checks that required values are set', function () {
     var s = {required:true, rules:{in:['x']}};
-    var res = Skematic.checkValue('', s);
-    expect( Skematic.checkValue('', s) ).to.have.length(1);
-    expect( Skematic.checkValue('', s)[0] ).to.match( /required/ig );
+    var res = checkValue('', s);
+    expect( checkValue('', s) ).to.have.length(1);
+    expect( checkValue('', s)[0] ).to.match( /required/ig );
 
     // Now check the affirmative case
     s = {required:true, default:'zim', rules:{in:['zim']}};
-    expect( Skematic.checkValue( 'zim', s) ).to.have.length( 0 );
+    expect( checkValue( 'zim', s) ).to.have.length( 0 );
   });
 
   it('returns unrequired undefined values', function () {
-    expect( Skematic.checkValue(undefined, {rules:{min:0}}) ).to.have.length(0);
+    expect( checkValue(undefined, {rules:{min:0}}) ).to.have.length(0);
   });
 
   it('then applies specified rules', function () {
     var s = {type:'integer', rules:{min:5}};
-    expect( Skematic.checkValue(1, s) ).to.have.length(1);
-    expect( Skematic.checkValue(1, s) ).to.match( /min/ig );
+    expect( checkValue(1, s) ).to.have.length(1);
+    expect( checkValue(1, s) ).to.match( /min/ig );
   });
 
   it('adds error if rule is unknown/undeclared', function () {
     var s = {type:'integer', rules:{'attack':true}};
-    expect( Skematic.checkValue(1, s) ).to.have.length(1);
-    expect( Skematic.checkValue(1, s) ).to.match( /unknown/ig );
+    expect( checkValue(1, s) ).to.have.length(1);
+    expect( checkValue(1, s) ).to.match( /unknown/ig );
   });
 
   describe('error msgs', function () {
     it('can be set declaritively', function () {
       var s = {rules:{in:['a']}, errors:{in:'Hotdog!'}};
-      expect( Skematic.checkValue('b', s)[0] ).to.equal('Hotdog!');
+      expect( checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('can set default error message for schema', function () {
       var s = {rules:{in:['a']}, errors:{default:'Hotdog!'}};
-      expect( Skematic.checkValue('b', s)[0] ).to.equal('Hotdog!');
+      expect( checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('can set default msg as string', function () {
       var s = {rules:{in:['a']}, errors:'Hotdog!'};
-      expect( Skematic.checkValue('b', s)[0] ).to.equal('Hotdog!');
+      expect( checkValue('b', s)[0] ).to.equal('Hotdog!');
     });
 
     it('uses system default msg if no match', function () {
       var s = {rules:{in:['a']}, errors:{}};
 
       // @note This is HARDCODED to match the 'defaultError'
-      expect( Skematic.checkValue('b', s) ).to.match( /failed/ig );
+      expect( checkValue('b', s) ).to.match( /failed/ig );
     });
   });
 });
@@ -251,7 +249,7 @@ describe('sparseValidate', function () {
     var rec = {mega:'kool'};
     var s = {mega:{type:'string'}, cray:{required:true}};
 
-    var res = Skematic.sparseValidate(rec, s);
+    var res = Skematic.validate(s, {sparse:true}, rec);
     expect( res.valid ).to.equal( true );
   });
 });

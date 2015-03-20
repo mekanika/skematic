@@ -1,24 +1,24 @@
 
 var expect = require('chai').expect
-  , Skematic = require('../index');
+  , setDefault = require('../lib/default');
 
 describe('default', function () {
 
   it('returns the default value if no val provided', function () {
-    expect( Skematic.default( '', {default:'yes'})).to.equal('yes');
+    expect( setDefault( '', {default:'yes'})).to.equal('yes');
   });
 
   it('returns the passed value if provided', function () {
-    expect( Skematic.default('hi', {default:'yes'})).to.equal('hi');
+    expect( setDefault('hi', {default:'yes'})).to.equal('hi');
   });
 
   it('handles falsey defaults', function () {
-    expect( Skematic.default('', {default:false})).to.equal(false);
+    expect( setDefault('', {default:false})).to.equal(false);
   });
 
   it('returns the value if no .default', function () {
-    expect( Skematic.default( '' ) ).to.equal('');
-    expect( Skematic.default('hi') ).to.equal('hi');
+    expect( setDefault( '' ) ).to.equal('');
+    expect( setDefault('hi') ).to.equal('hi');
   });
 
   it('can parse complex objects and return defaults', function () {
@@ -26,12 +26,12 @@ describe('default', function () {
       name: {default:'Zim'},
       age: {type:'number'}
     };
-    expect( Skematic.default({age:21}, s).name ).to.equal('Zim');
+    expect( setDefault({age:21}, s).name ).to.equal('Zim');
   });
 
   it('ignores undefined values where no default specified', function () {
     var s = {moo: {type:'string'}};
-    var o = Skematic.default({},s);
+    var o = setDefault({},s);
     expect( o ).to.not.have.key('moo');
   });
 
