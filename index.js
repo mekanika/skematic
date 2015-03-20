@@ -1,2 +1,2 @@
 
-module.exports = require('./lib/schema.js');
+module.exports = require('./lib/api.js');

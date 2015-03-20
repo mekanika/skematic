@@ -1,6 +1,6 @@
 
 var expect = require('chai').expect
-  , Skematic = require('../lib/schema');
+  , Skematic = require('../index');
 
 
 describe('API', function () {

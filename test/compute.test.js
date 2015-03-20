@@ -1,6 +1,6 @@
 
 var expect = require('chai').expect
-  , Skematic = require('../lib/schema')
+  , Skematic = require('../index')
   , computeValue = require('../lib/compute').computeValue
   , computeAll = require('../lib/compute').computeAll;
 
