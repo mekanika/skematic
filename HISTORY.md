@@ -1,3 +1,44 @@
+0.13.0 - 22 March 2015
+======
+
+MAJOR BREAKING CHANGES
+The big API rewrite for the newly named `Skematic` library. Tread softly.
+
+Added:
+
+- `.format()` major API method
+- `sparse` capability flag to only process provided data
+- Benchmark scripts in `/perf`
+- `.npmignore` file to package `/build` and `/docs`
+
+Removed:
+
+- `validSchema` schema
+- Checking schema is validate on data validation
+- `.cast()` method
+- EVERY method from API except "format", "validate", "createFrom" and setups
+
+Changed:
+
+- Major API calls now use `(schema, [opts,] data)` arguments
+- Rename config field `filter` to `transforms`
+- Return `null` on no errors on validate
+- Rename `loadLib()` to `useGenerators()`
+- Replace `accessor(fn)` with `useSchemas()` method
+
+Internal:
+
+- Massive refactor and restructure with lots of cleanup
+
+
+
+0.12.0 - 19 March 2015
+======
+
+Placeholder release. Use v0.13.0
+
+
+
 0.11.1 - 19 March 2015
 ======
 
