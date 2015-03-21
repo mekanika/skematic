@@ -20,6 +20,7 @@
   "license": "MPL-2.0",
   "main": "index.js",
   "scripts": {
+    "benchmark": "node perf/benchmark.js",
     "browser": "browserify index.js -o build/skematic.dev.js -s Skematic",
     "build": "npm run browser && npm run compress",
     "compress": "uglifyjs build/skematic.dev.js -cm -o build/skematic.min.js",
