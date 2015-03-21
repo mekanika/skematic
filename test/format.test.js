@@ -19,6 +19,13 @@ describe('.format(skm, opts, data)', function () {
     Skematic.loadLib({});
   });
 
+  it('supports passing 2 args (schema, data)', function () {
+    var s = {name:{default:'ace'}, power:{default:3}};
+    var out = format( s, {} );
+    expect( out.name ).to.equal('ace');
+    expect( out.power ).to.equal(3);
+  });
+
   it('`sparse` opt defaults to false', function () {
     var s = {name:{default:'ace'}, power:{default:3}};
     var out = format( s, {}, {} );
