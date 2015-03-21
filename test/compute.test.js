@@ -16,20 +16,20 @@ describe('Computed value generator', function () {
 
   beforeEach(function () {
     // Clear the library
-    Skematic.loadLib({});
+    Skematic.useGenerators({});
 
     // Reload the library
-    Skematic.loadLib(fnLib);
+    Skematic.useGenerators(fnLib);
   });
 
-  it('can load in an object library of fns', function () {
+  it('.useGenerators() can load in an object library of fns', function () {
     var s = {name: {
       generate:{ops:[{fn:'run'}]}}
     };
     // Clear the library
-    Skematic.loadLib({});
+    Skematic.useGenerators({});
     // Load in the library
-    Skematic.loadLib(fnLib);
+    Skematic.useGenerators(fnLib);
     expect( computeAll(s, {}).name ).to.equal('yes');
   });
 

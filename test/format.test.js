@@ -8,7 +8,7 @@ describe('.format(skm, opts, data)', function () {
 
   // Load in the library of functions
   before( function () {
-    Skematic.loadLib({
+    Skematic.useGenerators({
       xx:function () {return 'wow';},
       dbl: function (x) { return x * 2; }
     });
@@ -16,7 +16,7 @@ describe('.format(skm, opts, data)', function () {
 
   after( function () {
     // Empty out the library
-    Skematic.loadLib({});
+    Skematic.useGenerators({});
   });
 
   it('supports passing 2 args (schema, data)', function () {

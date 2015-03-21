@@ -7,9 +7,9 @@ describe('API', function () {
 
   var apiMethods = [
     'useSchemas',
+    'useGenerators',
     'createFrom',
     'format',
-    'loadLib',
     'validate'
   ];
 
