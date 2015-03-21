@@ -46,25 +46,9 @@ describe('Validate', function () {
 
     describe('string reference', function () {
 
-      it('accessor throws if not overwritten', function () {
-        var err;
-        try { Skematic.validate({go:{schema:'yo'}}, {go:'boo'}); }
-        catch (e) { err = e; }
-        expect( err ).to.be.an.instanceof( Error );
-      });
-
-      it('sets accessor by passing a function', function () {
-        var tmp = Skematic.accessor;
-        var rep = function() { return 'woo!'; };
-        Skematic.accessor(rep);
-        expect( Skematic.accessor() ).to.equal('woo!');
-        // Replace the accessor method
-        Skematic.accessor(tmp);
-      });
-
       it('accessor can return working schema', function () {
         var hero = {name:{type:'string'}, power:{type:'integer'}};
-        Skematic.accessor( function () { return hero; } );
+        Skematic.useSchemas( {hero:hero} );
         var s = {group:{type:'array', schema:'hero'}};
         var res = Skematic.validate( s, {group: [{name:'gir', power:'3'}]} );
         expect( res.valid ).to.be.false;
