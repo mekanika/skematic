@@ -56,4 +56,10 @@ describe('createFrom', function () {
   it('sets intial object defaults', function () {
     expect( Skematic.createFrom(_s).name ).to.equal('Gir');
   });
+
+  it('runs .format() to execute generators', function () {
+    var go = function () { return 'woo!'; };
+    var s = {shout:{generate:{ops:[go]}}};
+    expect( Skematic.createFrom(s) ).to.eql( {shout:'woo!'} );
+  });
 });
