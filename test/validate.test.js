@@ -12,6 +12,14 @@ describe('Validate', function () {
     expect( res ).to.have.keys( 'valid', 'errors' );
   });
 
+  it('returns {errors:null} if no errors', function () {
+    var s = {name:{type:'string'}};
+    var out = Skematic.validate( s.name, 'woo' );
+    expect( out.errors ).to.equal(null);
+    out = Skematic.validate( s, {name:'woo'});
+    expect( out.errors ).to.equal(null);
+  });
+
   it('provides error arrays keyed to properties', function () {
     var res = Skematic.validate({power:{type:'integer'}}, {power:'1'});
     expect( res.errors ).to.have.keys( 'power' );
