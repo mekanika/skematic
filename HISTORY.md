@@ -1,3 +1,12 @@
+0.13.1 - 22 March 2015
+======
+
+Internal:
+
+- Provide README info regarding API STABLE status and upcoming v1.0 RC
+
+
+
 0.13.0 - 22 March 2015
 ======
 
