@@ -35,4 +35,12 @@ describe('default', function () {
     expect( o ).to.not.have.key('moo');
   });
 
+  it('applies default to falsey scalar', function () {
+    expect( setDefault( undefined, {default:false}) ).to.equal(false);
+  });
+
+  it('applies default to falsey object', function () {
+    expect( setDefault( {a:''}, {a:{default:false}} ) ).to.eql({a:false});
+  });
+
 });

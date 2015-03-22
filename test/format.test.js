@@ -46,6 +46,10 @@ describe('.format(skm, opts, data)', function () {
     expect( out.name ).to.equal('ace');
   });
 
+  it('applies falsey defaults', function () {
+    expect( format({default:false}, undefined) ).to.equal(false);
+  });
+
   it('`transform` opt default transforms values', function () {
     var s = {name:{default:'ace', transforms:['uppercase']}};
     var out = format( s, {}, {} );
