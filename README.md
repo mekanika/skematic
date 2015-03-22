@@ -1,6 +1,12 @@
 # Skematic
 
-> **Data structure** and **rule validation engine**. Robust schema for JS objects.
+**Data structure** and **rule validation engine**. Robust schema for JS objects.
+
+> IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
+>
+> After a major API update in v0.13 (see [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes) and renaming the project from `mekanika-schema` to `skematic`, this library is now aiming for v1.0 release candidate. 
+>
+> The API status is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
 
 Isomorphic, fast and lightweight (~9.5Kb), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
 
