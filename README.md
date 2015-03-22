@@ -96,6 +96,50 @@ Optional setup methods:
 
 > Note: As you can see, keys that can contain many values are always plural, eg. `transforms`, `rules`, etc. Keys that only contain one value or item are always singular, eg. `default`, `required`, `schema`, etc.
 
+
+### `$dynamic` keys
+
+In some cases it is useful to apply the same schema to all the fields on an object (or sub-object), even if you don't know what those key names are. In this case, specify **`$dynamic`** rather than the field name:
+
+```js
+var KnownKeys = {
+  propA: {default:'sweet', required:true},
+  propB: {default:'sweet', required:true} // etc etc
+};
+
+var Dynamic = {
+  $dynamic: {default:'sweet', required:true}
+};
+```
+
+The `$dynamic` key will apply to _every_ field on your object at the level you specify, and `Skematic` will not process any other declared rules. Place `$dynamic` keys anywhere you'd use a normal field name:
+
+```js
+var MoreNested = {
+  props: {
+    schema: {
+      $dynamic: {
+        schema: {
+          value: {default:'!', required:true}
+        },
+        default:{}
+      }
+    },
+    default: {}
+  }
+};
+
+Skematic.format( MoreNested, {props:{randCrazy:undefined}} );
+// -> { props: { randCrazy: { value: '!' } } }
+
+Skematic.validate( MoreNested, {props:{ crazy:{} }});
+// -> { valid:false, errors:{props:{crazy:['Required to be set']}} }
+
+Skematic.validate( MoreNested, {props:{ crazy:{value:99} }});
+// -> { valid:true, errors:null }
+```
+
+
 ### Simple examples
 
 A data model for a single key (eg. `name`):

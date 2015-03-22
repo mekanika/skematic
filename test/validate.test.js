@@ -42,6 +42,30 @@ describe('Validate', function () {
     expect ( Skematic.validate(s, '1234').errors ).to.be.an.instanceof( Array );
   });
 
+  describe('$dynamic', function () {
+
+    it('validates dynamic keys', function () {
+      var MoreNested = {
+        props: {
+          schema: {
+            $dynamic: {
+              schema: {
+                value: {default:'!', required:true}
+              },
+              default:{}
+            }
+          },
+          default: {}
+        }
+      };
+
+      var o = Skematic.validate( MoreNested, {props:{randCrazy:{}}} );
+      expect( o.valid ).to.equal(false);
+      expect( o.errors.props.randCrazy.value).to.have.length(1);
+    });
+
+  });
+
   describe('subschema', function () {
 
     describe('string reference', function () {

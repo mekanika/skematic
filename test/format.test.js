@@ -100,6 +100,40 @@ describe('.format(skm, opts, data)', function () {
     expect( out ).to.not.have.key('name');
   });
 
+
+  describe('$dynamic', function () {
+    it('applies to all object keys', function () {
+      var demo = {
+        $dynamic: {default:'hello', required:true}
+      };
+
+      var out = format(demo, {a:undefined, b:null, c:''});
+      expect( out.a ).to.equal('hello');
+      expect( out.b ).to.equal('hello');
+      expect( out.c ).to.equal('hello');
+    });
+
+    it('applies nested schema to objects', function () {
+      var demo = {
+        $dynamic: {type:'object', schema:{
+          boom: {default:'!'}
+        }}
+      };
+      var out = format(demo, {xo:{}});
+      expect( out.xo.boom ).to.equal('!');
+    });
+
+    it('applies nested schema to arrays', function () {
+      var demo = {
+        $dynamic: {type:'array', schema:{
+          boom:{default:'!', required:true}
+        }}
+      };
+      var out = format(demo, {xo:[{}]});
+      expect( out.xo[0].boom ).to.equal('!');
+    });
+  });
+
   describe('sub-schema', function () {
 
     it('applies format to embedded schema objects', function () {
@@ -110,11 +144,14 @@ describe('.format(skm, opts, data)', function () {
             name: {default:'Zim'},
             age: {generate:{ops:[{fn:'dbl', args:[5]}]}},
             phrase: {transforms:['uppercase']}
-          }
+          },
+          // If no default specified, 'person' will only be applied
+          // when a {person:{..}} field is provided
+          default:{}
         }
       };
 
-      var out = format(s, {}, {});
+      var out = format(s, {});
       expect( out.person.name ).to.equal('Zim');
       expect( out.person.age ).to.equal( 10 );
 
