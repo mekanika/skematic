@@ -167,6 +167,16 @@ describe('.format(skm, opts, data)', function () {
       expect( out.zeep ).to.eql([]);
       expect( out.moo ).to.eql([]);
     });
+
+    it('applies schema to objects in arrays', function () {
+      var demo = {
+        field: {type:'array', schema:{
+          boom:{default:'!', required:true}
+        }}
+      };
+      var out = format(demo, {field:[{}]});
+      expect( out.field[0].boom ).to.equal('!');
+    });
   });
 
   describe('scalar', function () {
