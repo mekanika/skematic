@@ -180,11 +180,11 @@ describe('.format(skm, opts, data)', function () {
   });
 
   describe('scalar', function () {
-    it('should basds', function () {
+    it('can format scalar values', function () {
       var s = {default:'smoo'};
 
       var out = format(s, {}, '');
-      console.log('out', out);
+      expect(out).to.equal('smoo');
     });
   });
 
