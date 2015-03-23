@@ -32,8 +32,8 @@ Skematic.format( Hero, {shouts:' woo  '} );
 Skematic.validate( Hero, {name:'Zim'} );
 // {valid:false, 
 //  errors:{
-//    name: 'Bad name!',
-//    skill: 'Required to be set'
+//    name: ['Bad name!'],
+//    skill: ['Required to be set']
 // }}
 ```
 
