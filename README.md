@@ -394,7 +394,7 @@ Skematic.useSchemas( allMyModels );
 
 ## Format
 
-Format transforms, generates and conforms data:
+Format transforms, generates and conforms data (in place - ie. destructively changes `data`):
 
 ```js
 Skematic.format( schema, [opts,] data );
