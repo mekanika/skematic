@@ -26,6 +26,13 @@ describe('.format(skm, opts, data)', function () {
     expect( out.power ).to.equal(3);
   });
 
+  it('can format scalar values', function () {
+    var s = {default:'smoo'};
+
+    var out = format(s, {}, '');
+    expect(out).to.equal('smoo');
+  });
+
   it('`sparse` opt defaults to false', function () {
     var s = {name:{default:'ace'}, power:{default:3}};
     var out = format( s, {}, {} );
@@ -102,6 +109,12 @@ describe('.format(skm, opts, data)', function () {
 
     var out = format(s, {generate:false}, {});
     expect( out ).to.not.have.key('name');
+  });
+
+  it('`strip` removes matching field values', function () {
+    var data = {a:undefined, b:null, c:2, d:':)'};
+    var out = format( {}, {strip:[undefined, null, ':)']}, data);
+    expect( data ).to.eql( {c:2} );
   });
 
 
@@ -217,15 +230,6 @@ describe('.format(skm, opts, data)', function () {
       };
       var out = format(demo, {field:[{}]});
       expect( out.field[0].boom ).to.equal('!');
-    });
-  });
-
-  describe('scalar', function () {
-    it('can format scalar values', function () {
-      var s = {default:'smoo'};
-
-      var out = format(s, {}, '');
-      expect(out).to.equal('smoo');
     });
   });
 

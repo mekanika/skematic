@@ -421,6 +421,7 @@ Legend: **field** - _{Type}_ - `default`: Description
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value (setting as `"once"` will _also_ compute for fields flagged as "once") - see [Design:generate](#generate)
 - **transform** - modify values - see [Design:transforms](#transforms)
+- **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
 
 Format applies these options in significant order:
 
@@ -428,6 +429,7 @@ Format applies these options in significant order:
 2. `defaults`: Apply default values
 3. `generate`: Compute and apply generated values
 4. `transform`: Run transform functions on values
+5. `strip`: Removes matching field values after all other formatting
 
 Meaning if you have an uppercase transform, it will run AFTER your generate methods, thus uppercasing whatever they produce.
 
@@ -443,9 +445,11 @@ var myModel = {
 var out = Skematic.format( myModel, {generate:'once'}, {} );
 // -> {created:'12345', power:5, name:'ZIM'}
 out = Skematic.format( myModel, {} ); // (schema, data)
-// -> {rando:undefined, power:5, name:'ZIM}
+// -> {power:5, name:'ZIM}
 out = Skematic.format( myModel, {defaults:false}, {} );
-// -> {random:undefined, power:undefined, name:undefined}
+// -> {}
+out = Skematic.format( myModel, {strip:[undefined,'x']}, {rando:undefined,power:'x'});
+// -> {name:'ZIM'}
 out = Skematic.format( myModel, {sparse:true}, {name:'Gir'} );
 // -> {name:'GIR'}
 ```
