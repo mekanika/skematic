@@ -1,3 +1,23 @@
+0.14.0 - 26 March 2015
+======
+
+Added:
+
+- `$dynamic` keys to schema config #15
+- `strip` flag to .format() to remove matching field values #9
+- `copy` flag to .format() to preserve passed 'data'
+
+Fixed:
+
+- .format() now applies schema to objects in arrays
+- Falsey defaults do not apply correctly #16
+
+Internal:
+
+- Added .editorconfig file http://editorconfig.org
+
+
+
 0.13.1 - 22 March 2015
 ======
 
