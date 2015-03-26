@@ -117,6 +117,18 @@ describe('.format(skm, opts, data)', function () {
     expect( data ).to.eql( {c:2} );
   });
 
+  it('`copy` clones the data to return', function () {
+    var data = {a:undefined};
+    var out = format( {a:{default:5}}, {copy:true}, data);
+    expect( data.a ).to.equal( undefined );
+    expect( out.a ).to.equal( 5 );
+
+    data = [undefined];
+    out = format( {type:'array', schema:{default:4}}, {copy:true}, data );
+    expect( data[0] ).to.equal(undefined);
+    expect( out[0] ).to.equal(4);
+  });
+
 
   describe('$dynamic', function () {
     it('applies to all object keys', function () {

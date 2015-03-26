@@ -8,7 +8,7 @@
 >
 > The API status is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
 
-Isomorphic, fast and lightweight (~9.5Kb), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
+Isomorphic, fast and lightweight (~10Kb), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
@@ -422,6 +422,7 @@ Legend: **field** - _{Type}_ - `default`: Description
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value (setting as `"once"` will _also_ compute for fields flagged as "once") - see [Design:generate](#generate)
 - **transform** - modify values - see [Design:transforms](#transforms)
 - **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
+- **copy** - _{Boolean}_ - `false` Creates a clone copy rather than edit in place
 
 Format applies these options in significant order:
 
