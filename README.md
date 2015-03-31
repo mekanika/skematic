@@ -394,7 +394,9 @@ Skematic.useSchemas( allMyModels );
 
 ## Format
 
-Format transforms, generates and conforms data (in place - ie. destructively changes `data`):
+Format transforms, generates and conforms data. 
+
+This is done "destructively" by default (ie. changes the `data` parameter directly). To preserve the original, pass `{copy:true}` to the 'opts' argument:
 
 ```js
 Skematic.format( schema, [opts,] data );
@@ -434,7 +436,7 @@ Format applies these options in significant order:
 
 Meaning if you have an uppercase transform, it will run AFTER your generate methods, thus uppercasing whatever they produce.
 
-Format example:
+Format examples:
 
 ```js
 var myModel = {
@@ -445,12 +447,16 @@ var myModel = {
 
 var out = Skematic.format( myModel, {generate:'once'}, {} );
 // -> {created:'12345', power:5, name:'ZIM'}
+
 out = Skematic.format( myModel, {} ); // (schema, data)
 // -> {power:5, name:'ZIM}
+
 out = Skematic.format( myModel, {defaults:false}, {} );
 // -> {}
+
 out = Skematic.format( myModel, {strip:[undefined,'x']}, {rando:undefined,power:'x'});
 // -> {name:'ZIM'}
+
 out = Skematic.format( myModel, {sparse:true}, {name:'Gir'} );
 // -> {name:'GIR'}
 ```
