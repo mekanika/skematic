@@ -93,6 +93,7 @@ Optional setup methods:
 - [**rules**](#rules) _{Object}_ hash of validation rules: `{ rules: {min:3, max:11} }`
 - [**errors**](#custom-error-messages) _{Object|String}_ hash of error messages for rules
 - [**schema**](#sub-schema) _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
+- [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
 
 > Note: As you can see, keys that can contain many values are always plural, eg. `transforms`, `rules`, etc. Keys that only contain one value or item are always singular, eg. `default`, `required`, `schema`, etc.
 
@@ -392,6 +393,27 @@ Skematic.useSchemas( allMyModels );
 ```
 
 
+### primaryKey
+
+A schema can declare any **one** of its fields as the **primary key** (the id field) to be used for its data objects. This can be used in conjunction with `Skematic.format()` in order to _modify_ an incoming data collection and map a pre-existing id field (say for example "_id") to the `primaryKey`.
+
+This is useful for data stores that use their own id fields (eg. MongoDB uses "_id").
+
+```js
+var propSchema = {
+  prop_id: {primaryKey:true},
+  name: {type:"string"}
+};
+
+// Example default results from data store:
+var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ];
+
+Skematic.format( propSchema, {mapIdFrom:'_id'}, data );
+// -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
+```
+
+
+
 ## Format
 
 Format transforms, generates and conforms data. 
@@ -425,6 +447,7 @@ Legend: **field** - _{Type}_ - `default`: Description
 - **transform** - modify values - see [Design:transforms](#transforms)
 - **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
 - **copy** - _{Boolean}_ - `false` Creates a clone copy rather than edit in place
+- **mapIdFrom** - _{String}_ - `undefined` maps a primary key field from the field name provided (requires a `primaryKey` field set on the schema)
 
 Format applies these options in significant order:
 
@@ -433,6 +456,7 @@ Format applies these options in significant order:
 3. `generate`: Compute and apply generated values
 4. `transform`: Run transform functions on values
 5. `strip`: Removes matching field values after all other formatting
+6. `mapIdFrom`: Sets the id field on data to be on the 'primaryKey'
 
 Meaning if you have an uppercase transform, it will run AFTER your generate methods, thus uppercasing whatever they produce.
 
@@ -440,6 +464,7 @@ Format examples:
 
 ```js
 var myModel = {
+  mod_id: {primaryKey:true},
   rando: { generate:{ops:[{fn:'makeRand'}], once:true} },
   power: {default: 5},
   name: {default: 'zim', transforms:['uppercase']}
@@ -459,6 +484,9 @@ out = Skematic.format( myModel, {strip:[undefined,'x']}, {rando:undefined,power:
 
 out = Skematic.format( myModel, {sparse:true}, {name:'Gir'} );
 // -> {name:'GIR'}
+
+out = Skematic.format( myModel, {mapIdFrom:'_id'}, {_id:'12345'});
+// -> {mod_id:'12345', power:5, name:'ZIM'}
 ```
 
 

@@ -129,6 +129,20 @@ describe('.format(skm, opts, data)', function () {
     expect( out[0] ).to.equal(4);
   });
 
+  it('`mapIdFrom` maps the primaryKey from the id field', function () {
+    var propSchema = {
+      prop_id: {primaryKey:true},
+      name: {type:"string"}
+    };
+
+    var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ];
+
+    var out = Skematic.format( propSchema, {mapIdFrom:'_id'}, data );
+    expect( out ).to.have.length(2);
+    expect( out[0] ).to.include.key( 'prop_id' );
+    expect( out[0] ).to.not.include.key( '_id' );
+  });
+
 
   describe('$dynamic', function () {
     it('applies to all object keys', function () {
