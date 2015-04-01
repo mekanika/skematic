@@ -44,7 +44,7 @@ var valid = {
     zipcode:5151},
   tags: ['hello', '20'],
   books: [{title:'WOT', author:'RJ'}, {title:'GOT', author:'555'}]
-}
+};
 
 
 var start,end;
