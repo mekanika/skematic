@@ -412,6 +412,8 @@ Skematic.format( propSchema, {mapIdFrom:'_id'}, data );
 // -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
 ```
 
+> Note: Your data store might automatically use a particular field name for its identifying purposes (usually `"id"`). If you **know** you're using a datastore that defaults its id field to a given key, you can simply reuse this field name in your schema. Specifying `primaryKey` is simply a way to _force_ data models into using a given key. ([Adapters](https://github.com/mekanika/adapter) will use this information to map their usual id field onto your primary key)
+
 
 
 ## Format
