@@ -35,11 +35,7 @@ Skematic.format( Hero, {shouts:' woo  '} );
 
 // -- Validate an object
 Skematic.validate( Hero, {name:'Zim'} );
-// {valid:false, 
-//  errors:{
-//    name: ['Bad name!'],
-//    skill: ['Required to be set']
-// }}
+// {valid:false, errors:{ name: ['Bad name!'], skill: ['Required to be set']}}
 ```
 
 ## Install
@@ -62,6 +58,8 @@ To use in a browser:
 > Please note that the ES5 `Object.keys()` method is not supported by IE7 & 8, so to use `Skematic` in these fossil browsers, you'll need to install [es5-shim](https://github.com/es-shims/es5-shim) (and worship Satan :metal:).
 
 ## API
+
+> Note: Generated API docs can be found in the _npm package_ under `docs/index.html`
 
 The API surface is small by design, with two **primary methods**:
 
@@ -287,26 +285,28 @@ var user = {
 
 The `generate` field has the following properties:
 
+> Legend: **field** - _{Type}_ `default`: Description
+
 - **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The output of each function is passed as the first parameter of the next.
 - **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite unless set to `true`.
 - **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data. 
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
 
-> Unless instructed otherwise (via flags) generate will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To ensure a generator is only run when you pass a `{generate:'once'}` to format(), set the `once: true` flag.
+> Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To ensure a generator is only run when you pass a `{generate:'once'}` to format(), set the `once: true` flag.
 
 Example: 
 
 ```js
 var Hero = {
   updated: {
-    // This is our "generate" field
     generate: {
       // The ops array lists fn objects or functions
       ops:[
         // A fn object specifies `fn` and `args`
         {fn: myFunc, args:[]},
         // , {fn...}, etc etc
-        // And here is a raw function with no args
+        // And here is a raw function with no args, it will be passed
+        // the output of the last `fn` as its first parameter
         anotherFn
       ],
       // Optional flag: preserves a provided value
@@ -446,7 +446,7 @@ Skematic.format( Hero, {sparse:true}, {name:'Zim'} );
 
 Format _options_ include:
 
-Legend: **field** - _{Type}_ - `default`: Description
+> Legend: **field** - _{Type}_ - `default`: Description
 
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire schema
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields
@@ -544,7 +544,7 @@ Returns an object `{valid: $boolean, errors: $object|$array|null}` where the `er
 
 Validate _options_ include:
 
-Legend: **field** - _{Type}_ - `default`: Description
+> Legend: **field** - _{Type}_ - `default`: Description
 
 - **sparse** _{Boolean}_ `false`: Only process fields on the provided data, rather than all fields on the entire schema
 
@@ -574,7 +574,7 @@ Contributions to `Skematic` are welcome.
 
 `Skematic` is maintained and released by [Mekanika](http://mekanika.org)
 
-![Mekanika](http://mekanika.org/assets/external/readme.logotag.png)
+[![Mekanika](http://mekanika.org/assets/external/readme.logotag.png)](http://mekanika.org)
 
 Copyright 2013-2015 Mekanika
 
