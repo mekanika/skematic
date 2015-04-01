@@ -2,7 +2,10 @@
 
 **Data structure** and **rule validation engine**. Robust schema for JS objects.
 
+
 [![npm version](https://img.shields.io/npm/v/skematic.svg?label=version)](https://npmjs.com/package/skematic)
+[![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg)](https://codeclimate.com/github/mekanika/skematic)
+
 
 > IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
 >
