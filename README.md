@@ -2,6 +2,8 @@
 
 **Data structure** and **rule validation engine**. Robust schema for JS objects.
 
+[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version)](https://npmjs.com/package/skematic)
+
 > IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
 >
 > After a major API update in v0.13 (see [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes) and renaming the project from `mekanika-schema` to `skematic`, this library is now aiming for v1.0 release candidate. 
