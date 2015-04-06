@@ -288,7 +288,7 @@ The `generate` field has the following properties:
 > Legend: **field** - _{Type}_ `default`: Description
 
 - **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The output of each function is passed as the first parameter of the next.
-- **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite unless set to `true`.
+- **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite if set to `true`. (If left as `false`, generate will always replace the provided value)
 - **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data. 
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
 
