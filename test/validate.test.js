@@ -223,6 +223,13 @@ describe('checkValue(val, schema)', function () {
     expect( checkValue(1, s) ).to.match( /unknown/ig );
   });
 
+  it('bails out immediately if required fails', function () {
+    var s = {rules:{minLength:3}, required:true};
+    var out = checkValue(undefined, s);
+    expect( out ).to.have.length( 1 );
+    expect( out ).to.match( /required/ig );
+  });
+
   describe('error msgs', function () {
     it('can be set declaritively', function () {
       var s = {rules:{in:['a']}, errors:{in:'Hotdog!'}};
