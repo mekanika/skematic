@@ -80,4 +80,12 @@ describe('createFrom', function () {
     expect( Skematic.createFrom(s) ).to.eql( {swee:[{name:'user'}]} );
   });
 
+  it('loads sub-schema as strings correctly', function () {
+    var moo = {name:{type:'string', default:'swee'}};
+    var joop = {meep:{schema:'moo'}};
+
+    Skematic.useSchemas( {moo:moo} );
+    expect( Skematic.createFrom(joop) ).to.eql( {meep:{name:'swee'}} );
+  });
+
 });
