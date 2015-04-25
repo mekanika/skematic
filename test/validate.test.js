@@ -245,6 +245,14 @@ describe('checkValue(val, schema)', function () {
       // @note This is HARDCODED to match the 'defaultError'
       expect( checkValue('b', s) ).to.match( /failed/ig );
     });
+
+    // The 'required' rule is a shorthand that previously was handled
+    // separately to the 'regular' rules and didn't enable setting
+    // its own custom message.
+    it('enables setting custom required message', function () {
+      var s = {required:true, errors:{required:'woot!'}};
+      expect( checkValue(undefined, s) ).to.eql( ['woot!'] );
+    });
   });
 });
 

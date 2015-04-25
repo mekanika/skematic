@@ -219,6 +219,7 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.match** - String must match regexp
 - **.notMatch** - String must NOT match regexp
 - **.empty** - `true` checks the value is empty, `false` checks it's not
+- **required** - Value MUST be set (cannot be empty)
 
 Declare `rules` key as follows:
 
@@ -232,6 +233,12 @@ var User = {
 Skematic.validate( User.name, 'Zim' );
 // -> {valid:false, errors:['Failed: minLength']}
 ```
+
+> Note: The `required` rule has a special shorthand allowing you to declare it directly on the schema:
+>
+> ```js
+> var model = {type:'string', required:true};
+> ```
 
 ### Custom **error** messages
 
