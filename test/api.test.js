@@ -62,4 +62,22 @@ describe('createFrom', function () {
     var s = {shout:{generate:{ops:[go]}}};
     expect( Skematic.createFrom(s) ).to.eql( {shout:'woo!'} );
   });
+
+  it('initialises sub-schema fields on objects', function () {
+    var s = {swee:{schema:{
+      tags:{type:'array', default:[]},
+      name:{type:'string', default:'user'}
+    }}};
+
+    expect( Skematic.createFrom(s) ).to.eql( {swee:{tags:[], name:'user'}} );
+  });
+
+  it('intialises sub-schema fields on arrays', function () {
+    var s = {swee:{type:'array', default:[{}], schema:{
+      name:{type:'string', default:'user'}
+    }}};
+
+    expect( Skematic.createFrom(s) ).to.eql( {swee:[{name:'user'}]} );
+  });
+
 });
