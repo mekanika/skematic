@@ -143,6 +143,18 @@ describe('.format(skm, opts, data)', function () {
     expect( out[0] ).to.not.include.key( '_id' );
   });
 
+  it('`strict` strips fields not declared on schema', function () {
+    var scm = {
+      name:{type:'string'},
+      tags:{type:'array', schema:{label:{}}}
+    };
+    var data = {woot:'1', name:'yo', tags:[{whatever:1, label:'moo'}]};
+
+    var out = Skematic.format( scm, {strict:true}, data);
+    expect( out ).to.have.keys( 'name', 'tags' );
+    expect( out.tags[0] ).to.have.key( 'label' );
+  });
+
 
   describe('$dynamic', function () {
     it('applies to all object keys', function () {

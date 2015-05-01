@@ -454,6 +454,7 @@ Format _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
+- **strict** - _{Boolean}_ - `false` Strips any fields not declared on schema
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire schema
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value (setting as `"once"` will _also_ compute for fields flagged as "once") - see [Design:generate](#generate)
