@@ -1,3 +1,23 @@
+0.15.0 - 2 May 2015
+======
+
+Added:
+
+- `primaryKey` to schema design
+- `mapIdFrom` flag to .format() to map primaryKey to id field
+- #19 `strict` flag to format()
+
+Changed:
+
+- #21 Enable setting `required` as a normal rule (inc. custom error messages)
+
+Fixed:
+
+- #20 Sub-schema properties initialise on `.createFrom()`
+- #21 Required fields fail immediately if not set
+
+
+
 0.14.0 - 26 March 2015
 ======
 
