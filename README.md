@@ -1,19 +1,18 @@
 # Skematic
 
-**Data structure** and **rule validation engine**. Robust schema for JS objects.
+**Data structure** and **rule validation** engine. Robust schema for JS objects.
 
 
-[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic)
-[![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic)
+[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic)
 
 
 > IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
 >
-> After a major API update in v0.13 (see [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes) and renaming the project from `mekanika-schema` to `skematic`, this library is now aiming for v1.0 release candidate.
+> The core API status (`format()` and `validate()`) is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
 >
-> The API status is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
+> See [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes.
 
-Isomorphic, fast and lightweight (~10Kb), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
+Isomorphic, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
@@ -68,7 +67,7 @@ The API surface is small by design, with two **primary methods**:
 
 A few other **convenience methods** are provided, that mostly encapsulate or expose specific functionality in format or validate:
 
-- **.createFrom**( schema ) - _generate an object from schema definitions_ - see [createFrom](#createfrom)
+- **.createFrom**( schema ) - _generate an object from schema definitions_ - see [createFrom](#createfrom) ![status:unstable](https://img.shields.io/badge/status-unstable-orange.svg?style=flat-square)
 
 Optional setup methods:
 
@@ -505,6 +504,10 @@ out = Skematic.format( myModel, {mapIdFrom:'_id'}, {_id:'12345'});
 
 
 ### createFrom
+
+![status:unstable](https://img.shields.io/badge/status-unstable-orange.svg?style=flat-square)
+
+> Likely to be subsumed into `format()` as a flag. See [Issue #18](https://github.com/mekanika/skematic/issues/18)
 
 The convenience method `.createFrom( schema )` generates an object based on all the fields in the provided `schema`, and otherwise runs through `.format()` with default flags set - in other words, the new object gets defaults, generators and transforms applied.
 
