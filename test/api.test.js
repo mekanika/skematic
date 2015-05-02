@@ -17,7 +17,7 @@ describe('API', function () {
   // Modify the array above `apiMethods` to add and remove from the API surface.
   apiMethods.forEach( function (method) {
 
-    it('.'+method+'() exists', function () {
+    it('.' + method + '() exists', function () {
       expect( Skematic[method] ).to.be.an.instanceof( Function );
     });
 

@@ -9,7 +9,7 @@
 
 > IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
 >
-> After a major API update in v0.13 (see [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes) and renaming the project from `mekanika-schema` to `skematic`, this library is now aiming for v1.0 release candidate. 
+> After a major API update in v0.13 (see [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes) and renaming the project from `mekanika-schema` to `skematic`, this library is now aiming for v1.0 release candidate.
 >
 > The API status is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
 
@@ -54,7 +54,7 @@ To use in a browser:
 <script src="node_modules/skematic/build/skematic.min.js"></script>
 ```
 
-> **Compatibility Note:** `Skematic` is written in ES5 and works across _all modern browsers_ (IE9+, Chrome, Firefox, Safari evergreens). 
+> **Compatibility Note:** `Skematic` is written in ES5 and works across _all modern browsers_ (IE9+, Chrome, Firefox, Safari evergreens).
 > Please note that the ES5 `Object.keys()` method is not supported by IE7 & 8, so to use `Skematic` in these fossil browsers, you'll need to install [es5-shim](https://github.com/es-shims/es5-shim) (and worship Satan :metal:).
 
 ## API
@@ -78,7 +78,7 @@ Optional setup methods:
 
 ## Design
 
-### Schema configuration 
+### Schema configuration
 
 `Skematic` provides keys to define rules and conditions for your data. Config keys are **all optional**, so the empty object `{}` is perfectly valid (even if it doesn't do anything).
 
@@ -295,12 +295,12 @@ The `generate` field has the following properties:
 
 - **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The output of each function is passed as the first parameter of the next.
 - **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite if set to `true`. (If left as `false`, generate will always replace the provided value)
-- **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data. 
+- **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data.
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
 
 > Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To ensure a generator is only run when you pass a `{generate:'once'}` to format(), set the `once: true` flag.
 
-Example: 
+Example:
 
 ```js
 var Hero = {
@@ -429,7 +429,7 @@ Skematic.format( propSchema, {mapIdFrom:'_id'}, data );
 
 ## Format
 
-Format transforms, generates and conforms data. 
+Format transforms, generates and conforms data.
 
 This is done "destructively" by default (ie. changes the `data` parameter directly). To preserve the original, pass `{copy:true}` to the 'opts' argument:
 
@@ -577,7 +577,7 @@ Contributions to `Skematic` are welcome.
 - Add documentation (JSDoc for functions, README updates, etc)
 - Open a pull request
 
-### License 
+### License
 
 `Skematic` is maintained and released by [Mekanika](http://mekanika.org)
 
