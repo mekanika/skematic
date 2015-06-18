@@ -570,6 +570,12 @@ Run the tests:
 
 **Benchmarks:** The `perf/benchmark.js` is simply a check to ensure you haven't destroyed performance: `npm run benchmark`. Skematic runs at several tens of thousands of complex validations per second on basic hardware.
 
+Code conventions based on [**Semistandard**](https://github.com/Flet/semistandard).
+
+    npm install semistandard -g
+
+[![js-semistandard-style](https://cdn.rawgit.com/flet/semistandard/master/badge.svg)](https://github.com/Flet/semistandard)
+
 ### Contributions
 
 Contributions to `Skematic` are welcome.

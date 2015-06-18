@@ -26,7 +26,7 @@
     "compress": "uglifyjs build/skematic.dev.js -cm -o build/skematic.min.js",
     "coverage": "istanbul cover _mocha",
     "docs": "jsdoc -c .jsdoc.conf --destination docs/ index.js lib/ README.md",
-    "lint": "jshint --config .jshintrc index.js lib/*.js test/*.js perf/*.js",
+    "lint": "semistandard index.js lib/*.js test/*.js perf/*.js",
     "test": "mocha -R spec test/"
   },
   "repository": {
