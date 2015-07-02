@@ -4,21 +4,21 @@
   @ignore
 */
 
-var Cast = require('./typeconvert');
+import * as Cast from './typeconvert';
 
 /**
   Export transform modules
   @ignore
 */
 
-module.exports = transform;
+export default transform;
 
 /**
   Available transform functions (modifiers for value)
   @namespace Transforms
 */
 
-var _transforms = {
+const _transforms = {
 
   /**
     Remove whitespace from start and end of string
@@ -27,7 +27,7 @@ var _transforms = {
     @return {String} Trimmed string
     @memberOf Transforms
   */
-  trim: function (v) { return v.trim(); },
+  trim: v => v.trim(),
 
   /**
     Removes ALL whitespace from string
@@ -37,7 +37,7 @@ var _transforms = {
     @memberOf Transforms
   */
 
-  nowhite: function (v) { return v.replace(/ /g, ''); },
+  nowhite: v => v.replace(/ /g, ''),
 
   /**
     Convert a string to all uppercase
@@ -47,7 +47,7 @@ var _transforms = {
     @memberOf Transforms
   */
 
-  uppercase: function (v) { return v.toUpperCase(); },
+  uppercase: v => v.toUpperCase(),
 
   /**
     Convert a string to all lowercase
@@ -57,7 +57,7 @@ var _transforms = {
     @memberOf Transforms
   */
 
-  lowercase: function (v) { return v.toLowerCase(); }
+  lowercase: v => v.toLowerCase()
 };
 
 // Add 'to$CAST' casters to transforms
@@ -88,8 +88,8 @@ function transform (val, transforms) {
   // Ensure transforms are provided as an array
   if (typeof transforms === 'string') transforms = [transforms];
 
-  for (var i = 0; i < transforms.length; i++) {
-    var key = transforms[i];
+  for (let i = 0; i < transforms.length; i++) {
+    let key = transforms[i];
     // Try-catch is to make it CLEAR that this can throw
     // May be useful in future to do more than propagate throw
     try {
@@ -109,9 +109,7 @@ function transform (val, transforms) {
   @return {Array}
 */
 
-transform.available = function () {
-  return Object.keys(_transforms);
-};
+transform.available = () => Object.keys(_transforms);
 
 /**
   Adds a named `key` transform `fn`
@@ -120,6 +118,4 @@ transform.available = function () {
   @param {Function} fn The transform function (passed `v` and returns modified `v`)
 */
 
-transform.add = function (key, fn) {
-  _transforms[ key ] = fn;
-};
+transform.add = (key, fn) => _transforms[ key ] = fn;

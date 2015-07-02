@@ -4,7 +4,15 @@
  * @namespace TypeConvert
  */
 
-module.exports = exports;
+export {
+  toString,
+  convertNumber,
+  toNumber,
+  toFloat,
+  toInteger,
+  toBoolean,
+  toDate
+};
 
 /**
  * Convert to a string
@@ -30,7 +38,7 @@ module.exports = exports;
  * @memberOf TypeConvert
  */
 
-exports.toString = function toString (val) {
+function toString (val) {
 
   if (val === null) return val;
 
@@ -73,7 +81,7 @@ exports.toString = function toString (val) {
  * @memberOf TypeConvert
  */
 
-exports.convertNumber = function convertNumber (val, convertor, radix) {
+function convertNumber (val, convertor, radix) {
 
   // Setup defaults
   convertor || (convertor = radix !== undefined ? parseInt : Number);
@@ -120,8 +128,8 @@ exports.convertNumber = function convertNumber (val, convertor, radix) {
  * @memberOf TypeConvert
  */
 
-exports.toNumber = function toNumber (val) {
-  return exports.convertNumber(val, Number);
+function toNumber (val) {
+  return convertNumber(val, Number);
 };
 
 /**
@@ -137,8 +145,8 @@ exports.toNumber = function toNumber (val) {
  * @memberOf TypeConvert
  */
 
-exports.toFloat = function toFloat (val) {
-  return exports.convertNumber(val, parseFloat);
+function toFloat (val) {
+  return convertNumber(val, parseFloat);
 };
 
 /**
@@ -155,8 +163,8 @@ exports.toFloat = function toFloat (val) {
  * @memberOf TypeConvert
  */
 
-exports.toInteger = function toInteger (val, radix) {
-  return exports.convertNumber(val, parseInt, radix);
+function toInteger (val, radix) {
+  return convertNumber(val, parseInt, radix);
 };
 
 /**
@@ -181,7 +189,7 @@ exports.toInteger = function toInteger (val, radix) {
  * @memberOf TypeConvert
  */
 
-exports.toBoolean = function toBoolean (val) {
+function toBoolean (val) {
 
   if (val === null) return val;
   if (val === '0') return false;
@@ -214,7 +222,7 @@ exports.toBoolean = function toBoolean (val) {
  * @memberOf TypeConvert
  */
 
-exports.toDate = function toDate (val) {
+function toDate (val) {
 
   if (val === null || val === '') return null;
   if (val instanceof Date) return val;

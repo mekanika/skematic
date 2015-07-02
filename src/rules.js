@@ -6,7 +6,24 @@
  * Expose module
  */
 
-module.exports = exports;
+export {
+  required,
+  empty,
+  minLength,
+  maxLength,
+  max,
+  min,
+  present,
+  notPresent,
+  has,
+  hasNot,
+  isEmail,
+  isUrl,
+  isAlpha,
+  isAlphaNum,
+  match,
+  notMatch
+};
 
 /**
  * Ensure the value is set (and not undefined)
@@ -17,7 +34,7 @@ module.exports = exports;
  * @alias required
  */
 
-exports.required = function required (val) {
+function required (val) {
   return !(val === undefined || val === null || val === '');
 };
 
@@ -33,7 +50,7 @@ exports.required = function required (val) {
  * @alias empty
  */
 
-exports.empty = function (v, allowEmpty) {
+function empty (v, allowEmpty) {
   if (typeof allowEmpty === 'undefined') allowEmpty = true;
   return (v === '' || v === undefined) && allowEmpty;
 };
@@ -47,7 +64,7 @@ exports.empty = function (v, allowEmpty) {
  * @alias minLength
  */
 
-exports.minLength = function minLength (str, min) {
+function minLength (str, min) {
   return str.length >= min;
 };
 
@@ -60,7 +77,7 @@ exports.minLength = function minLength (str, min) {
  * @alias maxLength
  */
 
-exports.maxLength = function maxLength (str, max) {
+function maxLength (str, max) {
   return str.length <= max;
 };
 
@@ -74,7 +91,7 @@ exports.maxLength = function maxLength (str, max) {
  * @alias max
  */
 
-exports.max = function max (val, limit) {
+function max (val, limit) {
   return val <= limit;
 };
 
@@ -88,7 +105,7 @@ exports.max = function max (val, limit) {
  * @alias min
  */
 
-exports.min = function min (val, limit) {
+function min (val, limit) {
   return val >= limit;
 };
 
@@ -100,10 +117,10 @@ exports.min = function min (val, limit) {
  * @param {Number} limit The list of values to test against
  * @return {Boolean}
  * @memberOf Rules
- * @alias in
+ * @alias present
  */
 
-exports.in = function (v, list) {
+function present (v, list) {
   // Check against an array
   if (list instanceof Array) return list.indexOf(v) > -1;
   // Check against a list of arguments
@@ -118,11 +135,11 @@ exports.in = function (v, list) {
  * @param {Number} limit The list of values to test against
  * @return {Boolean}
  * @memberOf Rules
- * @alias notIn
+ * @alias notPresent
  */
 
-exports.notIn = function () {
-  return !exports.in.apply(this, arguments);
+function notPresent () {
+  return !present.apply(this, arguments);
 };
 
 /**
@@ -134,7 +151,7 @@ exports.notIn = function () {
   @alias has
 */
 
-exports.has = function has (arr, val) {
+function has (arr, val) {
   return arr.indexOf(val) > -1;
 };
 
@@ -147,7 +164,7 @@ exports.has = function has (arr, val) {
   @alias hasNot
 */
 
-exports.hasNot = function hasNot (arr, val) {
+function hasNot (arr, val) {
   return arr.indexOf(val) === -1;
 };
 
@@ -160,7 +177,7 @@ exports.hasNot = function hasNot (arr, val) {
  * @alias isEmail
  */
 
-exports.isEmail = function isEmail (str) {
+function isEmail (str) {
   return (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(str);
 };
 
@@ -173,7 +190,7 @@ exports.isEmail = function isEmail (str) {
  * @alias isUrl
  */
 
-exports.isUrl = function isUrl (str) {
+function isUrl (str) {
   // A modified version of the validator from @diegoperini / https://gist.github.com/729294
   return str.length < 2083 && (/^(?!mailto:)(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[0-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))|localhost)(?::\d{2,5})?(?:\/[^\s]*)?$/i).test(str);
 };
@@ -187,7 +204,7 @@ exports.isUrl = function isUrl (str) {
  * @alias isAlpha
  */
 
-exports.isAlpha = function (v) {
+function isAlpha (v) {
   return (/^[a-zA-Z]+$/i).test(v);
 };
 
@@ -197,10 +214,10 @@ exports.isAlpha = function (v) {
  * @param {String} str
  * @return {Boolean}
  * @memberOf Rules
- * @alias isUrl
+ * @alias isAlphaNum
  */
 
-exports.isAlphaNum = function (v) {
+function isAlphaNum (v) {
   return (/^[a-zA-Z0-9]+$/i).test(v) && typeof v === 'string';
 };
 
@@ -212,11 +229,10 @@ exports.isAlphaNum = function (v) {
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
  * @memberOf Rules
- * @method is
- * @alias regex
+ * @alias match
  */
 
-exports.match = function regex (str, exp, flags) {
+function match (str, exp, flags) {
   if (!(exp instanceof RegExp)) exp = new RegExp(exp, flags);
   return exp.test(str);
 };
@@ -229,10 +245,9 @@ exports.match = function regex (str, exp, flags) {
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
  * @memberOf Rules
- * @method not
- * @alias notRegex
+ * @alias notMatch
  */
 
-exports.notMatch = function notRegex (str, exp, flags) {
+function notMatch (str, exp, flags) {
   return !exports.match(str, exp, flags);
 };

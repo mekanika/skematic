@@ -1,24 +1,22 @@
 
 /**
+  `Skematic` provides methods to structure and valid data.
+  @module Skematic
+*/
+
+/**
   Import type checker
   @ignore
 */
 
-var is = require('mekanika-lsd/is');
+import is from 'mekanika-lsd/is';
 
 /**
   Import default setter
   @ignore
 */
 
-var setDefault = require('./default');
-
-/**
-  `Skematic` provides methods to structure and valid data.
-  @module Skematic
-*/
-
-module.exports = exports;
+import setDefault from './default';
 
 /**
   Internal reference for Schemas (if any)
@@ -26,7 +24,7 @@ module.exports = exports;
   @private
 */
 
-var _schemas = exports.models = {};
+let _schemas = {};
 
 /**
   Internal method for other modules to access any loaded Schemas above
@@ -36,8 +34,8 @@ var _schemas = exports.models = {};
   @private
 */
 
-exports._getSchema = function (ref) {
-  var ret = _schemas[ref];
+function _getSchema (ref) {
+  let ret = _schemas[ref];
   if (!ret) throw new Error('No schema found for: ' + ref);
   return ret;
 };
@@ -58,7 +56,7 @@ exports._getSchema = function (ref) {
   @param {Object} schemas Hash of schemas
 */
 
-exports.useSchemas = function (s) {
+function useSchemas (s) {
   _schemas = s;
 };
 
@@ -71,13 +69,13 @@ exports.useSchemas = function (s) {
   @return {Object}
 */
 
-exports.createFrom = function (schema, nullValue) {
-  var o = {};
+function createFrom (schema, nullValue) {
+  let o = {};
 
   if (!schema) return o;
   if (is.string(schema)) schema = exports._getSchema(schema);
 
-  for (var k in schema) {
+  for (let k in schema) {
     if (!schema.hasOwnProperty(k)) continue;
     o[k] = setDefault(nullValue, schema[k]);
     // Ensure undefined type:'array' is set to [] (unless overridden)
@@ -87,14 +85,14 @@ exports.createFrom = function (schema, nullValue) {
     if (schema[k].schema) {
       // Only apply to objects or assume 'object' if type not defined
       if (!schema[k].type || schema[k].type === 'object') {
-        o[k] = exports.createFrom(schema[k].schema);
+        o[k] = createFrom(schema[k].schema);
       }
     }
 
   }
 
   // Now format the new object
-  o = exports.format(schema, {once: true}, o);
+  o = format(schema, {once: true}, o);
 
   return o;
 };
@@ -104,18 +102,29 @@ exports.createFrom = function (schema, nullValue) {
   @ignore
 */
 
-exports.useGenerators = require('./compute').useGenerators;
+import {useGenerators} from './compute';
 
 /**
   Expose validation surface
   @ignore
 */
 
-exports.validate = require('./validate');
+import {validate} from './validate';
 
 /**
   Expose format surface
   @ignore
 */
 
-exports.format = require('./format');
+import format from './format';
+
+// Export the library
+export {
+  _schemas as models,
+  _getSchema,
+  createFrom,
+  format,
+  useGenerators,
+  useSchemas,
+  validate
+};

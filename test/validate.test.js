@@ -191,12 +191,12 @@ describe('checkValue(val, schema)', function () {
   });
 
   it('then checks that required values are set', function () {
-    var s = {required: true, rules: {in: ['x']}};
+    var s = {required: true, rules: {present: ['x']}};
     expect(checkValue('', s)).to.have.length(1);
     expect(checkValue('', s)[0]).to.match(/required/ig);
 
     // Now check the affirmative case
-    s = {required: true, default: 'zim', rules: {in: ['zim']}};
+    s = {required: true, default: 'zim', rules: {present: ['zim']}};
     expect(checkValue('zim', s)).to.have.length(0);
   });
 
@@ -225,22 +225,22 @@ describe('checkValue(val, schema)', function () {
 
   describe('error msgs', function () {
     it('can be set declaritively', function () {
-      var s = {rules: {in: ['a']}, errors: {in: 'Hotdog!'}};
+      var s = {rules: {present: ['a']}, errors: {present: 'Hotdog!'}};
       expect(checkValue('b', s)[0]).to.equal('Hotdog!');
     });
 
     it('can set default error message for schema', function () {
-      var s = {rules: {in: ['a']}, errors: {default: 'Hotdog!'}};
+      var s = {rules: {present: ['a']}, errors: {default: 'Hotdog!'}};
       expect(checkValue('b', s)[0]).to.equal('Hotdog!');
     });
 
     it('can set default msg as string', function () {
-      var s = {rules: {in: ['a']}, errors: 'Hotdog!'};
+      var s = {rules: {present: ['a']}, errors: 'Hotdog!'};
       expect(checkValue('b', s)[0]).to.equal('Hotdog!');
     });
 
     it('uses system default msg if no match', function () {
-      var s = {rules: {in: ['a']}, errors: {}};
+      var s = {rules: {present: ['a']}, errors: {}};
 
       // @note This is HARDCODED to match the 'defaultError'
       expect(checkValue('b', s)).to.match(/failed/ig);

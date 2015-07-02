@@ -209,8 +209,8 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.max** - The highest permitted number
 - **.minLength** - The shortest string permitted
 - **.maxLength** - The longest string permitted
-- **.in** - Value must be in the list of elements
-- **.notIn** - Value must NOT be in the list of elements
+- **.present** - Value must be present in the list of elements
+- **.notPresent** - Value must NOT be present in the list of elements
 - **.has** - List of elements contains the value
 - **.hasNot** - List of elements does NOT contain the value
 - **.isEmail** - no parameters: Is the string an email
@@ -388,7 +388,7 @@ When storing schema data structures as JSON, it can be handy to reference defini
 ```js
 var allMyModels = {
   Taste: {
-    major: {rules:{in:['sweet','sour','salty','other']}},
+    major: {rules:{present:['sweet','sour','salty','other']}},
     description: {type:'string'}
   },
 
@@ -581,7 +581,7 @@ Code conventions based on [**Semistandard**](https://github.com/Flet/semistandar
 Contributions to `Skematic` are welcome.
 
 - Maintain the existing code style conventions
-- Ensure your code passes JSHint `npm run lint`
+- Ensure your code passes Semistandard lint `npm run lint`
 - Include tests that fail without your code, and pass with it
 - Add documentation (JSDoc for functions, README updates, etc)
 - Open a pull request

@@ -11,27 +11,26 @@
   @ignore
 */
 
-var is = require('mekanika-lsd/is');
-var clone = require('mekanika-lsd/clone');
+import is from 'mekanika-lsd/is';
+import clone from 'mekanika-lsd/clone';
 
 /**
   Import Skematic tools
   @ignore
 */
 
-var getSchema = require('./api')._getSchema,
-  setDefault = require('./default'),
-  transform = require('./transform'),
-  strip = require('./strip'),
-  canCompute = require('./compute').canCompute,
-  compute = require('./compute').computeValue,
-  idMap = require('./idmap');
+import {_getSchema as getSchema} from './api';
+import setDefault from './default';
+import transform from './transform';
+import strip from './strip';
+import {canCompute, computeValue as compute} from './compute';
+import idMap from './idmap';
 
 /**
   Export module
 */
 
-module.exports = format;
+export default format;
 
 /**
   Formats a data object according to schema rules.
@@ -70,7 +69,7 @@ function format (skm, opts, data) {
   if (!opts) opts = {};
 
   // Apply bulk formatters
-  var res = _dive(skm, opts, data);
+  let res = _dive(skm, opts, data);
 
   // Map the idField if provided
   if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom);
@@ -108,7 +107,6 @@ function _makeValue (ss, opts, val) {
     var args = [ss, {once: runOnce}];
     if (arguments.length > 2) args.push(val);
 
-    // Ensure blah
     if (canCompute.apply(null, args)) {
       // Handle generators flagged as 'once'
       if (ss.generate.once) {
@@ -145,7 +143,7 @@ function _dive (skm, opts, data) {
   if (!skm) return data;
 
   // Placeholder for formatted data
-  var out;
+  let out;
 
   // Load a string referenced schema from an accessor (expects a SCHEMA)
   if (is.string(skm.schema)) skm.schema = getSchema(skm.schema);
@@ -158,19 +156,19 @@ function _dive (skm, opts, data) {
 
     // Strip keys not declared on schea if in 'strict' mode
     if (opts.strict) {
-      var schemaKeys = Object.keys(skm);
+      const schemaKeys = Object.keys(skm);
       Object.keys(data).forEach(function (k) {
         if (schemaKeys.indexOf(k) < 0) delete data[k];
       });
     }
 
-    var step = skm;
+    let step = skm;
     // Switch to parsing only provided keys on data if a) dynamic or b) sparse
     if (skm.$dynamic || opts.sparse) step = data;
 
-    for (var key in step) {
+    for (let key in step) {
       // Define the schema to use for this value
-      var model = skm.$dynamic ? skm.$dynamic : skm[key];
+      let model = skm.$dynamic ? skm.$dynamic : skm[key];
       // Some field names won't have a schema defined. Skip these.
       if (!model) continue;
 
@@ -178,7 +176,7 @@ function _dive (skm, opts, data) {
       if (is.array(data[key]) || model.type === 'array') {
         out = _dive(model, opts, data[key]);
       } else {
-        var args = [model, opts];
+        let args = [model, opts];
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key]);
         out = _makeValue.apply(null, args);
 
@@ -199,7 +197,7 @@ function _dive (skm, opts, data) {
     // Process data as an array IF there is a sub-schema to format against
     if (opts.copy) data = clone(data);
 
-    for (var i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
         data[i] = _dive(skm.schema, opts, data[i]);

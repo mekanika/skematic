@@ -1,16 +1,10 @@
 
 /**
-  Setup exports
-*/
-
-module.exports = exports;
-
-/**
   Expose the compute library
   @ignore
 */
 
-var fnLib = {};
+let fnLib = {};
 
 /**
   Loads in a "library" hash of keyed functions that can then be used as
@@ -22,9 +16,9 @@ var fnLib = {};
   @alias useGenerators
 */
 
-exports.useGenerators = function (lib) {
+function useGenerators (lib) {
   fnLib = lib;
-};
+}
 
 /**
   Determines whether a generator SHOULD be run or not.
@@ -43,23 +37,23 @@ exports.useGenerators = function (lib) {
   @ignore
 */
 
-exports.canCompute = function (skm, opts, val) {
+function canCompute (skm, opts = {}, val) {
   if (!skm || !skm.generate) return false;
 
   // Shorthand
-  var gen = skm.generate;
+  const gen = skm.generate;
 
-  var runOnce = opts.once;
+  const runOnce = opts ? opts.once : false;
 
   // Skip if there is no generator
   if (!gen) return false;
 
   // Has a value been provided by the caller
-  var provided = arguments.length > 2;
+  const provided = arguments.length > 2;
 
-  var preserve = gen.preserve;
-  var require = gen.require;
-  var once = gen.once;
+  const preserve = gen.preserve;
+  const require = gen.require;
+  const once = gen.once;
 
   // Don't generate on the following conditions
   if (once && !runOnce) return false;
@@ -67,7 +61,7 @@ exports.canCompute = function (skm, opts, val) {
   if (require && !provided) return false;
 
   return true;
-};
+}
 
 /**
   Computes a single value (rather than stepping through a data object).
@@ -93,22 +87,20 @@ exports.canCompute = function (skm, opts, val) {
   @alias compute
 */
 
-exports.computeValue = function (skm, opts, val) {
+function computeValue (skm, opts = {}, val) {
 
-  if (!opts) opts = {};
-
-  var provided = arguments.length > 2;
-  var args = [skm.generate, opts.once];
+  const provided = arguments.length > 2;
+  const args = [skm.generate, opts ? opts.once : false];
   if (provided) args.push(val);
 
   // Check that we can compute and either:
-  return exports.canCompute.apply(null, arguments)
+  return canCompute.apply(null, arguments)
     // 1. Generate the value, or
     ? _generate.apply(null, args)
     // 2. Return the unmodified value
     : val;
 
-};
+}
 
 /**
   Generates a value by executing all `gen.ops` functions
@@ -127,24 +119,24 @@ exports.computeValue = function (skm, opts, val) {
 function _generate (gen, runOnce, data) {
 
   // Prepare the value to return
-  var value;
+  let value;
 
   if (gen.once && !runOnce) {
     throw new Error('Must pass `runOnce` flag for `once` generators');
   }
 
   // Has a value been provided?
-  var provided = arguments.length > 2;
+  const provided = arguments.length > 2;
 
-  var ops = gen.ops;
+  let ops = gen.ops;
 
   // Ensure we're always dealing with an Array
   // (supports defining a generator as `key:{fns:{FNOBJ}`)
   if (!ops || !ops.length) ops = [ops];
 
   // Step through ops and generate value
-  for (var i = 0; i < ops.length; i++) {
-    var runner;
+  for (let i = 0; i < ops.length; i++) {
+    let runner;
 
     if (typeof ops[i] === 'function') runner = ops[i];
     else runner = fnLib[ops[i].fn];
@@ -174,7 +166,7 @@ function _generate (gen, runOnce, data) {
     }
 
     // Resolve function parameters to values
-    var k = -1, px = ops[i].args || [];
+    let k = -1, px = ops[i].args || [];
     while (++k < px.length) {
       if (typeof px[k] === 'function') px[k] = px[k]();
     }
@@ -184,3 +176,9 @@ function _generate (gen, runOnce, data) {
 
   return value;
 }
+
+/**
+  Setup exports
+*/
+
+export {useGenerators, canCompute, computeValue};

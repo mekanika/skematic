@@ -4,8 +4,8 @@
   @ignore
 */
 
-var Rules = require('./rules'),
-  is = require('mekanika-lsd/is');
+import {empty} from './rules';
+import is from 'mekanika-lsd/is';
 
 /**
   Sets a default value if specified on empty fields
@@ -20,16 +20,15 @@ var Rules = require('./rules'),
   @alias setDefault
 */
 
-module.exports = function (v, schema) {
+export default function (v, schema) {
   if (!schema) return v;
 
-  var def = function (v, s) {
+  const def = function (v, s) {
     // No default, return the value as is
     if (s.default === undefined) return v;
 
     // Return the default if `v` is empty (ie. undefined or '')
-    var x = Rules.empty(v) || v === null ? s.default : v;
-    return x;
+    return empty(v) || v === null ? s.default : v;
   };
 
   // Parse objects

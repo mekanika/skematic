@@ -4,17 +4,17 @@
   @ignore
 */
 
-var is = require('mekanika-lsd/is'),
-  getSchema = require('./api')._getSchema,
-  Rules = require('./rules'),
-  setDefault = require('./default');
+import is from 'mekanika-lsd/is';
+import {_getSchema as getSchema} from './api';
+import * as Rules from './rules';
+import setDefault from './default';
 
 /**
   Expose the module
   @ignore
 */
 
-module.exports = exports = validate;
+export {validate, checkValue};
 
 /**
   Internal error message generator
@@ -24,8 +24,7 @@ module.exports = exports = validate;
 function errMsg (key) {
   // The default "failed validation" message. Appended with ' $key' where
   // `$key` is the key of the validation rule that failed.
-  var defaultError = 'Failed:';
-  return defaultError + ' ' + key;
+  return 'Failed: ' + key;
 }
 
 /**
@@ -92,15 +91,15 @@ function validate (schema, opts, data) {
   @private
 */
 
-exports.checkValue = function (val, schema) {
-  var errs = [];
+function checkValue (val, schema) {
+  let errs = [];
 
   if (!schema) return errs;
 
   // Not required and unset returns WITHOUT check
   if (val === undefined && !schema.required) return errs;
 
-  var setError = function (schema, key, errs) {
+  const setError = (schema, key, errs) => {
     // Failed validation adds error to stack
     if (schema.errors) {
       if (typeof schema.errors === 'string') errs.push(schema.errors);
@@ -122,27 +121,27 @@ exports.checkValue = function (val, schema) {
   // The value type matches its declaration (if any)
   if (schema.type) {
     if (!is.undefined(val) && !is[ schema.type ](val)) {
-      return ['Not of type: ' + schema.type];
+      return [`Not of type: ${schema.type}`];
     }
   }
 
   // 3. Validate rules
-  for (var key in schema.rules) {
+  for (let key in schema.rules) {
     if (!schema.rules.hasOwnProperty(key)) continue;
 
     // Build parameters to pass to rule
-    var params = schema.rules[key];
+    let params = schema.rules[key];
     if (!(params instanceof Array)) params = [params];
     params.unshift(val);
 
     // Check that the rule exists to run against
     if (!Rules[key]) {
-      errs.push('Unknown rule: ' + key);
+      errs.push(`Unknown rule: ${key}`);
       continue;
     }
 
     // Run validation
-    var isValid = Rules[key].apply(this, params);
+    const isValid = Rules[key].apply(this, params);
     if (!isValid) setError(schema, key, errs);
   }
 
@@ -161,12 +160,12 @@ exports.checkValue = function (val, schema) {
 */
 
 function _validate (data, schema) {
-  var errs = {};
-  var isValid = true;
+  let errs = {};
+  let isValid = true;
 
   // Validate scalars
   if (!is.object(data)) {
-    var res = exports.checkValue(data, schema);
+    let res = checkValue(data, schema);
     return res.length
       ? {valid: false, errors: res}
       : {valid: true, errors: null};
@@ -175,17 +174,17 @@ function _validate (data, schema) {
   // Determine whether to step through the schema or the data
   // based on whether we're using $dynamic keys or fixed
   // (Note: sparse validation of known keys happens in `_sparse()`)
-  var step = schema;
+  let step = schema;
   if (schema.$dynamic) step = data;
 
   // Step through ONLY our schema keys
-  for (var key in step) {
-    var scm = schema.$dynamic ? schema.$dynamic : schema[key];
+  for (let key in step) {
+    let scm = schema.$dynamic ? schema.$dynamic : schema[key];
     // Only handle own properties
     if (!scm) continue;
 
     // Shorthand
-    var v = data[key];
+    let v = data[key];
 
     // If it's not required and the default value is 'empty', skip it
     if (!scm.required && Rules.empty(setDefault(v, scm))) continue;
@@ -203,13 +202,13 @@ function _validate (data, schema) {
         if (!v) continue;
 
         // Step through the values in the array
-        for (var i = 0; i < v.length; i++) {
-          var val = v[i];
-          var idx = i;
+        for (let i = 0; i < v.length; i++) {
+          let val = v[i];
+          let idx = i;
 
           // Array of complex objects
           if (is.type(val) === 'object') {
-            var arsub = _validate(val, scm.schema);
+            let arsub = _validate(val, scm.schema);
             if (!arsub.valid) {
               isValid = false;
               if (!errs[key]) errs[key] = {};
@@ -217,7 +216,7 @@ function _validate (data, schema) {
             }
           } else {
             // Array of simple types
-            var er = exports.checkValue(val, scm.schema);
+            let er = checkValue(val, scm.schema);
             if (er.length) {
               isValid = false;
               if (!errs[key]) errs[key] = {};
@@ -227,15 +226,17 @@ function _validate (data, schema) {
         }
       } else {
         // Otherwise just assume it's an object
-        var sub = _validate(v, scm.schema);
+        let sub = _validate(v, scm.schema);
         if (!sub.valid) {
           isValid = false;
           errs[key] = sub.errors;
         }
       }
-    } else {
+
       // Otherwise NO sub-schema: test the value directly
-      var errors = exports.checkValue(v, scm);
+    } else {
+
+      let errors = checkValue(v, scm);
       if (errors.length) {
         isValid = false;
         errs[key] = errors;
@@ -263,11 +264,11 @@ function _validate (data, schema) {
 */
 
 function _sparse (data, schema) {
-  var isValid = true;
-  var errs = {};
-  var out;
+  let isValid = true;
+  let errs = {};
+  let out;
 
-  for (var key in data) {
+  for (let key in data) {
     // Only valid with an associated schema
     if (!schema[key]) continue;
 

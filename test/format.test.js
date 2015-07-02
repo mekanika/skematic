@@ -111,7 +111,7 @@ describe('.format(skm, opts, data)', function () {
 
   it('`strip` removes matching field values', function () {
     var data = {a: undefined, b: null, c: 2, d: ':)'};
-    var s = {a: {type:'number'}};
+    var s = {a: {type: 'number'}};
     var out = format(s, {strip: [undefined, null, ':)']}, data);
     expect(out).to.eql({c: 2});
   });

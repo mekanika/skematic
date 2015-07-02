@@ -1,10 +1,6 @@
 build
 .DS_Store
 node_modules
-coverage/
+coverage
 docs
-out
-
-# Ignore any files that include .ignore. in their filename
-# eg. todo.ignore.txt
-*.ignore.*
+lib

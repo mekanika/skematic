@@ -4,14 +4,14 @@
   @ignore
 */
 
-module.exports = idMap;
+export default idMap;
 
 /**
   Defines the property to lookup
   @ignore
 */
 
-var KEY_NAME = 'primaryKey';
+const KEY_NAME = 'primaryKey';
 
 /**
   Internal helper to retrieve an arbitrary property match from an object hash
@@ -23,14 +23,14 @@ var KEY_NAME = 'primaryKey';
   @private
 */
 
-var _getField = function (schema, name) {
+function _getField (schema, name) {
 
-  for (var key in schema) {
+  for (let key in schema) {
     if (!schema.hasOwnProperty(key)) continue;
     if (schema[key][name]) return key;
   }
 
-};
+}
 
 /**
   Maps a default id field to a schema provided primaryKey field
@@ -59,7 +59,7 @@ var _getField = function (schema, name) {
 function idMap (schema, col, idField) {
 
   // Load up the primaryKey field from a given model
-  var pk = _getField(schema, KEY_NAME);
+  let pk = _getField(schema, KEY_NAME);
 
   // No need to replace anything if no primary key
   if (!pk) return col;
@@ -67,12 +67,10 @@ function idMap (schema, col, idField) {
   if (schema[pk].generate) return col;
 
   // Step through collection and rename primary key field
-  for (var i = 0; i < col.length; i++) {
-    var el = col[i];
-
+  col.forEach(el => {
     el[pk] = el[idField];
     delete el[idField];
-  }
+  });
 
   return col;
 }
