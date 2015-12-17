@@ -209,6 +209,8 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.max** - The highest permitted number
 - **.minLength** - The shortest string permitted
 - **.maxLength** - The longest string permitted
+- **.eq** - Value must be strictly equal
+- **.neq** - Value must not equal
 - **.present** - Value must be present in the list of elements
 - **.notPresent** - Value must NOT be present in the list of elements
 - **.has** - List of elements contains the value

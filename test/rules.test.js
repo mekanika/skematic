@@ -43,6 +43,26 @@ describe('Rules', function () {
     });
   });
 
+  describe('eq(val, match)', function () {
+    it('matches strictly equal', function () {
+      expect(V.eq('hi', 'hi')).to.be.true;
+    });
+
+    it('fails on mismatch', function () {
+      expect(V.eq(1, '1')).to.be.false;
+    });
+  });
+
+  describe('neq(val, notmatch)', function () {
+    it('fails on equality', function () {
+      expect(V.neq('hi', 'hi')).to.be.false;
+    });
+
+    it('passes on mismatch', function () {
+      expect(V.neq(1, '1')).to.be.true;
+    });
+  });
+
   // --- Strings
   describe('Strings', function () {
     describe('.minLength( v, len )', function () {

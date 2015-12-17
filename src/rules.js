@@ -9,6 +9,8 @@
 export {
   required,
   empty,
+  eq,
+  neq,
   minLength,
   maxLength,
   max,
@@ -54,6 +56,35 @@ function empty (v, allowEmpty) {
   if (typeof allowEmpty === 'undefined') allowEmpty = true;
   return (v === '' || v === undefined) && allowEmpty;
 };
+
+/**
+ * Value strict equals specified value
+ *
+ * @param {Mixed} val The value to test
+ * @param {Mixed} mustMatchVal The value to strictly equal
+ * @return {Boolean}
+ * @memberOf Rules
+ * @alias eq
+*/
+
+function eq (val, mustMatchVal) {
+  return val === mustMatchVal;
+}
+
+/**
+ * Value strict NOT equals specified value
+ *
+ * @param {Mixed} val The value to test
+ * @param {Mixed} mustNotMatchVal The value to strictly NOT equal
+ * @return {Boolean}
+ * @memberOf Rules
+ * @alias neq
+*/
+
+function neq (val, mustNotMatchVal) {
+  return val !== mustNotMatchVal;
+}
+
 
 /**
  * Minimum string length
