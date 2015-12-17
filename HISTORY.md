@@ -1,3 +1,16 @@
+0.16.0 - 17 December 2015
+======
+
+Added:
+
+- Rules `eq` and `neq` equality matchers
+
+Changed:
+
+- **BREAKING** Rules 'in' and 'notIn' renamed to 'present', 'notPresent'
+
+
+
 0.15.0 - 2 May 2015
 ======
 
