@@ -8,7 +8,7 @@
 
 > :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
-Isomorphic, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
+Universal, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
@@ -290,7 +290,7 @@ The `generate` field has the following properties:
 
 > Legend: **field** - _{Type}_ `default`: Description
 
-- **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The output of each function is passed as the first parameter of the next.
+- **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The first function in the list is passed the value of the object being formatted. The output of each function is passed as the first parameter of the next.
 - **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite if set to `true`. (If left as `false`, generate will always replace the provided value)
 - **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data.
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
@@ -560,7 +560,11 @@ Validate _options_ include:
 
 ## Development
 
-`Skematic` is currently written in **ES5**.
+`Skematic` is written in **ES6+**.
+
+Developing Skemetic requires installing all dependencies:
+
+    npm install
 
 Run the tests:
 
@@ -568,18 +572,16 @@ Run the tests:
 
 **Benchmarks:** The `perf/benchmark.js` is simply a check to ensure you haven't destroyed performance: `npm run benchmark`. Skematic runs at several tens of thousands of complex validations per second on basic hardware.
 
-Code conventions based on [**Semistandard**](https://github.com/Flet/semistandard).
+Code conventions based on [**Standard**](https://github.com/feross/standard).
 
-    npm install semistandard -g
-
-[![js-semistandard-style](https://cdn.rawgit.com/flet/semistandard/master/badge.svg)](https://github.com/Flet/semistandard)
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ### Contributions
 
 Contributions to `Skematic` are welcome.
 
 - Maintain the existing code style conventions
-- Ensure your code passes Semistandard lint `npm run lint`
+- Ensure your code passes Standard lint `npm run lint`
 - Include tests that fail without your code, and pass with it
 - Add documentation (JSDoc for functions, README updates, etc)
 - Open a pull request

@@ -21,14 +21,12 @@
   "main": "index.js",
   "scripts": {
     "benchmark": "node perf/benchmark.js",
-    "browser": "browserify index.js -o build/skematic.dev.js -s Skematic",
-    "build": "npm run es5 && npm run browser && npm run compress",
+    "browser": "browserify src/api.js -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ transform-object-rest-spread ] ]",
+    "build": "npm run browser && npm run compress",
     "compress": "uglifyjs build/skematic.dev.js -cm -o build/skematic.min.js",
     "coverage": "istanbul cover _mocha",
-    "docs": "jsdoc -c .jsdoc.conf --destination docs/ index.js lib/ README.md",
-    "es5": "babel src --out-dir lib",
-    "lint": "semistandard index.js src/*.js test/*.js perf/*.js",
-    "test": "mocha -R spec test/"
+    "lint": "standard --verbose index.js src/*.js test/*.js perf/*.js | snazzy",
+    "test": "mocha -r babel-register -R spec test/"
   },
   "repository": {
     "type": "git",
@@ -41,12 +39,30 @@
     "mekanika-lsd": "^0.1.0"
   },
   "devDependencies": {
-    "browserify": "^9.0.3",
-    "chai": "^2.1.2",
-    "istanbul": "^0.3.8",
-    "jsdoc": "^3.3.0-beta3",
-    "jshint": "^2.6.3",
-    "mocha": "^2.2.1",
-    "uglify-js": "^2.4.17"
+    "babel-eslint": "^6.1.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-register": "^6.9.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^2.5.3",
+    "snazzy": "^4.0.0",
+    "standard": "^7.1.2",
+    "uglify-js": "^2.6.4"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "add-module-exports",
+      "transform-object-rest-spread"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }
