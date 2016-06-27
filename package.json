@@ -25,6 +25,7 @@
     "build": "npm run browser && npm run compress",
     "compress": "uglifyjs build/skematic.dev.js -cm -o build/skematic.min.js",
     "coverage": "istanbul cover _mocha",
+    "docs": "documentation build index.js --name Skematic -o docs -f html",
     "lint": "standard --verbose index.js src/*.js test/*.js perf/*.js | snazzy",
     "test": "mocha -r babel-register -R spec test/"
   },
@@ -46,6 +47,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
+    "documentation": "^4.0.0-beta5",
     "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
     "snazzy": "^4.0.0",

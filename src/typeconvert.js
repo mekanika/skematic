@@ -35,7 +35,7 @@ export {
  * @throws Conversion failure error
  * @returns {String} converted value
  * @alias toString
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toString (val) {
@@ -77,7 +77,7 @@ function toString (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias convertNumber
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function convertNumber (val, convertor, radix) {
@@ -121,7 +121,7 @@ function convertNumber (val, convertor, radix) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toNumber
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toNumber (val) {
@@ -138,7 +138,7 @@ function toNumber (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toFloat
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toFloat (val) {
@@ -156,7 +156,7 @@ function toFloat (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toInteger
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toInteger (val, radix) {
@@ -182,7 +182,7 @@ function toInteger (val, radix) {
  *
  * @returns {Boolean} converted value
  * @alias toBoolean
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toBoolean (val) {
@@ -213,7 +213,7 @@ function toBoolean (val) {
  * @throws Conversion failure error
  * @returns {Date} converted value
  * @alias toDate
- * @memberOf TypeConvert
+ * @memberof TypeConvert
  */
 
 function toDate (val) {

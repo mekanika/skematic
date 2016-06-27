@@ -2,7 +2,7 @@
   @namespace Rules
 */
 
-/**
+/*
  * Expose module
  */
 
@@ -32,7 +32,7 @@ export {
  *
  * @param {Mixed} val The value to test
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias required
  */
 
@@ -45,10 +45,10 @@ function required (val) {
  *
  * Set `allowEmpty=false` to return `false` on empty, `true` on set
  *
- * @param {Mixed} val The value to test
+ * @param {Mixed} v The value to test
  * @param {Boolean} allowEmpty [default:true] When `false`, empty values return `false`, set values return `true`
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias empty
  */
 
@@ -63,7 +63,7 @@ function empty (v, allowEmpty) {
  * @param {Mixed} val The value to test
  * @param {Mixed} mustMatchVal The value to strictly equal
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias eq
 */
 
@@ -77,7 +77,7 @@ function eq (val, mustMatchVal) {
  * @param {Mixed} val The value to test
  * @param {Mixed} mustNotMatchVal The value to strictly NOT equal
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias neq
 */
 
@@ -88,9 +88,10 @@ function neq (val, mustNotMatchVal) {
 /**
  * Minimum string length
  *
- * @param {String} val The value to test
+ * @param {String} str The value to test
+ * @param {Number} min Minimum length to equal or exceed
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias minLength
  */
 
@@ -101,9 +102,10 @@ function minLength (str, min) {
 /**
  * Maximum string length
  *
- * @param {String} val The value to test
+ * @param {String} str The value to test
+ * @param {Number} max Maximum length
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias maxLength
  */
 
@@ -117,7 +119,7 @@ function maxLength (str, max) {
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias max
  */
 
@@ -131,7 +133,7 @@ function max (val, limit) {
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias min
  */
 
@@ -141,30 +143,26 @@ function min (val, limit) {
 
 /**
  * Present in a list of values (whitelist)
- * Also works passing in list values as arguments
  *
- * @param {Number} v The value to test
- * @param {Number} limit The list of values to test against
+ * @param {Mixed} v The value to test
+ * @param {Mixed|Mixed[]} list The list of values to test against
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias present
  */
 
 function present (v, list) {
-  // Check against an array
-  if (list instanceof Array) return list.indexOf(v) > -1
-  // Check against a list of arguments
-  else return Array.prototype.slice.call(arguments, 1).indexOf(v) > -1
+  const comp = list instanceof Array ? list : [list]
+  return comp.indexOf(v) > -1
 }
 
 /**
  * Not present in a list of values (blacklist)
- * Also works passing in list values as arguments
  *
  * @param {Number} v The value to test
- * @param {Number} limit The list of values to test against
+ * @param {Number[]} list The list of values to test against
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias notPresent
  */
 
@@ -177,7 +175,7 @@ function notPresent () {
 
   @param {Array} arr The array to inspect for presence of `val`
   @param {Mixed} val The value to find
-  @memberOf Rules
+  @memberof Rules
   @alias has
 */
 
@@ -190,7 +188,7 @@ function has (arr, val) {
 
   @param {Array} arr The array to inspect for presence of `val`
   @param {Mixed} val The value to find
-  @memberOf Rules
+  @memberof Rules
   @alias hasNot
 */
 
@@ -203,7 +201,7 @@ function hasNot (arr, val) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias isEmail
  */
 
@@ -216,7 +214,7 @@ function isEmail (str) {
  *
  * @param {String} str
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias isUrl
  */
 
@@ -228,9 +226,9 @@ function isUrl (str) {
 /**
  * String is alpha characters
  *
- * @param {String} str
+ * @param {String} v
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias isAlpha
  */
 
@@ -241,9 +239,9 @@ function isAlpha (v) {
 /**
  * String is alphaNumeric characters
  *
- * @param {String} str
+ * @param {String} v
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias isAlphaNum
  */
 
@@ -258,7 +256,7 @@ function isAlphaNum (v) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias match
  */
 
@@ -274,7 +272,7 @@ function match (str, exp, flags) {
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
  * @return {Boolean}
- * @memberOf Rules
+ * @memberof Rules
  * @alias notMatch
  */
 

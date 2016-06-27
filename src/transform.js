@@ -23,18 +23,18 @@ const _transforms = {
   /**
     Remove whitespace from start and end of string
 
-    @param {String} str
+    @param {String} v
     @return {String} Trimmed string
-    @memberOf Transforms
+    @memberof Transforms
   */
   trim: v => v.trim(),
 
   /**
     Removes ALL whitespace from string
 
-    @param {String} str
+    @param {String} v
     @return {String} No whitespaced string
-    @memberOf Transforms
+    @memberof Transforms
   */
 
   nowhite: v => v.replace(/ /g, ''),
@@ -42,9 +42,9 @@ const _transforms = {
   /**
     Convert a string to all uppercase
 
-    @param {String} str
+    @param {String} v
     @return {String} Uppercased string
-    @memberOf Transforms
+    @memberof Transforms
   */
 
   uppercase: v => v.toUpperCase(),
@@ -52,9 +52,9 @@ const _transforms = {
   /**
     Convert a string to all lowercase
 
-    @param {String} str
+    @param {String} v
     @return {String} Lowercased string
-    @memberOf Transforms
+    @memberof Transforms
   */
 
   lowercase: v => v.toLowerCase()
@@ -74,7 +74,7 @@ for (var cast in Cast) {
   @throws {Error} if transform cannot be applied
   @return {Mixed} The transformed value
 
-  @memberOf Format
+  @memberof Format
   @alias transform
 */
 

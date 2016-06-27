@@ -51,7 +51,7 @@ function _getField (schema, name) {
   @param {String} idField The name of the provided id field
 
   @return {Array} The collection of data mapped id fields
-  @memberOf Format
+  @memberof Format
 */
 
 function idMap (schema, col, idField) {

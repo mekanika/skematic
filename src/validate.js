@@ -60,7 +60,7 @@ function errMsg (key) {
 
   @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
 
-  @memberOf module:Skematic
+  @memberof Skematic
   @alias validate
 */
 

@@ -16,7 +16,7 @@ import is from './is'
   @param {Schema} schema The associated schema to check the default value on
 
   @return Value or the default value
-  @memberOf Format
+  @memberof Format
   @alias setDefault
 */
 

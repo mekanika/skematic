@@ -5,7 +5,7 @@
   @param {Mixed|Mixed[]} values The value or array of values to match
   @param {Object} data
 
-  @memberOf Format
+  @memberof Format
   @alias strip
 */
 

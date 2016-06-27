@@ -12,7 +12,7 @@ let fnLib = {}
 
   @param {Object} lib An Object of keyed functions `{key:function()...}`
 
-  @memberOf module:Skematic
+  @memberof Skematic
   @alias useGenerators
 */
 
@@ -83,8 +83,7 @@ function canCompute (skm, opts = {}, val) {
 
   @return {Mixed} The computed value (if any) or the passed `val`
 
-  @memberOf Format
-  @alias compute
+  @memberof Format
 */
 
 function computeValue (skm, opts = {}, val) {
@@ -175,7 +174,7 @@ function _generate (gen, runOnce, data) {
   return value
 }
 
-/**
+/*
   Setup exports
 */
 

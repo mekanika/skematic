@@ -27,6 +27,7 @@ import idMap from './idmap'
 
 /**
   Export module
+  @ignore
 */
 
 export default format
@@ -53,7 +54,7 @@ export default format
 
   @return {Object}
 
-  @memberOf module:Skematic
+  @memberof Skematic
   @alias format
 */
 
@@ -126,7 +127,7 @@ function _makeValue (ss, opts, val) {
   Internal method to recurse through a schema and apply _makeValue. Handles
   scalars, arrays and object data.
 
-  @param {Schema} ss The schema to apply
+  @param {Schema} skm The schema to apply
   @param {Object} opts The options hash
   @param {Mixed} data The (likely OBJECT) data to be formatted
 

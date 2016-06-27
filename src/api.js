@@ -53,7 +53,8 @@ function _getSchema (ref) {
   }
   ```
 
-  @param {Object} schemas Hash of schemas
+  @param {Object} s Hash of schemas
+  @memberof Skematic
 */
 
 function useSchemas (s) {
@@ -65,8 +66,10 @@ function useSchemas (s) {
   and having been run through `.format()` with default flags.
 
   @param {Schema} schema To initialise object
+  @param {Mixed} nullValue
 
   @return {Object}
+  @memberof Skematic
 */
 
 function createFrom (schema, nullValue) {
