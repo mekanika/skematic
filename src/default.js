@@ -5,7 +5,7 @@
 */
 
 import {empty} from './rules';
-import is from 'mekanika-lsd/is';
+import is from './is'
 
 /**
   Sets a default value if specified on empty fields

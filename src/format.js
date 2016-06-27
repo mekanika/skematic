@@ -11,8 +11,7 @@
   @ignore
 */
 
-import is from 'mekanika-lsd/is';
-import clone from 'mekanika-lsd/clone';
+import is from './is'
 
 /**
   Import Skematic tools
@@ -152,7 +151,7 @@ function _dive (skm, opts, data) {
   // Process data as an object
   if (is.object(data)) {
 
-    if (opts.copy) data = clone(data);
+    if (opts.copy) data = {...data}
 
     // Strip keys not declared on schea if in 'strict' mode
     if (opts.strict) {
@@ -195,7 +194,7 @@ function _dive (skm, opts, data) {
   } else if (is.array(data) && skm.schema) {
     // ARRAY (with sub-schema)
     // Process data as an array IF there is a sub-schema to format against
-    if (opts.copy) data = clone(data);
+    if (opts.copy) data = data.slice()
 
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects

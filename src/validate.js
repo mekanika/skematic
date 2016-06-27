@@ -4,10 +4,10 @@
   @ignore
 */
 
-import is from 'mekanika-lsd/is';
 import {_getSchema as getSchema} from './api';
 import * as Rules from './rules';
 import setDefault from './default';
+import is from './is'
 
 /**
   Expose the module

@@ -9,7 +9,7 @@
   @ignore
 */
 
-import is from 'mekanika-lsd/is';
+import is from './is'
 
 /**
   Import default setter

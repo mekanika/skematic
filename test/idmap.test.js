@@ -1,6 +1,5 @@
 /*eslint-env node, mocha */
 var expect = require('chai').expect,
-  clone = require('mekanika-lsd/clone'),
   idMap = require('../lib/idmap');
 
 describe('idMap()', function () {
@@ -12,7 +11,7 @@ describe('idMap()', function () {
   var data = [ {_id: '512314', name: 'power'}, {_id: '519910', name: 'speed'} ];
 
   it('transposes to a primaryKey field from an idField', function () {
-    var out = idMap(propSchema, clone(data), '_id');
+    const out = idMap(propSchema, data.slice(), '_id')
 
     expect(out).to.have.length(2);
     expect(out[0]).to.include.key('prop_id');

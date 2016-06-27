@@ -36,7 +36,6 @@
     "url": "https://github.com/mekanika/skematic/issues"
   },
   "dependencies": {
-    "mekanika-lsd": "^0.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.0",
