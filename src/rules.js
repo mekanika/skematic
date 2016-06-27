@@ -25,7 +25,7 @@ export {
   isAlphaNum,
   match,
   notMatch
-};
+}
 
 /**
  * Ensure the value is set (and not undefined)
@@ -37,8 +37,8 @@ export {
  */
 
 function required (val) {
-  return !(val === undefined || val === null || val === '');
-};
+  return !(val === undefined || val === null || val === '')
+}
 
 /**
  * Value is empty (either `''` or `undefined`).
@@ -53,9 +53,9 @@ function required (val) {
  */
 
 function empty (v, allowEmpty) {
-  if (typeof allowEmpty === 'undefined') allowEmpty = true;
-  return (v === '' || v === undefined) && allowEmpty;
-};
+  if (typeof allowEmpty === 'undefined') allowEmpty = true
+  return (v === '' || v === undefined) && allowEmpty
+}
 
 /**
  * Value strict equals specified value
@@ -68,7 +68,7 @@ function empty (v, allowEmpty) {
 */
 
 function eq (val, mustMatchVal) {
-  return val === mustMatchVal;
+  return val === mustMatchVal
 }
 
 /**
@@ -82,9 +82,8 @@ function eq (val, mustMatchVal) {
 */
 
 function neq (val, mustNotMatchVal) {
-  return val !== mustNotMatchVal;
+  return val !== mustNotMatchVal
 }
-
 
 /**
  * Minimum string length
@@ -96,8 +95,8 @@ function neq (val, mustNotMatchVal) {
  */
 
 function minLength (str, min) {
-  return str.length >= min;
-};
+  return str.length >= min
+}
 
 /**
  * Maximum string length
@@ -109,8 +108,8 @@ function minLength (str, min) {
  */
 
 function maxLength (str, max) {
-  return str.length <= max;
-};
+  return str.length <= max
+}
 
 /**
  * Maximum number value
@@ -123,8 +122,8 @@ function maxLength (str, max) {
  */
 
 function max (val, limit) {
-  return val <= limit;
-};
+  return val <= limit
+}
 
 /**
  * Minimum number value
@@ -137,8 +136,8 @@ function max (val, limit) {
  */
 
 function min (val, limit) {
-  return val >= limit;
-};
+  return val >= limit
+}
 
 /**
  * Present in a list of values (whitelist)
@@ -153,10 +152,10 @@ function min (val, limit) {
 
 function present (v, list) {
   // Check against an array
-  if (list instanceof Array) return list.indexOf(v) > -1;
+  if (list instanceof Array) return list.indexOf(v) > -1
   // Check against a list of arguments
-  else return Array.prototype.slice.call(arguments, 1).indexOf(v) > -1;
-};
+  else return Array.prototype.slice.call(arguments, 1).indexOf(v) > -1
+}
 
 /**
  * Not present in a list of values (blacklist)
@@ -170,8 +169,8 @@ function present (v, list) {
  */
 
 function notPresent () {
-  return !present.apply(this, arguments);
-};
+  return !present.apply(this, arguments)
+}
 
 /**
   Checks that a provided array contains the value `val`
@@ -183,8 +182,8 @@ function notPresent () {
 */
 
 function has (arr, val) {
-  return arr.indexOf(val) > -1;
-};
+  return arr.indexOf(val) > -1
+}
 
 /**
   Checks that a provided array DOES NOT contain the value `val`
@@ -196,8 +195,8 @@ function has (arr, val) {
 */
 
 function hasNot (arr, val) {
-  return arr.indexOf(val) === -1;
-};
+  return arr.indexOf(val) === -1
+}
 
 /**
  * String is a valid email
@@ -209,8 +208,8 @@ function hasNot (arr, val) {
  */
 
 function isEmail (str) {
-  return (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(str);
-};
+  return (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(str)
+}
 
 /**
  * String is a valid URL
@@ -223,8 +222,8 @@ function isEmail (str) {
 
 function isUrl (str) {
   // A modified version of the validator from @diegoperini / https://gist.github.com/729294
-  return str.length < 2083 && (/^(?!mailto:)(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[0-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))|localhost)(?::\d{2,5})?(?:\/[^\s]*)?$/i).test(str);
-};
+  return str.length < 2083 && (/^(?!mailto:)(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[0-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))|localhost)(?::\d{2,5})?(?:\/[^\s]*)?$/i).test(str)
+}
 
 /**
  * String is alpha characters
@@ -236,8 +235,8 @@ function isUrl (str) {
  */
 
 function isAlpha (v) {
-  return (/^[a-zA-Z]+$/i).test(v);
-};
+  return (/^[a-zA-Z]+$/i).test(v)
+}
 
 /**
  * String is alphaNumeric characters
@@ -249,8 +248,8 @@ function isAlpha (v) {
  */
 
 function isAlphaNum (v) {
-  return (/^[a-zA-Z0-9]+$/i).test(v) && typeof v === 'string';
-};
+  return (/^[a-zA-Z0-9]+$/i).test(v) && typeof v === 'string'
+}
 
 /**
  * String matches Regex `exp`
@@ -264,9 +263,9 @@ function isAlphaNum (v) {
  */
 
 function match (str, exp, flags) {
-  if (!(exp instanceof RegExp)) exp = new RegExp(exp, flags);
-  return exp.test(str);
-};
+  if (!(exp instanceof RegExp)) exp = new RegExp(exp, flags)
+  return exp.test(str)
+}
 
 /**
  * String does NOT match Regex `exp`
@@ -280,5 +279,5 @@ function match (str, exp, flags) {
  */
 
 function notMatch (str, exp, flags) {
-  return !exports.match(str, exp, flags);
-};
+  return !exports.match(str, exp, flags)
+}

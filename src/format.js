@@ -18,18 +18,18 @@ import is from './is'
   @ignore
 */
 
-import {_getSchema as getSchema} from './api';
-import setDefault from './default';
-import transform from './transform';
-import strip from './strip';
-import {canCompute, computeValue as compute} from './compute';
-import idMap from './idmap';
+import {_getSchema as getSchema} from './api'
+import setDefault from './default'
+import transform from './transform'
+import strip from './strip'
+import {canCompute, computeValue as compute} from './compute'
+import idMap from './idmap'
 
 /**
   Export module
 */
 
-export default format;
+export default format
 
 /**
   Formats a data object according to schema rules.
@@ -58,22 +58,21 @@ export default format;
 */
 
 function format (skm, opts, data) {
-
   if (arguments.length === 2) {
-    data = arguments[1];
-    opts = {};
+    data = arguments[1]
+    opts = {}
   }
 
   // Set a default for `opts`
-  if (!opts) opts = {};
+  if (!opts) opts = {}
 
   // Apply bulk formatters
-  let res = _dive(skm, opts, data);
+  let res = _dive(skm, opts, data)
 
   // Map the idField if provided
-  if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom);
+  if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom)
 
-  return res;
+  return res
 }
 
 /**
@@ -88,40 +87,39 @@ function format (skm, opts, data) {
 */
 
 function _makeValue (ss, opts, val) {
-
   // Set empty object default for schema as it's possible to provide an empty
   // `ss` if applying a sub-schema that has not been defined
-  if (!ss) ss = {};
+  if (!ss) ss = {}
 
   // Set defaults
   if (opts.defaults !== false) {
-    if (!is.undefined(ss.default)) val = setDefault(val, ss);
+    if (!is.undefined(ss.default)) val = setDefault(val, ss)
   }
 
   // Run generators
   if (opts.generate !== false) {
     // Sets up the "runOnce" flag if `opts.compute = 'once'`
-    var runOnce = opts.generate === 'once';
+    var runOnce = opts.generate === 'once'
 
-    var args = [ss, {once: runOnce}];
-    if (arguments.length > 2) args.push(val);
+    var args = [ss, {once: runOnce}]
+    if (arguments.length > 2) args.push(val)
 
     if (canCompute.apply(null, args)) {
       // Handle generators flagged as 'once'
       if (ss.generate.once) {
-        if (runOnce) val = compute(ss, {once: true}, val);
-      }
+        if (runOnce) val = compute(ss, {once: true}, val)
+
       // All other generators run every time
-      else val = compute(ss, {}, val);
+      } else val = compute(ss, {}, val)
     }
   }
 
   // Apply transforms
   if (opts.transform !== false) {
-    if (ss.transforms) val = transform(val, ss.transforms);
+    if (ss.transforms) val = transform(val, ss.transforms)
   }
 
-  return val;
+  return val
 }
 
 /**
@@ -139,58 +137,56 @@ function _makeValue (ss, opts, val) {
 function _dive (skm, opts, data) {
   // On the odd chance we reach here with no `skm` schema defined
   // (This happened in real-world testing scenarios)
-  if (!skm) return data;
+  if (!skm) return data
 
   // Placeholder for formatted data
-  let out;
+  let out
 
   // Load a string referenced schema from an accessor (expects a SCHEMA)
-  if (is.string(skm.schema)) skm.schema = getSchema(skm.schema);
+  if (is.string(skm.schema)) skm.schema = getSchema(skm.schema)
 
   // -- OBJECT
   // Process data as an object
   if (is.object(data)) {
-
     if (opts.copy) data = {...data}
 
     // Strip keys not declared on schea if in 'strict' mode
     if (opts.strict) {
-      const schemaKeys = Object.keys(skm);
+      const schemaKeys = Object.keys(skm)
       Object.keys(data).forEach(function (k) {
-        if (schemaKeys.indexOf(k) < 0) delete data[k];
-      });
+        if (schemaKeys.indexOf(k) < 0) delete data[k]
+      })
     }
 
-    let step = skm;
+    let step = skm
     // Switch to parsing only provided keys on data if a) dynamic or b) sparse
-    if (skm.$dynamic || opts.sparse) step = data;
+    if (skm.$dynamic || opts.sparse) step = data
 
     for (let key in step) {
       // Define the schema to use for this value
-      let model = skm.$dynamic ? skm.$dynamic : skm[key];
+      let model = skm.$dynamic ? skm.$dynamic : skm[key]
       // Some field names won't have a schema defined. Skip these.
-      if (!model) continue;
+      if (!model) continue
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {
-        out = _dive(model, opts, data[key]);
+        out = _dive(model, opts, data[key])
       } else {
-        let args = [model, opts];
-        if (Object.keys(data).indexOf(key) > -1) args.push(data[key]);
-        out = _makeValue.apply(null, args);
+        let args = [model, opts]
+        if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
+        out = _makeValue.apply(null, args)
 
         // Special case handle objects with sub-schema
         // Apply the sub-schema to the object output
         if (is.object(out) && model.schema) {
-          out = _dive(model.schema, opts, out);
+          out = _dive(model.schema, opts, out)
         }
       }
 
       // Only apply new value if changed (ensures 'undefined' values are
       // not automatically added to ABSENT keys on the data object)
-      if (out !== data[key]) data[key] = out;
+      if (out !== data[key]) data[key] = out
     }
-
   } else if (is.array(data) && skm.schema) {
     // ARRAY (with sub-schema)
     // Process data as an array IF there is a sub-schema to format against
@@ -199,25 +195,22 @@ function _dive (skm, opts, data) {
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
-        data[i] = _dive(skm.schema, opts, data[i]);
-
+        data[i] = _dive(skm.schema, opts, data[i])
       } else {
         // Or simply "makeValue" for everything else
-        out = _makeValue(skm.schema, opts, data[i]);
-        if (data[i] !== out) data[i] = out;
+        out = _makeValue(skm.schema, opts, data[i])
+        if (data[i] !== out) data[i] = out
       }
     }
-
   } else {
     // NORMAL VALUE
     // Process as scalar value
-    out = _makeValue(skm, opts, data);
-    if (out !== data) data = out;
+    out = _makeValue(skm, opts, data)
+    if (out !== data) data = out
   }
 
   // Remove any matching field values
-  if (opts.strip) strip(opts.strip, data);
+  if (opts.strip) strip(opts.strip, data)
 
-  return data;
-
+  return data
 }

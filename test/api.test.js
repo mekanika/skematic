@@ -1,6 +1,6 @@
-/*eslint-env node, mocha */
-var expect = require('chai').expect,
-  Skematic = require('../index');
+/* eslint-env node, mocha */
+const expect = require('chai').expect
+const Skematic = require('../index')
 
 describe('API', function () {
   var apiMethods = [
@@ -9,78 +9,75 @@ describe('API', function () {
     'createFrom',
     'format',
     'validate'
-  ];
+  ]
 
   // This loops through all the EXPECTED methods to be exposed on the API .
   // Modify the array above `apiMethods` to add and remove from the API surface.
   apiMethods.forEach(function (method) {
     it('.' + method + '() exists', function () {
-      expect(Skematic[method]).to.be.an.instanceof(Function);
-    });
-
-  });
-
-});
+      expect(Skematic[method]).to.be.an.instanceof(Function)
+    })
+  })
+})
 
 describe('Lookup Schema by string reference', function () {
   it('throws if ref not found', function (done) {
-    var s = { jam: {schema: 'woo'} };
+    var s = { jam: {schema: 'woo'} }
     try {
-      Skematic.validate(s, {jam: 1});
+      Skematic.validate(s, {jam: 1})
     } catch (e) {
-      expect(e.message).to.match(/woo/ig);
-      done();
+      expect(e.message).to.match(/woo/ig)
+      done()
     }
-  });
+  })
 
   it('loads in a schemas reference', function () {
-    var s = { jam: {schema: 'woo'} };
-    Skematic.useSchemas({woo: {type: 'string'}});
-    var out = Skematic.validate(s, {jam: 1});
-    expect(out.valid).to.equal(false);
-  });
-});
+    var s = { jam: {schema: 'woo'} }
+    Skematic.useSchemas({woo: {type: 'string'}})
+    var out = Skematic.validate(s, {jam: 1})
+    expect(out.valid).to.equal(false)
+  })
+})
 
 describe('createFrom', function () {
-  var _s = { name: {default: 'Gir'}, age: {}, power: {}};
+  var _s = {name: {default: 'Gir'}, age: {}, power: {}}
 
   it('builds an object to match the Skematic keys', function () {
-    expect(Skematic.createFrom(_s)).to.have.keys('name', 'age', 'power');
-  });
+    expect(Skematic.createFrom(_s)).to.have.keys('name', 'age', 'power')
+  })
 
   it('sets intial object defaults', function () {
-    expect(Skematic.createFrom(_s).name).to.equal('Gir');
-  });
+    expect(Skematic.createFrom(_s).name).to.equal('Gir')
+  })
 
   it('runs .format() to execute generators', function () {
-    var go = function () { return 'woo!'; };
-    var s = {shout: {generate: {ops: [go]}}};
-    expect(Skematic.createFrom(s)).to.eql({shout: 'woo!'});
-  });
+    var go = function () { return 'woo!' }
+    var s = {shout: {generate: {ops: [go]}}}
+    expect(Skematic.createFrom(s)).to.eql({shout: 'woo!'})
+  })
 
   it('initialises sub-schema fields on objects', function () {
     var s = {swee: {schema: {
-          tags: {type: 'array', default: []},
-          name: {type: 'string', default: 'user'}
-    }}};
+      tags: {type: 'array', default: []},
+      name: {type: 'string', default: 'user'}
+    }}}
 
-    expect(Skematic.createFrom(s)).to.eql({swee: {tags: [], name: 'user'}});
-  });
+    expect(Skematic.createFrom(s)).to.eql({swee: {tags: [], name: 'user'}})
+  })
 
   it('intialises sub-schema fields on arrays', function () {
     var s = {swee: {type: 'array', default: [{}], schema: {
-          name: {type: 'string', default: 'user'}
-    }}};
+      name: {type: 'string', default: 'user'}
+    }}}
 
-    expect(Skematic.createFrom(s)).to.eql({swee: [{name: 'user'}]});
-  });
+    expect(Skematic.createFrom(s)).to.eql({swee: [{name: 'user'}]})
+  })
 
   it('loads sub-schema as strings correctly', function () {
-    var moo = {name: {type: 'string', default: 'swee'}};
-    var joop = {meep: {schema: 'moo'}};
+    var moo = {name: {type: 'string', default: 'swee'}}
+    var joop = {meep: {schema: 'moo'}}
 
-    Skematic.useSchemas({moo: moo});
-    expect(Skematic.createFrom(joop)).to.eql({meep: {name: 'swee'}});
-  });
-
-});
+    Skematic.useSchemas({moo: moo})
+    expect(Skematic.createFrom(joop)).to.eql({meep: {name: 'swee'}})
+  })
+})

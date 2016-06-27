@@ -4,14 +4,14 @@
   @ignore
 */
 
-import * as Cast from './typeconvert';
+import * as Cast from './typeconvert'
 
 /**
   Export transform modules
   @ignore
 */
 
-export default transform;
+export default transform
 
 /**
   Available transform functions (modifiers for value)
@@ -58,11 +58,11 @@ const _transforms = {
   */
 
   lowercase: v => v.toLowerCase()
-};
+}
 
 // Add 'to$CAST' casters to transforms
 for (var cast in Cast) {
-  if (cast.substr(0, 2) === 'to') _transforms[cast] = Cast[cast];
+  if (cast.substr(0, 2) === 'to') _transforms[cast] = Cast[cast]
 }
 
 /**
@@ -80,27 +80,27 @@ for (var cast in Cast) {
 
 function transform (val, transforms) {
   // No-op if no transforms
-  if (!transforms) return val;
+  if (!transforms) return val
 
   // Do not attempt to transform 'undefined' values
-  if (val === undefined) return val;
+  if (val === undefined) return val
 
   // Ensure transforms are provided as an array
-  if (typeof transforms === 'string') transforms = [transforms];
+  if (typeof transforms === 'string') transforms = [transforms]
 
   for (let i = 0; i < transforms.length; i++) {
-    let key = transforms[i];
+    let key = transforms[i]
     // Try-catch is to make it CLEAR that this can throw
     // May be useful in future to do more than propagate throw
     try {
       // @note this will silently fail if no transform is found...
-      if (_transforms[key]) val = _transforms[key](val);
-    } catch(e) {
-      throw e;
+      if (_transforms[key]) val = _transforms[key](val)
+    } catch (e) {
+      throw e
     }
   }
 
-  return val;
+  return val
 }
 
 /**
@@ -109,7 +109,7 @@ function transform (val, transforms) {
   @return {Array}
 */
 
-transform.available = () => Object.keys(_transforms);
+transform.available = () => Object.keys(_transforms)
 
 /**
   Adds a named `key` transform `fn`
@@ -118,4 +118,4 @@ transform.available = () => Object.keys(_transforms);
   @param {Function} fn The transform function (passed `v` and returns modified `v`)
 */
 
-transform.add = (key, fn) => _transforms[ key ] = fn;
+transform.add = (key, fn) => (_transforms[ key ] = fn)

@@ -4,7 +4,7 @@
   @ignore
 */
 
-let fnLib = {};
+let fnLib = {}
 
 /**
   Loads in a "library" hash of keyed functions that can then be used as
@@ -17,7 +17,7 @@ let fnLib = {};
 */
 
 function useGenerators (lib) {
-  fnLib = lib;
+  fnLib = lib
 }
 
 /**
@@ -38,29 +38,29 @@ function useGenerators (lib) {
 */
 
 function canCompute (skm, opts = {}, val) {
-  if (!skm || !skm.generate) return false;
+  if (!skm || !skm.generate) return false
 
   // Shorthand
-  const gen = skm.generate;
+  const gen = skm.generate
 
-  const runOnce = opts ? opts.once : false;
+  const runOnce = opts ? opts.once : false
 
   // Skip if there is no generator
-  if (!gen) return false;
+  if (!gen) return false
 
   // Has a value been provided by the caller
-  const provided = arguments.length > 2;
+  const provided = arguments.length > 2
 
-  const preserve = gen.preserve;
-  const require = gen.require;
-  const once = gen.once;
+  const preserve = gen.preserve
+  const require = gen.require
+  const once = gen.once
 
   // Don't generate on the following conditions
-  if (once && !runOnce) return false;
-  if (provided && preserve) return false;
-  if (require && !provided) return false;
+  if (once && !runOnce) return false
+  if (provided && preserve) return false
+  if (require && !provided) return false
 
-  return true;
+  return true
 }
 
 /**
@@ -88,18 +88,16 @@ function canCompute (skm, opts = {}, val) {
 */
 
 function computeValue (skm, opts = {}, val) {
-
-  const provided = arguments.length > 2;
-  const args = [skm.generate, opts ? opts.once : false];
-  if (provided) args.push(val);
+  const provided = arguments.length > 2
+  const args = [skm.generate, opts ? opts.once : false]
+  if (provided) args.push(val)
 
   // Check that we can compute and either:
   return canCompute.apply(null, arguments)
     // 1. Generate the value, or
     ? _generate.apply(null, args)
     // 2. Return the unmodified value
-    : val;
-
+    : val
 }
 
 /**
@@ -117,39 +115,38 @@ function computeValue (skm, opts = {}, val) {
 */
 
 function _generate (gen, runOnce, data) {
-
   // Prepare the value to return
-  let value;
+  let value
 
   if (gen.once && !runOnce) {
-    throw new Error('Must pass `runOnce` flag for `once` generators');
+    throw new Error('Must pass `runOnce` flag for `once` generators')
   }
 
   // Has a value been provided?
-  const provided = arguments.length > 2;
+  const provided = arguments.length > 2
 
-  let ops = gen.ops;
+  let ops = gen.ops
 
   // Ensure we're always dealing with an Array
   // (supports defining a generator as `key:{fns:{FNOBJ}`)
-  if (!ops || !ops.length) ops = [ops];
+  if (!ops || !ops.length) ops = [ops]
 
   // Step through ops and generate value
   for (let i = 0; i < ops.length; i++) {
-    let runner;
+    let runner
 
-    if (typeof ops[i] === 'function') runner = ops[i];
-    else runner = fnLib[ops[i].fn];
+    if (typeof ops[i] === 'function') runner = ops[i]
+    else runner = fnLib[ops[i].fn]
 
     if (!runner) {
-      throw new Error('No generator method:' + ops[i].fn);
+      throw new Error('No generator method:' + ops[i].fn)
     }
 
     // On the first op, push the provided value (if any) to the end of the
     // arguments being run by the op
     if (!i && provided) {
-      if (!ops[i].args) ops[i].args = [];
-      ops[i].args.push(data);
+      if (!ops[i].args) ops[i].args = []
+      ops[i].args.push(data)
     }
 
     // If a value has been generated (by a previous function)
@@ -157,28 +154,29 @@ function _generate (gen, runOnce, data) {
     if (value) {
       ops[i].args
         ? ops[i].args.unshift(value)
-        : ops[i].args = [value];
+        : ops[i].args = [value]
     }
 
     // Ensure args are treated as an array
     if (ops[i].args && !(ops[i].args instanceof Array)) {
-      ops[i].args = [ops[i].args];
+      ops[i].args = [ops[i].args]
     }
 
     // Resolve function parameters to values
-    let k = -1, px = ops[i].args || [];
+    let k = -1
+    let px = ops[i].args || []
     while (++k < px.length) {
-      if (typeof px[k] === 'function') px[k] = px[k]();
+      if (typeof px[k] === 'function') px[k] = px[k]()
     }
 
-    value = runner.apply(this, ops[i].args);
+    value = runner.apply(this, ops[i].args)
   }
 
-  return value;
+  return value
 }
 
 /**
   Setup exports
 */
 
-export {useGenerators, canCompute, computeValue};
+export {useGenerators, canCompute, computeValue}

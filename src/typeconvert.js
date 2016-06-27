@@ -12,7 +12,7 @@ export {
   toInteger,
   toBoolean,
   toDate
-};
+}
 
 /**
  * Convert to a string
@@ -39,22 +39,21 @@ export {
  */
 
 function toString (val) {
-
-  if (val === null) return val;
+  if (val === null) return val
 
   // Parse if value is not undefined
   if (val !== undefined) {
     // Convert objects with simple JSON.stringify (does not convert methods)
     if (val.constructor && val.constructor.name === 'Object') {
-      if (JSON && JSON.stringify) return JSON.stringify(val);
+      if (JSON && JSON.stringify) return JSON.stringify(val)
     }
 
     // Otherwise just try a simple conversion
-    if (val.toString) return val.toString();
+    if (val.toString) return val.toString()
   }
 
-  throw new Error('Failed to cast to String');
-};
+  throw new Error('Failed to cast to String')
+}
 
 /**
  * Convert to a number (optionally integer or float)
@@ -82,40 +81,37 @@ function toString (val) {
  */
 
 function convertNumber (val, convertor, radix) {
-
   // Setup defaults
-  convertor || (convertor = radix !== undefined ? parseInt : Number);
-  radix || (radix = 10);
+  convertor || (convertor = radix !== undefined ? parseInt : Number)
+  radix || (radix = 10)
 
   if (!isNaN(val)) {
-
     // Empty values
-    if (val === null) return val;
-    if (val === '') return undefined;
+    if (val === null) return val
+    if (val === '') return undefined
 
     // Already a number? Run it through the convertor and return
     if (val instanceof Number || typeof val === 'number') {
-      return convertor(val, radix);
+      return convertor(val, radix)
     }
 
     // Convert booleans
     if (typeof val === 'boolean') {
-      return val ? 1 : 0;
+      return val ? 1 : 0
     }
 
     // Convert any remaining possibilities
-    if (typeof val === 'string') val = convertor(val, radix);
+    if (typeof val === 'string') val = convertor(val, radix)
     if (val.toString &&
       !Array.isArray(val) &&
-      val.toString() === Number(val)) val = convertor(val, radix);
+      val.toString() === Number(val)) val = convertor(val, radix)
 
     // And return if we don't have a NaN
-    if (!isNaN(val) && typeof val === 'number') return val;
+    if (!isNaN(val) && typeof val === 'number') return val
   }
 
-  throw new Error('Failed to cast to Number');
-
-};
+  throw new Error('Failed to cast to Number')
+}
 
 /**
  * Convert to a Number
@@ -129,8 +125,8 @@ function convertNumber (val, convertor, radix) {
  */
 
 function toNumber (val) {
-  return convertNumber(val, Number);
-};
+  return convertNumber(val, Number)
+}
 
 /**
  * Convert to a float Number
@@ -146,8 +142,8 @@ function toNumber (val) {
  */
 
 function toFloat (val) {
-  return convertNumber(val, parseFloat);
-};
+  return convertNumber(val, parseFloat)
+}
 
 /**
  * Convert to an integer Number (optional radix to convert to base)
@@ -164,8 +160,8 @@ function toFloat (val) {
  */
 
 function toInteger (val, radix) {
-  return convertNumber(val, parseInt, radix);
-};
+  return convertNumber(val, parseInt, radix)
+}
 
 /**
  * Convert to a Boolean
@@ -190,14 +186,12 @@ function toInteger (val, radix) {
  */
 
 function toBoolean (val) {
-
-  if (val === null) return val;
-  if (val === '0') return false;
-  if (val === 'true') return true;
-  if (val === 'false') return false;
-  return !!val;
-
-};
+  if (val === null) return val
+  if (val === '0') return false
+  if (val === 'true') return true
+  if (val === 'false') return false
+  return !!val
+}
 
 /**
  * Convert to a Date
@@ -223,25 +217,22 @@ function toBoolean (val) {
  */
 
 function toDate (val) {
+  if (val === null || val === '') return null
+  if (val instanceof Date) return val
 
-  if (val === null || val === '') return null;
-  if (val instanceof Date) return val;
-
-  var date;
+  var date
 
   // support for timestamps
   if (val instanceof Number ||
       typeof val === 'number' ||
       String(val) === Number(val)) {
-    date = new Date(Number(val));
-
+    date = new Date(Number(val))
   } else if (val && val.toString) {
     // support for date strings
-    date = new Date(val.toString());
+    date = new Date(val.toString())
   }
 
-  if (date && date.toString() !== 'Invalid Date') return date;
+  if (date && date.toString() !== 'Invalid Date') return date
 
-  throw new Error('Failed to cast to Date');
-
-};
+  throw new Error('Failed to cast to Date')
+}

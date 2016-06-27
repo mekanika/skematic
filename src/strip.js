@@ -10,13 +10,11 @@
 */
 
 export default function strip (values, data) {
-
   for (var k in data) {
-    if (!data.hasOwnProperty(k)) continue;
+    if (!data.hasOwnProperty(k)) continue
 
-    if (!(values instanceof Array)) values = [values];
+    if (!(values instanceof Array)) values = [values]
 
-    values.forEach(val => data[k] === val && delete data[k]);
+    values.forEach(val => data[k] === val && delete data[k])
   }
-
 }

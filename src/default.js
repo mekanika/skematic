@@ -4,7 +4,7 @@
   @ignore
 */
 
-import {empty} from './rules';
+import {empty} from './rules'
 import is from './is'
 
 /**
@@ -21,24 +21,24 @@ import is from './is'
 */
 
 export default function (v, schema) {
-  if (!schema) return v;
+  if (!schema) return v
 
   const def = function (v, s) {
     // No default, return the value as is
-    if (s.default === undefined) return v;
+    if (s.default === undefined) return v
 
     // Return the default if `v` is empty (ie. undefined or '')
-    return empty(v) || v === null ? s.default : v;
-  };
+    return empty(v) || v === null ? s.default : v
+  }
 
   // Parse objects
   if (v && typeof v === 'object') {
     for (var k in schema) {
-      if (!is.undefined(schema[k].default)) v[k] = def(v[k], schema[k]);
+      if (!is.undefined(schema[k].default)) v[k] = def(v[k], schema[k])
     }
 
-    return v;
-  }
+    return v
+
   // Or simply return defaulted scalars
-  else return def(v, schema);
-};
+  } else return def(v, schema)
+}

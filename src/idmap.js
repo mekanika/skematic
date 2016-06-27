@@ -4,14 +4,14 @@
   @ignore
 */
 
-export default idMap;
+export default idMap
 
 /**
   Defines the property to lookup
   @ignore
 */
 
-const KEY_NAME = 'primaryKey';
+const KEY_NAME = 'primaryKey'
 
 /**
   Internal helper to retrieve an arbitrary property match from an object hash
@@ -24,12 +24,10 @@ const KEY_NAME = 'primaryKey';
 */
 
 function _getField (schema, name) {
-
   for (let key in schema) {
-    if (!schema.hasOwnProperty(key)) continue;
-    if (schema[key][name]) return key;
+    if (!schema.hasOwnProperty(key)) continue
+    if (schema[key][name]) return key
   }
-
 }
 
 /**
@@ -39,12 +37,12 @@ function _getField (schema, name) {
   var propSchema = {
     prop_id: {primaryKey:true},
     name: {type:"string"}
-  };
+  }
 
   // Example default results from data store:
-  var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ];
+  var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ]
 
-  idMap( propSchema, data, '_id' );
+  idMap( propSchema, data, '_id' )
   // -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
   ```
 
@@ -57,20 +55,19 @@ function _getField (schema, name) {
 */
 
 function idMap (schema, col, idField) {
-
   // Load up the primaryKey field from a given model
-  let pk = _getField(schema, KEY_NAME);
+  let pk = _getField(schema, KEY_NAME)
 
   // No need to replace anything if no primary key
-  if (!pk) return col;
+  if (!pk) return col
   // No need to replace anything if primary key field auto-generated
-  if (schema[pk].generate) return col;
+  if (schema[pk].generate) return col
 
   // Step through collection and rename primary key field
   col.forEach(el => {
-    el[pk] = el[idField];
-    delete el[idField];
-  });
+    el[pk] = el[idField]
+    delete el[idField]
+  })
 
-  return col;
+  return col
 }

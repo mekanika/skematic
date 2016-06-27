@@ -16,7 +16,7 @@ import is from './is'
   @ignore
 */
 
-import setDefault from './default';
+import setDefault from './default'
 
 /**
   Internal reference for Schemas (if any)
@@ -24,7 +24,7 @@ import setDefault from './default';
   @private
 */
 
-let _schemas = {};
+let _schemas = {}
 
 /**
   Internal method for other modules to access any loaded Schemas above
@@ -35,10 +35,10 @@ let _schemas = {};
 */
 
 function _getSchema (ref) {
-  let ret = _schemas[ref];
-  if (!ret) throw new Error('No schema found for: ' + ref);
-  return ret;
-};
+  let ret = _schemas[ref]
+  if (!ret) throw new Error('No schema found for: ' + ref)
+  return ret
+}
 
 /**
   Loads a hash of schemas to use for lookups by string.
@@ -50,15 +50,15 @@ function _getSchema (ref) {
   var schemas = {
     name: {type:'string'},
     age: {type:'number'} // etc.
-  };
+  }
   ```
 
   @param {Object} schemas Hash of schemas
 */
 
 function useSchemas (s) {
-  _schemas = s;
-};
+  _schemas = s
+}
 
 /**
   Returns an object built on ALL values present in the schema, set to defaults
@@ -70,53 +70,52 @@ function useSchemas (s) {
 */
 
 function createFrom (schema, nullValue) {
-  let o = {};
+  let o = {}
 
-  if (!schema) return o;
-  if (is.string(schema)) schema = exports._getSchema(schema);
+  if (!schema) return o
+  if (is.string(schema)) schema = exports._getSchema(schema)
 
   for (let k in schema) {
-    if (!schema.hasOwnProperty(k)) continue;
-    o[k] = setDefault(nullValue, schema[k]);
+    if (!schema.hasOwnProperty(k)) continue
+    o[k] = setDefault(nullValue, schema[k])
     // Ensure undefined type:'array' is set to [] (unless overridden)
-    if (schema[k].type === 'array' && o[k] === nullValue) o[k] = [];
+    if (schema[k].type === 'array' && o[k] === nullValue) o[k] = []
 
     // Setup the models for any defined sub-schema on OBJECT types
     if (schema[k].schema) {
       // Only apply to objects or assume 'object' if type not defined
       if (!schema[k].type || schema[k].type === 'object') {
-        o[k] = createFrom(schema[k].schema);
+        o[k] = createFrom(schema[k].schema)
       }
     }
-
   }
 
   // Now format the new object
-  o = format(schema, {once: true}, o);
+  o = format(schema, {once: true}, o)
 
-  return o;
-};
+  return o
+}
 
 /**
   Expose loading library of functions for compute
   @ignore
 */
 
-import {useGenerators} from './compute';
+import {useGenerators} from './compute'
 
 /**
   Expose validation surface
   @ignore
 */
 
-import {validate} from './validate';
+import {validate} from './validate'
 
 /**
   Expose format surface
   @ignore
 */
 
-import format from './format';
+import format from './format'
 
 // Export the library
 export {
@@ -127,4 +126,4 @@ export {
   useGenerators,
   useSchemas,
   validate
-};
+}
