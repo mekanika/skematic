@@ -15,9 +15,9 @@
     "validate",
     "validation"
   ],
-  "version": "0.16.0",
+  "version": "2.0.0-alpha.1",
   "homepage": "https://github.com/mekanika/skematic",
-  "license": "MPL-2.0",
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "benchmark": "node perf/benchmark.js",

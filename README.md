@@ -6,11 +6,7 @@
 [![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic)
 
 
-> IMPORTANT: Upcoming [**v1.0 Release Candidate milestone**](https://github.com/mekanika/skematic/milestones/v1.0%20-%20Release%20Candidate)
->
-> The core API status (`format()` and `validate()`) is considered **STABLE** (no breaking changes, bug-fixes only) and can now be implemented without breaking changes leading to 1.0.
->
-> See [HISTORY.md](https://github.com/mekanika/skematic/blob/master/HISTORY.md#0130---22-march-2015) for changes.
+> :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
 Isomorphic, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
 
@@ -590,10 +586,5 @@ Contributions to `Skematic` are welcome.
 
 ### License
 
-`Skematic` is maintained and released by [Mekanika](http://mekanika.org)
-
-[![Mekanika](http://mekanika.org/assets/external/readme.logotag.png)](http://mekanika.org)
-
-Copyright 2013-2015 Mekanika
-
-Released under the **Mozilla Public License v2.0** ([MPL-2.0](http://mozilla.org/MPL/2.0/))
+Copyright 2016 [@cayuu](https://github.com/cayuu)
+v2+ Released under the **ISC License** ([ISC](https://opensource.org/licenses/ISC))
