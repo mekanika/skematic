@@ -3,7 +3,7 @@
 var inBrowser = typeof window !== 'undefined'
 
 // Setup to run in browser (expects Skematic global) or CommonJS
-if (!inBrowser) var Skematic = require('../index')
+if (!inBrowser) var Skematic = require('../build/skematic.min.js')
 
 // A reasonably complex schema
 var s = {

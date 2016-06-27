@@ -2,32 +2,36 @@
   "name": "skematic",
   "description": "Data structure and rule engine",
   "keywords": [
-    "compute",
     "data",
     "format",
     "generate",
     "mekanika",
-    "mekanika-schema",
     "model",
-    "project",
+    "record",
+    "sanitize",
     "schema",
-    "schemajs",
+    "structure",
+    "transform",
     "validate",
     "validation"
   ],
   "version": "2.0.0-alpha.1",
   "homepage": "https://github.com/mekanika/skematic",
   "license": "ISC",
-  "main": "index.js",
+  "main": "build/skematic.min.js",
   "scripts": {
     "benchmark": "node perf/benchmark.js",
-    "browser": "browserify src/api.js -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ transform-object-rest-spread ] ]",
+    "browser": "browserify -e src/api.js --debug -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports transform-object-rest-spread ] ]",
+    "watch:browser": "watchify -e src/api.js --debug -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports transform-object-rest-spread ] ]",
     "build": "npm run browser && npm run compress",
-    "compress": "uglifyjs build/skematic.dev.js -cm -o build/skematic.min.js",
-    "coverage": "istanbul cover _mocha",
+    "compress": "uglifyjs build/skematic.dev.js -r Skematic -cm -o build/skematic.min.js",
+    "coverage": "nyc --require babel-register --reporter=lcov --reporter=text mocha -R spec test/",
     "docs": "documentation build index.js --name Skematic -o docs -f html",
+    "dev": "npm run test:chain -s & nodemon --quiet --watch src --exec npm run build -s",
     "lint": "standard --verbose index.js src/*.js test/*.js perf/*.js | snazzy",
-    "test": "mocha -r babel-register -R spec test/"
+    "test": "mocha -r babel-register -R spec test/",
+    "test:chain": "mocha -r babel-register -R min -w test",
+    "watch:test": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
@@ -48,11 +52,13 @@
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
     "documentation": "^4.0.0-beta5",
-    "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "nyc": "^6.6.1",
     "snazzy": "^4.0.0",
     "standard": "^7.1.2",
-    "uglify-js": "^2.6.4"
+    "uglify-js": "^2.6.4",
+    "watchify": "^3.7.0"
   },
   "babel": {
     "presets": [
