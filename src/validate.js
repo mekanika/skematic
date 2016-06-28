@@ -17,17 +17,6 @@ import setDefault from './default'
 export {validate, checkValue}
 
 /**
-  Internal error message generator
-  @ignore
-*/
-
-function errMsg (key) {
-  // The default "failed validation" message. Appended with ' $key' where
-  // `$key` is the key of the validation rule that failed.
-  return 'Failed: ' + key
-}
-
-/**
   Validates `data` against a schema's rules.
 
   If passed "opts" `{sparse:true}`, validation is only run on the fields in
@@ -79,6 +68,33 @@ function validate (schema, opts, data) {
 }
 
 /**
+  Creates an Error message to be returned to caller. Defaults to a basic
+  error message, that can get overridden by `schema.errors`
+
+  @param {Object} schema The schema related to this error
+  @param {String} key The field on the schema that has errored
+  @param {Array} errs An array of existing errors
+
+  @return {Array} Copy of new errors array
+  @private
+*/
+
+const setError = (schema, key, errs) => {
+  let msg = `Failed: ${key}`
+  let errCopy = errs.slice()
+
+  // Attempt to override default message if `.errors` config provided on schema
+  if (schema.errors) {
+    if (is.string(schema.errors)) msg = schema.errors
+    else if (schema.errors[key]) msg = schema.errors[key]
+    else if (schema.errors.default) msg = schema.errors.default
+  }
+
+  errCopy.push(msg)
+  return errCopy
+}
+
+/**
   Checks a value against the rules defined in `schema`
 
   Does **NOT** apply rules to undefined values that are not `required`
@@ -92,33 +108,39 @@ function validate (schema, opts, data) {
 
 function checkValue (val, schema) {
   let errs = []
+  if (!schema) return []
 
-  if (!schema) return errs
+  //  1. Check null value status
+  //
+  //           required | req & allowNull | allowNull | !allowNull
+  // undefined   fail          fail            pass        fail
+  //      null   fail          pass            pass        fail
 
-  // Not required and unset returns WITHOUT check
-  if (val === undefined && !schema.required) return errs
-
-  const setError = (schema, key, errs) => {
-    // Failed validation adds error to stack
-    if (schema.errors) {
-      if (typeof schema.errors === 'string') errs.push(schema.errors)
-      else if (schema.errors[key]) errs.push(schema.errors[key])
-      else if (schema.errors.default) errs.push(schema.errors.default)
-      else errs.push(errMsg(key))
-    } else errs.push(errMsg(key))
-    return errs
+  // Disallow NOT NULL values
+  // Note: '==' equality matches `null` AND `undefined`
+  if (val == null && schema.allowNull === false) {
+    errs = setError(schema, 'required', errs)
+    return setError(schema, 'allowNull', errs)
   }
+
+  // Don't validate `null/undefined` values if not required
+  if (val == null && !schema.required) return []
+
+  // Allow NULL values (no validations run)
+  if (val === null && schema.allowNull) return []
 
   // Bail out if required is present and fails
   // (It's not useful to run the other validations otherwise)
-  if (schema.required) {
-    if (!Rules.required(val)) return setError(schema, 'required', errs)
+  if (!Rules.required(val) && schema.required) {
+    return setError(schema, 'required', errs)
   }
 
   // 2. Check type match
   // The value type matches its declaration (if any)
   if (schema.type) {
-    if (!is.undefined(val) && !is[ schema.type ](val)) {
+    if (!is[schema.type]) {
+      console.warn('[Skematic] Skipping validating unknown type', schema.type)
+    } else if (!is.undefined(val) && !is[ schema.type ](val)) {
       return [`Not of type: ${schema.type}`]
     }
   }
@@ -138,9 +160,14 @@ function checkValue (val, schema) {
       continue
     }
 
-    // Run validation
-    const isValid = Rules[key].apply(this, params)
-    if (!isValid) setError(schema, key, errs)
+    // Run defensive validation
+    try {
+      var isValid = Rules[key].apply(this, params)
+    } catch (e) {
+      isValid = false
+    }
+
+    if (!isValid) errs = setError(schema, key, errs)
   }
 
   // Return errors

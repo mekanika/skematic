@@ -15,8 +15,8 @@ export {
   maxLength,
   max,
   min,
-  present,
-  notPresent,
+  oneOf,
+  notOneOf,
   has,
   hasNot,
   isEmail,
@@ -37,7 +37,7 @@ export {
  */
 
 function required (val) {
-  return !(val === undefined || val === null || val === '')
+  return !(val == null)
 }
 
 /**
@@ -142,22 +142,22 @@ function min (val, limit) {
 }
 
 /**
- * Present in a list of values (whitelist)
+ * Value is one of a list of values (whitelist)
  *
  * @param {Mixed} v The value to test
  * @param {Mixed|Mixed[]} list The list of values to test against
  * @return {Boolean}
  * @memberof Rules
- * @alias present
+ * @alias oneOf
  */
 
-function present (v, list) {
+function oneOf (v, list) {
   const comp = list instanceof Array ? list : [list]
   return comp.indexOf(v) > -1
 }
 
 /**
- * Not present in a list of values (blacklist)
+ * Does not exist in a list of values (blacklist)
  *
  * @param {Number} v The value to test
  * @param {Number[]} list The list of values to test against
@@ -166,8 +166,8 @@ function present (v, list) {
  * @alias notPresent
  */
 
-function notPresent () {
-  return !present.apply(this, arguments)
+function notOneOf () {
+  return !oneOf.apply(this, arguments)
 }
 
 /**

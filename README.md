@@ -8,39 +8,45 @@
 
 > :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
-Universal, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and node/iojs.
+Universal, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and Node.js.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
 - [**Validate**](#validate): check that arbitrary data conforms to rules
 
-A very **basic example**:
+A **basic example**:
 ```js
 // -- Define a simple data structure
-var Hero = {
-  name:    {rules:{minLength:4}, errors:'Bad name!'},
-  shouts:  {transforms:['trim', 'uppercase']},
-  skill:   {type:'number', default:3, required:true},
-  updated: {generate:{ops:myTime}}
-};
+const Hero = {
+  name:    {rules: {minLength: 4}, errors: 'Bad name!'},
+  shouts:  {transforms: ['trim', 'uppercase']},
+  skill:   {type: 'number', default: 3, required: true},
+  updated: {generate: Date.now}
+}
 
 // -- Format some data
-Skematic.format( Hero, {shouts:' woo  '} );
-// {shouts:'WOO', skill:3, updated:1426937159385}
+Skematic.format(Hero, {shouts: '   woo    '})
+// {shouts: 'WOO', skill: 3, updated: 1426937159385}
 
 // -- Validate an object
-Skematic.validate( Hero, {name:'Zim'} );
-// {valid:false, errors:{ name: ['Bad name!'], skill: ['Required to be set']}}
+Skematic.validate(Hero, {name: 'Zim'})
+// {valid: false, errors: {name: ['Bad name!'], skill: ['Failed: required']}}
 ```
 
 ## Install
 
-    npm install skematic
+    npm install --save skematic
 
-To use in CommonJS (node/iojs) environments:
+Import to your project:
 
 ```js
-var Skematic = require('skematic');
+// CommonJS modules
+const Skematic = require('skematic')
+```
+
+```js
+// OR using ES6 Module imports
+import Skematic from 'skematic'
 ```
 
 To use in a browser:
@@ -49,17 +55,19 @@ To use in a browser:
 <script src="node_modules/skematic/build/skematic.min.js"></script>
 ```
 
-> **Compatibility Note:** `Skematic` is written in ES5 and works across _all modern browsers_ (IE9+, Chrome, Firefox, Safari evergreens).
+> **Compatibility Note:** `Skematic` is written in ES6 but compiled down to ES5 and works across _all modern browsers_ (IE9+, Chrome, Firefox, Safari evergreens).
 > Please note that the ES5 `Object.keys()` method is not supported by IE7 & 8, so to use `Skematic` in these fossil browsers, you'll need to install [es5-shim](https://github.com/es-shims/es5-shim) (and worship Satan :metal:).
 
 ## API
 
-> Note: Generated API docs can be found in the _npm package_ under `docs/index.html`
+> :warning: :construction: **Breaking changes pending in v2.0**
 
 The API surface is small by design, with two **primary methods**:
 
 - **.format**( schema, [opts,] data )  - see [Format](#format)
 - **.validate**( schema, [opts,] data )  - see [Validate](#validate)
+
+> Note: Generated API docs can be found in the _npm package_ under `docs/index.html`
 
 A few other **convenience methods** are provided, that mostly encapsulate or expose specific functionality in format or validate:
 
@@ -88,6 +96,7 @@ Optional setup methods:
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
+- **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
 - [**rules**](#rules) _{Object}_ hash of validation rules: `{ rules: {min:3, max:11} }`
 - [**errors**](#custom-error-messages) _{Object|String}_ hash of error messages for rules
 - [**schema**](#sub-schema) _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
@@ -101,76 +110,76 @@ Optional setup methods:
 In some cases it is useful to apply the same schema to all the fields on an object (or sub-object), even if you don't know what those key names are. In this case, specify **`$dynamic`** rather than the field name:
 
 ```js
-var KnownKeys = {
-  propA: {default:'sweet', required:true},
-  propB: {default:'sweet', required:true} // etc etc
-};
+const KnownKeys = {
+  propA: {default: 'sweet', required: true},
+  propB: {default: 'sweet', required: true} // etc etc
+}
 
-var Dynamic = {
-  $dynamic: {default:'sweet', required:true}
-};
+const Dynamic = {
+  $dynamic: {default: 'sweet', required: true}
+}
 ```
 
 The `$dynamic` key will apply to _every_ field on your object at the level you specify, and `Skematic` will not process any other declared rules. Place `$dynamic` keys anywhere you'd use a normal field name:
 
 ```js
-var MoreNested = {
+const MoreNested = {
   props: {
     schema: {
       $dynamic: {
         schema: {
-          value: {default:'!', required:true}
+          value: {default: '!', required: true}
         },
-        default:{}
+        default: {}
       }
     },
     default: {}
   }
-};
+}
 
-Skematic.format( MoreNested, {props:{randCrazy:undefined}} );
-// -> { props: { randCrazy: { value: '!' } } }
+Skematic.format(MoreNested, {props: {randCrazy: undefined}})
+// -> {props: {randCrazy: {value: '!' } } }
 
-Skematic.validate( MoreNested, {props:{ crazy:{} }});
-// -> { valid:false, errors:{props:{crazy:['Required to be set']}} }
+Skematic.validate(MoreNested, {props:{ crazy:{} }})
+// -> {valid: false, errors: {props: {crazy: ['Required to be set']}} }
 
-Skematic.validate( MoreNested, {props:{ crazy:{value:99} }});
-// -> { valid:true, errors:null }
+Skematic.validate(MoreNested, {props: {crazy: {value: 99}}})
+// -> {valid: true, errors: null }
 ```
 
 
 ### Simple examples
 
-A data model for a single key (eg. `name`):
+A data model for a single key/field (eg. `name`):
 
 ```js
-var HeroName = {
-  type:'string',
+const HeroNameField = {
+  type: 'string',
   default: 'Genericman',
-  transforms: ['toString','nowhite'],
+  transforms: ['toString', 'nowhite'],
   required: true,
-  rules: {maxLength:140, minLength:4},
-  errors: {maxLength:'Too long', minLength:'Shorty!'}
-};
+  rules: {maxLength: 140, minLength: 4},
+  errors: {maxLength: 'Too long', minLength: 'Shorty!'}
+}
 
-Skematic.validate( HeroName, 'Spiderman' );
-// -> {valid:true, errors:null}
-Skematic.validate( HeroName, 'Moo' );
-// -> {valid:false, errors:['Shorty!']]}
+Skematic.validate(HeroNameField, 'Spiderman')
+// -> {valid: true, errors: null}
+Skematic.validate(HeroNameField, 'Moo')
+// -> {valid: false, errors: ['Shorty!']]}
 ```
 
 Typically you'll create a more complete data model to represent your application objects, with several fields to format and validate:
 
 ```js
-var Hero = {
-  name: HeroName,
-  skill: {type:'number', default:0}
-};
+const Hero = {
+  name: HeroNameField,
+  skill: {type: 'number', default: 0}
+}
 
-Skematic.validate( Hero, {name:'Spiderman', skill:15} );
-// -> {valid:true, errors:null}
-Skematic.validate( Hero, {name:'Moo', skill:'magic'} );
-// -> {valid:false, errors:{name:['Shorty!'], skill:['Not of type: number']}}
+Skematic.validate(Hero, {name: 'Spiderman', skill: 15})
+// -> {valid: true, errors: null}
+Skematic.validate(Hero, {name: 'Moo', skill: 'magic'})
+// -> {valid: false, errors: {name: ['Shorty!'], skill: ['Not of type: number']}}
 // (Note: errors is an object when validating objects)
 ```
 
@@ -192,9 +201,9 @@ The following built-in transforms can be used to type convert and otherwise modi
 These are provided as an array on key `transforms`:
 
 ```js
-var mySchema = {
-  handle: {transforms:['trim', 'lowercase']}
-};
+const mySchema = {
+  handle: {transforms: ['trim', 'lowercase']}
+}
 ```
 
 ### Rules
@@ -207,8 +216,8 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.maxLength** - The longest string permitted
 - **.eq** - Value must be strictly equal
 - **.neq** - Value must not equal
-- **.present** - Value must be present in the list of elements
-- **.notPresent** - Value must NOT be present in the list of elements
+- **.oneOf** - Value must be one of the values in the list of elements
+- **.notOneOf** - Value must NOT be in the list of elements
 - **.has** - List of elements contains the value
 - **.hasNot** - List of elements does NOT contain the value
 - **.isEmail** - no parameters: Is the string an email
@@ -220,34 +229,34 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 Declare `rules` key as follows:
 
 ```js
-var User = {
+const User = {
   name: {
-    rules: {minLength:5}
+    rules: {minLength: 5}
   }
-};
+}
 
-Skematic.validate( User.name, 'Zim' );
-// -> {valid:false, errors:['Failed: minLength']}
+Skematic.validate(User.name, 'Zim')
+// -> {valid: false, errors: ['Failed: minLength']}
 ```
 
 > Note: The `required` rule has a special shorthand to declare it directly on the schema:
 >
 > ```js
-> var model = {type:'string', required:true};
+> const model = {type: 'string', required: true}
 > ```
 
 ### Custom **error** messages
 
 Custom error messages can be declared per rule name:
-`{errors: { "$ruleName": "Custom message" }}`
+`{errors: {'$ruleName': 'Custom message'}}`
 
 Provide a default message if no specific error message exists for that rule:
 
 ```js
 {
   errors: {
-    max:'Too large',
-    default:'Validation failed'
+    max: 'Too large',
+    default: 'Validation failed'
   }
 }
 ```
@@ -255,28 +264,28 @@ Provide a default message if no specific error message exists for that rule:
 Usage example :
 
 ```js
-var User = {
+const User = {
   name: {
-    rules: {minLength:5},
-    errors: {minLength:'Name too short!'}
+    rules: {minLength: 5},
+    errors: {minLength: 'Name too short!'}
   }
-};
+}
 
 // Using a "scalar" value test:
-Skematic.validate( User.name, 'Zim' );
+Skematic.validate(User.name, 'Zim')
 // -> {valid:false, errors:['Name too short!']}
 
 // Using a keyed object value test:
-Skematic.validate( User,  {name:'Zim'} );
+Skematic.validate(User, {name:'Zim'})
 // -> {valid:false, errors:{name:['Name too short!']}}
 ```
 
 Rules can be combined, and you can declare a string message on errors to apply to any and all errors:
 
 ```js
-var user = {
+const User = {
   name: {
-    rules: {minLength:5, maxLength:10},
+    rules: {minLength: 5, maxLength: 10},
     errors: 'Name must be between 5 and 10 characters'
   }
 }
@@ -292,7 +301,7 @@ The simplest usage is to specify `generate` as a function:
 {generate: () => Date.now()}
 ```
 
-You may also pass the `generate` field a config object with properties:
+Alternatively you may also pass a config object with properties:
 
 > Legend: **field** - _{Type}_ `default`: Description
 
@@ -306,13 +315,13 @@ You may also pass the `generate` field a config object with properties:
 Example:
 
 ```js
-var Hero = {
+const Hero = {
   updated: {
     generate: {
       // The ops array lists fn objects or functions
-      ops:[
+      ops: [
         // A fn object specifies `fn` and `args`
-        {fn: myFunc, args:[]},
+        {fn: myFunc, args: []},
         // , {fn...}, etc etc
         // And here is a raw function with no args, it will be passed
         // the output of the last `fn` as its first parameter
@@ -335,8 +344,8 @@ var Hero = {
 That looks like a mouthful - but if we pass the raw functions and assume default settings for the other flags, the above collapses to:
 
 ```js
-var Hero = {
-  updated: {generate:{ops:[myFunc,anotherFn]}}
+const Hero = {
+  updated: {generate: {ops: [myFunc, anotherFn]}}
 };
 ```
 
@@ -351,15 +360,15 @@ Skematic.useGenerators({
     // Generates a random string of characters
     return Math.random().toString(36).substr(2);
   }
-});
+})
 
 // Reference a generator by STRING: 'magic'
-var SpinModel = {
-  rando: { generate: {ops:[{fn:'magic'}]} }
-};
+const SpinModel = {
+  rando: {generate: {ops: [{fn: 'magic'}]}}
+}
 
-Skematic.createFrom(SpinModel);
-// -> {rando:'5wyml04ey1xos9k9'}
+Skematic.createFrom(SpinModel)
+// -> {rando: '5wyml04ey1xos9k9'}
 ```
 
 ### Sub-schema
@@ -368,18 +377,18 @@ A property can be formatted to another schema (essentially, a complex object), o
 
 ```js
 // A "post" would have comments made up of `owner_id, body`
-var post = {
-  comments: { type:'array', schema: {
-    owner_id: {type:'number'},
-    body: {type:'string', rules:{minLength:25}}
+const Post = {
+  comments: { type: 'array', schema: {
+    owner_id: {type: 'number'},
+    body: {type: 'string', rules: {minLength: 25}}
     }
   }
 }
 
 // Or, a simple scalar array of "tags" (an array of strings):
-var picture = {
-  url: {type:'string'},
-  tags: {type:'array', schema:{type:'string', rules:{minLength:3}}}
+const Picture = {
+  url: {type: 'string'},
+  tags: {type: 'array', schema: {type: 'string', rules: {minLength: 3}}}
 }
 ```
 
@@ -390,20 +399,20 @@ All the schema validations and checks assigned to the sub-schema (`comments`) wi
 When storing schema data structures as JSON, it can be handy to reference definitions by String (rather than as objects):
 
 ```js
-var allMyModels = {
+const allMyModels = {
   Taste: {
-    major: {rules:{present:['sweet','sour','salty','other']}},
-    description: {type:'string'}
+    major: {rules: {exists: ['sweet', 'sour', 'salty', 'other']}},
+    description: {type: 'string'}
   },
 
   Jellybean: {
     // Reference by String
-    taste: {schema:'Taste'}
+    taste: {schema: 'Taste'}
   }
-};
+}
 
 // Tell Skematic to lookup string references on this object
-Skematic.useSchemas( allMyModels );
+Skematic.useSchemas(allMyModels)
 ```
 
 
@@ -411,19 +420,19 @@ Skematic.useSchemas( allMyModels );
 
 A schema can declare any **one** of its fields as the **primary key** (the id field) to be used for its data objects. This can be used in conjunction with `Skematic.format()` in order to _modify_ an incoming data collection and map a pre-existing id field (say for example "_id") to the `primaryKey`.
 
-This is useful for data stores that use their own id fields (eg. MongoDB uses "_id").
+This is useful for data stores that use their own id fields (eg. MongoDB uses '_id').
 
 ```js
-var propSchema = {
-  prop_id: {primaryKey:true},
-  name: {type:"string"}
-};
+const propSchema = {
+  prop_id: {primaryKey: true},
+  name: {type: 'string'}
+}
 
 // Example default results from data store:
-var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ];
+let data = [{_id: '512314', name: 'power'}, {_id: '519910', name: 'speed'}]
 
-Skematic.format( propSchema, {mapIdFrom:'_id'}, data );
-// -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
+Skematic.format(propSchema, {mapIdFrom: '_id'}, data)
+// -> [{prop_id: '512314', name: 'power'}, {prop_id: '519910', name: 'speed'}]
 ```
 
 > Note: Your data store might automatically use a particular field name for its identifying purposes (usually `"id"`). If you **know** you're using a datastore that defaults its id field to a given key, you can simply reuse this field name in your schema. Specifying `primaryKey` is simply a way to _force_ data models into using a given key. ([Adapters](https://github.com/mekanika/adapter) will use this information to map their usual id field onto your primary key)
@@ -437,7 +446,7 @@ Format transforms, generates and conforms data.
 This is done "destructively" by default (ie. changes the `data` parameter directly). To preserve the original, pass `{copy:true}` to the 'opts' argument:
 
 ```js
-Skematic.format( schema, [opts,] data );
+Skematic.format(schema, [opts,] data)
 ```
 
 Parameters:
@@ -447,10 +456,10 @@ Parameters:
 - **data**: The data object to format
 
 ```js
-Skematic.format( Hero, {name:'Zim'} );
+Skematic.format(Hero, {name: 'Zim'})
 
 // Or with options
-Skematic.format( Hero, {sparse:true}, {name:'Zim'} );
+Skematic.format(Hero, {sparse: true}, {name: 'Zim'})
 ```
 
 Format _options_ include:
@@ -480,30 +489,30 @@ Meaning if you have an uppercase transform, it will run AFTER your generate meth
 Format examples:
 
 ```js
-var myModel = {
-  mod_id: {primaryKey:true},
-  rando: { generate:{ops:[{fn:'makeRand'}], once:true} },
+const myModel = {
+  mod_id: {primaryKey: true},
+  rando: {generate: {ops: Math.random, once:true}},
   power: {default: 5},
   name: {default: 'zim', transforms:['uppercase']}
 };
 
-var out = Skematic.format( myModel, {generate:'once'}, {} );
-// -> {created:'12345', power:5, name:'ZIM'}
+let out = Skematic.format(myModel, {generate: 'once'}, {})
+// -> {rando: 0.24123545, power: 5, name: 'ZIM'}
 
-out = Skematic.format( myModel, {} ); // (schema, data)
-// -> {power:5, name:'ZIM}
+out = Skematic.format(myModel, {}) // (schema, data)
+// -> {power: 5, name: 'ZIM}
 
-out = Skematic.format( myModel, {defaults:false}, {} );
+out = Skematic.format(myModel, {defaults: false}, {})
 // -> {}
 
-out = Skematic.format( myModel, {strip:[undefined,'x']}, {rando:undefined,power:'x'});
-// -> {name:'ZIM'}
+out = Skematic.format(myModel, {strip: [undefined, 'x']}, {rando: undefined, power: 'x'})
+// -> {name: 'ZIM'}
 
-out = Skematic.format( myModel, {sparse:true}, {name:'Gir'} );
-// -> {name:'GIR'}
+out = Skematic.format(myModel, {sparse: true}, {name: 'Gir'})
+// -> {name: 'GIR'}
 
-out = Skematic.format( myModel, {mapIdFrom:'_id'}, {_id:'12345'});
-// -> {mod_id:'12345', power:5, name:'ZIM'}
+out = Skematic.format(myModel, {mapIdFrom: '_id'}, {_id: '12345'})
+// -> {mod_id: '12345', power: 5, name: 'ZIM'}
 ```
 
 
@@ -518,13 +527,13 @@ The convenience method `.createFrom( schema )` generates an object based on all 
 In many ways it is similar to passing a blank data object to `.format( schema, {} )`, except every field on schema gets intialised to `undefined` unless overridden by a `default` or a `generate` method.
 
 ```js
-var mySchema = {
-  name: {type:'string'},
-  power: {default:5},
-  rnd: {generate:{ops:[Math.random]}}
-};
+const mySchema = {
+  name: {type: 'string'},
+  power: {default: 5},
+  rnd: {generate: Math.random}
+}
 
-Skematic.createFrom( mySchema );
+Skematic.createFrom(mySchema)
 // -> {name: undefined, power: 5, rnd:0.4125...}
 ```
 
@@ -534,7 +543,7 @@ Skematic.createFrom( mySchema );
 Validation applies any [rules](#rules) specified in the `schema` fields to the provided `data` and returns an object `{valid, errors}`:
 
 ```js
-Skematic.validate( schema, [opts,] data );
+Skematic.validate(schema, [opts,] data)
 ```
 
 Parameters:
@@ -544,10 +553,10 @@ Parameters:
 - **data**: The data object to validate
 
 ```js
-Skematic.validate( Hero, {name:'Zim'} );
+Skematic.validate(Hero, {name: 'Zim'})
 
 // Or with options
-Skematic.validate( Hero, {sparse:true}, {name:'Zim'} );
+Skematic.validate(Hero, {sparse: true}, {name: 'Zim'})
 ```
 
 Returns an object `{valid: $boolean, errors: $object|$array|null}` where the `errors` key may be:

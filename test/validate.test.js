@@ -67,8 +67,7 @@ describe('Validate', function () {
     describe('string reference', function () {
       it('accessor can return working schema', function () {
         var hero = {name: {type: 'string'}, power: {type: 'integer'}}
-        Skematic.useSchemas({hero: hero})
-        var s = {group: {type: 'array', schema: 'hero'}}
+        var s = {group: {type: 'array', schema: hero}}
         var res = Skematic.validate(s, {group: [{name: 'gir', power: '3'}]})
         expect(res.valid).to.be.false
         expect(res.errors.group[0].power).to.have.length(1)
@@ -117,8 +116,12 @@ describe('Validate', function () {
           books: [{title: 'WOT', author: 'RJ'}, {title: 'GOT', author: 555}]
         }
 
-        // Demonstrate error validation
+        // The following also ensures that source `data` is NOT mutated
+        const pre = JSON.stringify(data)
         var res = Skematic.validate(s, data)
+        const post = JSON.stringify(data)
+        expect(pre === post).to.be.true
+
         expect(res.valid).to.be.false
         expect(res.errors.books['1'].author).to.have.length(1)
       })
@@ -189,13 +192,26 @@ describe('checkValue(val, schema)', function () {
   })
 
   it('then checks that required values are set', function () {
-    var s = {required: true, rules: {present: ['x']}}
-    expect(checkValue('', s)).to.have.length(1)
-    expect(checkValue('', s)[0]).to.match(/required/ig)
+    var s = {required: true, rules: {oneOf: ['x']}}
+    expect(checkValue(null, s)).to.have.length(1)
+    expect(checkValue(null, s)[0]).to.match(/required/ig)
 
     // Now check the affirmative case
-    s = {required: true, default: 'zim', rules: {present: ['zim']}}
+    s = {required: true, default: 'zim', rules: {oneOf: ['zim']}}
     expect(checkValue('zim', s)).to.have.length(0)
+  })
+
+  it('disallows null/undef for NOT NULL (req + notnull)', () => {
+    const s = {allowNull: false}
+    expect(checkValue(undefined, s)).to.have.length(2)
+    expect(checkValue(null, s)).to.have.length(2)
+  })
+
+  it('allows `null` on .required with .allowNull', () => {
+    const s = {allowNull: true, required: true}
+
+    expect(checkValue(undefined, s)).to.have.length(1)
+    expect(checkValue(null, s)).to.have.length(0)
   })
 
   it('returns unrequired undefined values', function () {
@@ -223,22 +239,22 @@ describe('checkValue(val, schema)', function () {
 
   describe('error msgs', function () {
     it('can be set declaritively', function () {
-      var s = {rules: {present: ['a']}, errors: {present: 'Hotdog!'}}
+      var s = {rules: {oneOf: ['a']}, errors: {oneOf: 'Hotdog!'}}
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
 
     it('can set default error message for schema', function () {
-      var s = {rules: {present: ['a']}, errors: {default: 'Hotdog!'}}
+      var s = {rules: {oneOf: ['a']}, errors: {default: 'Hotdog!'}}
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
 
     it('can set default msg as string', function () {
-      var s = {rules: {present: ['a']}, errors: 'Hotdog!'}
+      var s = {rules: {oneOf: ['a']}, errors: 'Hotdog!'}
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
 
     it('uses system default msg if no match', function () {
-      var s = {rules: {present: ['a']}, errors: {}}
+      var s = {rules: {oneOf: ['a']}, errors: {}}
 
       // @note This is HARDCODED to match the 'defaultError'
       expect(checkValue('b', s)).to.match(/failed/ig)

@@ -16,8 +16,8 @@ describe('Rules', function () {
       expect(V.required(/regex/)).to.be.true
     })
 
-    it('fails if passed null, undefined, ""', function () {
-      expect(V.required('')).to.be.false
+    it('fails if passed null, undefined', function () {
+      expect(V.required('')).to.be.true
       expect(V.required(null)).to.be.false
       expect(V.required(undefined)).to.be.false
     })
@@ -114,23 +114,23 @@ describe('Rules', function () {
 
   // --- Lists
   describe('Lists', function () {
-    describe('.present(v,list)', function () {
+    describe('.oneOf(v,list)', function () {
       it('passes if value is in declared list', function () {
-        expect(V.present('hi', ['yo', 'hi', 'sup'])).to.be.true
+        expect(V.oneOf('hi', ['yo', 'hi', 'sup'])).to.be.true
       })
 
-      it('fails if value not present in list', function () {
-        expect(V.present('bye', ['yo', 'hi', 'sup'])).to.be.false
+      it('fails if value not oneOf in list', function () {
+        expect(V.oneOf('bye', ['yo', 'hi', 'sup'])).to.be.false
       })
     })
 
-    describe('.notPresent(v,list)', function () {
+    describe('.notOneOf(v,list)', function () {
       it('passes if value is NOT in declared list', function () {
-        expect(V.notPresent('bye', ['yo', 'hi', 'sup'])).to.be.true
+        expect(V.notOneOf('bye', ['yo', 'hi', 'sup'])).to.be.true
       })
 
       it('fails if value IS present in list', function () {
-        expect(V.notPresent('hi', ['yo', 'hi', 'sup'])).to.be.false
+        expect(V.notOneOf('hi', ['yo', 'hi', 'sup'])).to.be.false
       })
     })
 

@@ -1,3 +1,33 @@
+
+2.0.0-alpha UNRELEASED
+======
+
+**MAJOR BREAKING CHANGES**
+
+Added:
+
+- `allowNull` model definition (enables NOT NULL)
+
+Changed:
+
+- Rule.required ONLY checks null/undefined
+- Rules 'present', 'notPresent' renamed to 'oneOf', 'notOneOf'
+
+Internal:
+
+- License to ISC for v2+
+- ES6 throughout
+- Babel dependencies made explicit, conversion using `babelify`
+- JSDoc replaced with `documentation.js`
+
+
+1.0.0 - UNRELEASED
+=====
+
+The previous v0.16.0 is effectively the v1.0.0 version. New and breaking API
+changes and model changes fast forwarded the versioning to 2.0.0.
+
+
 0.16.0 - 17 December 2015
 ======
 
