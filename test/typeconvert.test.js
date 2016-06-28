@@ -139,15 +139,29 @@ describe('Cast Types', function () {
 
   describe('.toDate( val )', function () {
     it('casts value to a Date', function () {
-      expect(Cast.toDate('1234')).to.be.an.instanceof(Date)
-      expect(Cast.toDate(1234)).to.be.an.instanceof(Date)
-      expect(Cast.toDate(new Date())).to.be.an.instanceof(Date)
-      expect(Cast.toDate(['1'])).to.be.an.instanceof(Date)
+      expect(Cast.toDate('1234')).to.equal('1234-01-01T00:00:00.000Z')
+      expect(Cast.toDate(1234)).to.equal('1970-01-01T00:00:01.234Z')
+      expect(Cast.toDate(new Date())).to.match(/^20\d\d-\d\d-\d\d.*?Z$/)
     })
 
     it('returns null if value is null or ""', function () {
       expect(Cast.toDate(null)).to.equal(null)
       expect(Cast.toDate('')).to.equal(null)
+    })
+
+    it('throws on object, undefined or array', () => {
+      var errCount = 0
+      try {
+        Cast.toDate(['1'])
+      } catch (e) { errCount++ }
+      try {
+        Cast.toDate({})
+      } catch (e) { errCount++ }
+      try {
+        Cast.toDate()
+      } catch (e) { errCount++ }
+
+      expect(errCount).to.equal(3)
     })
   })
 })

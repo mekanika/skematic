@@ -194,7 +194,7 @@ function toBoolean (val) {
 }
 
 /**
- * Convert to a Date
+ * Convert to an ISO 8601 Date format
  *
  * Returns the following conversions:
  *
@@ -206,19 +206,22 @@ function toBoolean (val) {
  *   - function -> throws Error
  *   - Date     -> Date
  *   - object   -> throws Error
- *   - array    -> Date || Error: ['5'] -> Date# `new Date(['5'].toString())`
+ *   - array    -> throws Error
  *
  * @param {Mixed} val to convert
  *
  * @throws Conversion failure error
- * @returns {Date} converted value
+ * @returns {String} ISO 8601 formatted date
  * @alias toDate
  * @memberof TypeConvert
  */
 
 function toDate (val) {
+  if (val === undefined || val instanceof Array) {
+    throw new Error('Failed to cast to Date')
+  }
   if (val === null || val === '') return null
-  if (val instanceof Date) return val
+  if (val instanceof Date) return val.toISOString()
 
   var date
 
@@ -226,13 +229,13 @@ function toDate (val) {
   if (val instanceof Number ||
       typeof val === 'number' ||
       String(val) === Number(val)) {
-    date = new Date(Number(val))
+    date = new Date(Number(val)).toISOString()
   } else if (val && val.toString) {
     // support for date strings
-    date = new Date(val.toString())
+    date = new Date(val.toString()).toISOString()
   }
 
-  if (date && date.toString() !== 'Invalid Date') return date
+  if (date && (new Date(date)).toString() !== 'Invalid Date') return date
 
   throw new Error('Failed to cast to Date')
 }

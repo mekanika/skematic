@@ -196,7 +196,7 @@ The following built-in transforms can be used to type convert and otherwise modi
 - **toFloat** - converts value to a Float
 - **toInteger** - converts value to an Integer
 - **toBoolean** - converts value to a Boolean
-- **toDate** - converts value to a Javascript Date
+- **toDate** - converts value to an ISO 8601 Date eg. `2000-01-01T00:00:00.000Z`
 
 These are provided as an array on key `transforms`:
 

@@ -12,6 +12,7 @@ Changed:
 
 - Rule.required ONLY checks null/undefined
 - Rules 'present', 'notPresent' renamed to 'oneOf', 'notOneOf'
+- Typecast to Date returns ISO 8601 Date '2000-01-01T00:00:00.000Z'
 
 Internal:
 
