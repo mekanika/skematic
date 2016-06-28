@@ -46,6 +46,11 @@ describe('Computed value generator', function () {
     expect(format({}, null, o)).to.equal(o)
   })
 
+  it('executes directly passed function `{generate: fn}`', () => {
+    const s = {name: {generate: () => 'hello'}}
+    expect(format(s, null, {}).name).to.equal('hello')
+  })
+
   it('generates a value from a named function in schema def', function () {
     var s = {name: {
       generate: {ops: [{fn: 'run'}]}}

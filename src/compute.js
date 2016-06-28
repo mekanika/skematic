@@ -1,4 +1,6 @@
 
+import is from './is'
+
 /**
   Expose the compute library
   @ignore
@@ -47,6 +49,9 @@ function canCompute (skm, opts = {}, val) {
 
   // Skip if there is no generator
   if (!gen) return false
+
+  // Run if `gen` is a function
+  if (is.function(gen)) return true
 
   // Has a value been provided by the caller
   const provided = arguments.length > 2
@@ -114,6 +119,9 @@ function computeValue (skm, opts = {}, val) {
 */
 
 function _generate (gen, runOnce, data) {
+  // Run immediately if `gen` is a function
+  if (is.function(gen)) return gen()
+
   // Prepare the value to return
   let value
 
@@ -134,7 +142,11 @@ function _generate (gen, runOnce, data) {
   for (let i = 0; i < ops.length; i++) {
     let runner
 
-    if (typeof ops[i] === 'function') runner = ops[i]
+    // When declared as `{ops: [function() {}]}`
+    if (is.function(ops[i])) runner = ops[i]
+    // When declared as `{ops: [{fn: function () {}}]}`
+    else if (is.function(ops[i].fn)) runner = ops[i].fn
+    // When declared as string `{ops: [{fn: 'woo'}]}`
     else runner = fnLib[ops[i].fn]
 
     if (!runner) {

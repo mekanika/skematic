@@ -286,7 +286,13 @@ var user = {
 
 **Computed values** - `Skematic` keys can generate values using functions referenced in the `generate` directive.
 
-The `generate` field has the following properties:
+The simplest usage is to specify `generate` as a function:
+
+```js
+{generate: () => Date.now()}
+```
+
+You may also pass the `generate` field a config object with properties:
 
 > Legend: **field** - _{Type}_ `default`: Description
 
