@@ -53,16 +53,7 @@ export {validate, checkValue}
   @alias validate
 */
 
-function validate (schema, opts, data) {
-  // Initialise an empty object opts default if not provided
-  if (!opts) opts = {}
-
-  // Support passing only TWO arguments `(schema,data)`
-  if (arguments.length === 2) {
-    data = arguments[1]
-    opts = {}
-  }
-
+function validate (schema, data, opts = {}) {
   if (opts.sparse || schema.$dynamic) return _sparse(data, schema)
   else return _validate(data, schema)
 }

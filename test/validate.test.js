@@ -2,6 +2,7 @@
 const expect = require('chai').expect
 const checkValue = require('../src/validate').checkValue
 const Skematic = require('../index')
+const validate = Skematic.validate
 
 describe('Validate', function () {
   it('returns {valid, errors} object', function () {

@@ -6,11 +6,11 @@ const computeValue = require('../src/compute').computeValue
 
 describe('Computed value generator', function () {
   var fnLib = {
-    'run': function () { return 'yes' },
-    'next': function (arg) { return arg + ' no' }
+    run: function () { return 'yes' },
+    next: function (arg) { return arg + ' no' }
   }
 
-  var sc = {name: {generate: {ops: {fn: 'run'}}}}
+  var sc = {name: {generate: {ops: {fn: fnLib.run}}}}
 
   beforeEach(function () {
     // Clear the library
@@ -20,9 +20,9 @@ describe('Computed value generator', function () {
     Skematic.useGenerators(fnLib)
   })
 
-  it('.useGenerators() can load in an object library of fns', function () {
+  it.skip('.useGenerators() can load in an object library of fns', function () {
     var s = {name: {
-      generate: {ops: [{fn: 'run'}]}}
+      generate: {ops: [{fn: fnLib.run}]}}
     }
     // Clear the library
     Skematic.useGenerators({})
@@ -41,35 +41,30 @@ describe('Computed value generator', function () {
     } catch (e) { done() }
   })
 
-  it('returns the data object', function () {
-    var o = {a: 1}
-    expect(format({}, null, o)).to.equal(o)
-  })
-
   it('executes directly passed function `{generate: fn}`', () => {
     const s = {name: {generate: () => 'hello'}}
-    expect(format(s, null, {}).name).to.equal('hello')
+    expect(format(s, {}).name).to.equal('hello')
   })
 
   it('generates a value from a named function in schema def', function () {
     var s = {name: {
-      generate: {ops: [{fn: 'run'}]}}
+      generate: {ops: [{fn: fnLib.run}]}}
     }
 
-    expect(format(s, null, {}).name).to.equal('yes')
+    expect(format(s, {}).name).to.equal('yes')
   })
 
   it('supports declaring a single fn in schema', function () {
-    expect(format(sc, null, {}).name).to.equal('yes')
+    expect(format(sc, {}).name).to.equal('yes')
   })
 
   it('chains value as param into arrays of operator functions', function () {
     var s = {name: {
       generate: {
-        ops: [{fn: 'run'}, {fn: 'next'}]
+        ops: [{fn: fnLib.run}, {fn: fnLib.next}]
       }}
     }
-    expect(format(s, null, {}).name).to.equal('yes no')
+    expect(format(s, {}).name).to.equal('yes no')
   })
 
   it('passes provided value as first argument on first op', function () {
@@ -77,7 +72,7 @@ describe('Computed value generator', function () {
       name: {generate: {ops: [fnLib.next]}},
       boo: {generate: {ops: [fnLib.next, fnLib.next]}}
     }
-    var out = format(s, null, {name: '!?'})
+    var out = format(s, {name: '!?'})
     expect(out.name).to.equal('!? no')
     expect(out.boo).to.equal('!? no no')
   })
@@ -87,10 +82,10 @@ describe('Computed value generator', function () {
       return 'hello ' + p
     }
     var s = {name: {
-      generate: {ops: [{fn: 'next', args: [ _get.bind(this, 'world') ]}]}}
+      generate: {ops: [{fn: fnLib.next, args: [ _get.bind(this, 'world') ]}]}}
     }
 
-    var res = format(s, null, {})
+    var res = format(s, {})
 
     expect(res.name).to.equal('hello world no')
   })
@@ -99,17 +94,17 @@ describe('Computed value generator', function () {
     var woo = function () { return 'woo!' }
     var s = {jam: {generate: {ops: [woo]}}}
 
-    var out = format(s, null, {})
+    var out = format(s, {})
     expect(out.jam).to.equal('woo!')
   })
 
   it('run once:true only when runOnce flag is provided', function () {
-    var s = {name: {generate: {ops: [{fn: 'run'}], once: true}}}
+    var s = {name: {generate: {ops: [{fn: fnLib.run}], once: true}}}
 
-    var out = format(s, null, {})
+    var out = format(s, {})
     expect(out.name).to.equal(undefined)
 
-    out = format(s, {generate: 'once'}, {})
+    out = format(s, {}, {once: true})
     expect(out.name).to.equal('yes')
   })
 
@@ -122,7 +117,7 @@ describe('Computed value generator', function () {
         moo: {generate: {ops: [make]}}
       }
 
-      var out = format(s, null, {})
+      var out = format(s, {})
       expect(out.moo).to.equal('swee!')
     })
 
@@ -130,7 +125,7 @@ describe('Computed value generator', function () {
       var s = {
         moo: {generate: {ops: [make], preserve: true}}
       }
-      var out = format(s, null, {moo: 'moo!'})
+      var out = format(s, {moo: 'moo!'})
       expect(out.moo).to.equal('moo!')
     })
 
@@ -141,7 +136,7 @@ describe('Computed value generator', function () {
         woo: {generate: {ops: [make], require: true}}
       }
 
-      var out = format(s, null, {moo: '!?', yep: 'woo!'})
+      var out = format(s, {moo: '!?', yep: 'woo!'})
 
       expect(out.moo).to.equal('swee!')
       expect(out.yep).to.equal('woo!')

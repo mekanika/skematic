@@ -48,27 +48,29 @@ export default format
   - **strip** _{Array}_ `undefined` list of field values to strip from `data`
   - **mapIdFrom** _{String}_ `undefined` maps a primarykey field from the field name provided
 
-  @param {Schema} skm The schema to format to
-  @param {Object} opts Options hash
-  @param {Mixed} data The data to format
+  @example
+  const Model = {name: {default: 'Player 1'}, created: {generate: Date.now}}
 
-  @return {Object}
+  format(Model, {mydata: 'demo'})
+  // -> {name: 'Player 1', created: 1467139008992, mydata: 'demo'}
+
+  format(Model, {name: 'Mo', mydata: 'demo'}, {strict: true})
+  // -> {name: 'Mo', created: 1467139049234}
+
+  @param {Schema} skm The schema to format to
+  @param {Mixed} data The data to format
+  @param {Object} opts Options hash
+
+  @return {Object} A fresh copy of formatted data
 
   @memberof Skematic
   @alias format
 */
 
-function format (skm, opts, data) {
-  if (arguments.length === 2) {
-    data = arguments[1]
-    opts = {}
-  }
-
-  // Set a default for `opts`
-  if (!opts) opts = {}
+function format (skm, data, opts = {}) {
 
   // Apply bulk formatters
-  let res = _dive(skm, opts, data)
+  let res = _dive(skm, data, opts)
 
   // Map the idField if provided
   if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom)
@@ -79,7 +81,7 @@ function format (skm, opts, data) {
 /**
   Internal method to apply the modifier functions (default, generate etc)
 
-  @param {Schema} ss The schema to apply
+  @param {Schema} ss The schema to apply (default: {})
   @param {Object} opts The options hash
   @param {Mixed} value The (likely SCALAR) value to be formatted
 
@@ -87,11 +89,7 @@ function format (skm, opts, data) {
   @private
 */
 
-function _makeValue (ss, opts, val) {
-  // Set empty object default for schema as it's possible to provide an empty
-  // `ss` if applying a sub-schema that has not been defined
-  if (!ss) ss = {}
-
+function _makeValue (ss = {}, opts, val) {
   // Set defaults
   if (opts.defaults !== false) {
     if (!is.undefined(ss.default)) val = setDefault(val, ss)
@@ -128,20 +126,22 @@ function _makeValue (ss, opts, val) {
   scalars, arrays and object data.
 
   @param {Schema} skm The schema to apply
+  @param {Mixed} payload The (likely OBJECT) data to be formatted
   @param {Object} opts The options hash
-  @param {Mixed} data The (likely OBJECT) data to be formatted
 
-  @return The formatted data
+  @return A fresh copy of formatted data (no mutation)
   @private
 */
 
-function _dive (skm, opts, data) {
+function _dive (skm, payload, opts) {
   // On the odd chance we reach here with no `skm` schema defined
   // (This happened in real-world testing scenarios)
-  if (!skm) return data
+  if (!skm) return payload
 
   // Placeholder for formatted data
   let out
+
+  let data = payload
 
   // Load a string referenced schema from an accessor (expects a SCHEMA)
   if (is.string(skm.schema)) skm.schema = getSchema(skm.schema)
@@ -149,7 +149,9 @@ function _dive (skm, opts, data) {
   // -- OBJECT
   // Process data as an object
   if (is.object(data)) {
-    if (opts.copy) data = {...data}
+    // console.log('format as object')
+    // Create a copy of the object
+    data = {...data}
 
     // Strip keys not declared on schea if in 'strict' mode
     if (opts.strict) {
@@ -171,7 +173,7 @@ function _dive (skm, opts, data) {
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {
-        out = _dive(model, opts, data[key])
+        out = _dive(model, data[key], opts)
       } else {
         let args = [model, opts]
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
@@ -180,7 +182,7 @@ function _dive (skm, opts, data) {
         // Special case handle objects with sub-schema
         // Apply the sub-schema to the object output
         if (is.object(out) && model.schema) {
-          out = _dive(model.schema, opts, out)
+          out = _dive(model.schema, out, opts)
         }
       }
 
@@ -189,14 +191,14 @@ function _dive (skm, opts, data) {
       if (out !== data[key]) data[key] = out
     }
   } else if (is.array(data) && skm.schema) {
+    // Create a copy of the array
+    data = data.slice()
     // ARRAY (with sub-schema)
     // Process data as an array IF there is a sub-schema to format against
-    if (opts.copy) data = data.slice()
-
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
-        data[i] = _dive(skm.schema, opts, data[i])
+        data[i] = _dive(skm.schema, data[i], opts)
       } else {
         // Or simply "makeValue" for everything else
         out = _makeValue(skm.schema, opts, data[i])

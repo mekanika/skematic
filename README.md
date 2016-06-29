@@ -8,7 +8,7 @@
 
 > :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
-Universal, fast and lightweight, `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and Node.js.
+Universal, ultra fast and lightweight (5Kb!), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and Node.js.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
@@ -64,8 +64,8 @@ To use in a browser:
 
 The API surface is small by design, with two **primary methods**:
 
-- **.format**( schema, [opts,] data )  - see [Format](#format)
-- **.validate**( schema, [opts,] data )  - see [Validate](#validate)
+- **.format**( schema, data [, opts])  - see [Format](#format)
+- **.validate**( schema, data [, opts] )  - see [Validate](#validate)
 
 > Note: Generated API docs can be found in the _npm package_ under `docs/index.html`
 
@@ -83,7 +83,7 @@ Optional setup methods:
 
 ### Schema configuration
 
-`Skematic` provides keys to define rules and conditions for your data. Config keys are **all optional**, so the empty object `{}` is perfectly valid (even if it doesn't do anything).
+`Skematic` provides keys to define rules and conditions for your data. Config keys are **all optional**.
 
 - **type** _{String}_ Specify a _rule_ that value is type:
     - "string"
@@ -441,25 +441,26 @@ Skematic.format(propSchema, {mapIdFrom: '_id'}, data)
 
 ## Format
 
-Format transforms, generates and conforms data.
+Format creates and returns a conformed data model based on the schema and input data provided.
 
-This is done "destructively" by default (ie. changes the `data` parameter directly). To preserve the original, pass `{copy:true}` to the 'opts' argument:
+> Side-effect free, format never mutates data
 
 ```js
-Skematic.format(schema, [opts,] data)
+Skematic.format(schema [, data] [, opts])
+// -> {formattedData}
 ```
 
 Parameters:
 
 - **schema**: The schema to format against
-- **opts**: _[Optional]_ options hash (see below)
 - **data**: The data object to format
+- **opts**: _[Optional]_ options hash (see below)
 
 ```js
 Skematic.format(Hero, {name: 'Zim'})
 
 // Or with options
-Skematic.format(Hero, {sparse: true}, {name: 'Zim'})
+Skematic.format(Hero, {name: 'Zim', _junk: '!'}, {strict: true})
 ```
 
 Format _options_ include:
@@ -472,8 +473,7 @@ Format _options_ include:
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value (setting as `"once"` will _also_ compute for fields flagged as "once") - see [Design:generate](#generate)
 - **transform** - modify values - see [Design:transforms](#transforms)
 - **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
-- **copy** - _{Boolean}_ - `false` Creates a clone copy rather than edit in place
-- **mapIdFrom** - _{String}_ - `undefined` maps a primary key field from the field name provided (requires a `primaryKey` field set on the schema)
+- **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the schema)
 
 Format applies these options in significant order:
 
@@ -496,22 +496,22 @@ const myModel = {
   name: {default: 'zim', transforms:['uppercase']}
 };
 
-let out = Skematic.format(myModel, {generate: 'once'}, {})
+let out = Skematic.format(myModel, {}, {generate: 'once'})
 // -> {rando: 0.24123545, power: 5, name: 'ZIM'}
 
 out = Skematic.format(myModel, {}) // (schema, data)
 // -> {power: 5, name: 'ZIM}
 
-out = Skematic.format(myModel, {defaults: false}, {})
+out = Skematic.format(myModel, {}, {defaults: false})
 // -> {}
 
-out = Skematic.format(myModel, {strip: [undefined, 'x']}, {rando: undefined, power: 'x'})
+out = Skematic.format(myModel, {rando: undefined, power: 'x'}, {strip: [undefined, 'x']})
 // -> {name: 'ZIM'}
 
-out = Skematic.format(myModel, {sparse: true}, {name: 'Gir'})
+out = Skematic.format(myModel, {name: 'Gir'}, {sparse: true})
 // -> {name: 'GIR'}
 
-out = Skematic.format(myModel, {mapIdFrom: '_id'}, {_id: '12345'})
+out = Skematic.format(myModel, {_id: '12345'}, {mapIdFrom: '_id'})
 // -> {mod_id: '12345', power: 5, name: 'ZIM'}
 ```
 
@@ -543,20 +543,21 @@ Skematic.createFrom(mySchema)
 Validation applies any [rules](#rules) specified in the `schema` fields to the provided `data` and returns an object `{valid, errors}`:
 
 ```js
-Skematic.validate(schema, [opts,] data)
+Skematic.validate(schema, data [, opts])
+// -> {valid: <Boolean>, errors: {$key: [errors<String>]} | null}
 ```
 
 Parameters:
 
 - **schema**: The schema to validate against
-- **opts**: _[Optional]_ options hash (see below)
 - **data**: The data object to validate
+- **opts**: _[Optional]_ options hash (see below)
 
 ```js
 Skematic.validate(Hero, {name: 'Zim'})
 
 // Or with options
-Skematic.validate(Hero, {sparse: true}, {name: 'Zim'})
+Skematic.validate(Hero, {name: 'Zim'}, {sparse: true})
 ```
 
 Returns an object `{valid: $boolean, errors: $object|$array|null}` where the `errors` key may be:
