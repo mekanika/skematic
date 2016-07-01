@@ -241,7 +241,9 @@ function _validate (data, schema) {
     let v = data[key]
 
     // If it's not required and the default value is 'empty', skip it
-    if (!scm.required && Rules.empty(setDefault(v, scm))) continue
+    // Note: 'allowNull: false' is NOT NULL. Disallows empty.
+    const isRequired = scm.required || scm.allowNull === false
+    if (!isRequired && Rules.empty(setDefault(v, scm))) continue
 
     // Recursively Validate sub-schema
     if (scm.schema) {

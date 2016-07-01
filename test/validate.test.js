@@ -34,6 +34,11 @@ describe('Validate', function () {
     expect(res.valid).to.be.true
   })
 
+  it('treats `allowNull: false` as required field', () => {
+    const s = {name: {allowNull: false}}
+    expect(validate(s, {name: undefined}).valid).to.equal(false)
+  })
+
   it('validates scalars {validBool, errorArray!}', function () {
     var s = {type: 'string', rules: {maxLength: 3}}
 
