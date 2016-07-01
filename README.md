@@ -571,6 +571,7 @@ Validate _options_ include:
 > Legend: **field** - _{Type}_ - `default`: Description
 
 - **sparse** _{Boolean}_ `false`: Only process fields on the provided data, rather than all fields on the entire schema
+- **keyCheckOnly** _{Boolean}_ `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on schema. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
 
 
 

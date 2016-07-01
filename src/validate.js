@@ -54,8 +54,46 @@ export {validate, checkValue}
 */
 
 function validate (schema, data, opts = {}) {
-  if (opts.sparse || schema.$dynamic) return _sparse(data, schema)
+  if (opts.keyCheckOnly) return _checkKeys(schema, data)
+  else if (opts.sparse || schema.$dynamic) return _sparse(data, schema)
   else return _validate(data, schema)
+}
+
+/**
+  Checks that the keys on the data object
+
+  @param {Schema} schema The data structure rules used for validation
+  @param {Object|Mixed} data The data item to validate
+
+  @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
+  @private
+*/
+
+function _checkKeys (schema, data) {
+  let ret = {
+    valid: true,
+    errors: {}
+  }
+
+  if (!is.object(data)) {
+    return {valid: false, errors: {data: ['Invalid data']}}
+  }
+
+  const MAX_USER_KEY_LEN = 16
+  for (let key in data) {
+    if (!schema[key]) {
+      ret.valid = false
+
+      // Sanitize user keylength
+      const shortKey = key.length > MAX_USER_KEY_LEN
+        ? key.substr(0, MAX_USER_KEY_LEN - 3) + '...'
+        : key
+
+      ret.errors[shortKey] = [`Invalid key: ${shortKey}`]
+    }
+  }
+
+  return ret
 }
 
 /**

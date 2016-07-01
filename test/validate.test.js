@@ -178,6 +178,25 @@ describe('Validate', function () {
       })
     })
   })
+
+  describe('{keyCheckOnly: true}', () => {
+    it('only checks data keys exist on schema', () => {
+      const s = {name: {default: 'hi'}}
+      expect(validate(s, {name: 1}, {keyCheckOnly: true}).valid).to.equal(true)
+      const out = validate(s, {name: 1, x: 1}, {keyCheckOnly: true})
+      expect(out.valid).to.equal(false)
+    })
+  })
+
+  describe('{sparse: true} Sparse validate', function () {
+    it('only validates data object fields (not schema)', function () {
+      var rec = {mega: 'kool'}
+      var s = {mega: {type: 'string'}, cray: {required: true}}
+
+      var res = Skematic.validate(s, rec, {sparse: true})
+      expect(res.valid).to.equal(true)
+    })
+  })
 })
 
 describe('checkValue(val, schema)', function () {
@@ -268,15 +287,5 @@ describe('checkValue(val, schema)', function () {
       var s = {required: true, errors: {required: 'woot!'}}
       expect(checkValue(undefined, s)).to.eql(['woot!'])
     })
-  })
-})
-
-describe('sparseValidate', function () {
-  it('only validates data object fields (not schema)', function () {
-    var rec = {mega: 'kool'}
-    var s = {mega: {type: 'string'}, cray: {required: true}}
-
-    var res = Skematic.validate(s, {sparse: true}, rec)
-    expect(res.valid).to.equal(true)
   })
 })

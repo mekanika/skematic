@@ -7,6 +7,7 @@
 Added:
 
 - `allowNull` model definition (enables NOT NULL)
+- `keyCheckOnly` validation option to check user keys are all set on schema
 
 Changed:
 
@@ -28,11 +29,13 @@ Internal:
 - JSDoc replaced with `documentation.js`
 
 
+
 1.0.0 - UNRELEASED
 =====
 
 The previous v0.16.0 is effectively the v1.0.0 version. New and breaking API
 changes and model changes fast forwarded the versioning to 2.0.0.
+
 
 
 0.16.0 - 17 December 2015
