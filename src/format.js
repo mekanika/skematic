@@ -68,6 +68,7 @@ export default format
 */
 
 function format (skm, data, opts = {}) {
+  if (data == null) return createFrom(skm)
 
   // Apply bulk formatters
   let res = _dive(skm, data, opts)
@@ -76,6 +77,44 @@ function format (skm, data, opts = {}) {
   if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom)
 
   return res
+}
+
+/**
+  Returns an object built on ALL values present in the schema, set to defaults
+  and having been run through `.format()` with default flags.
+
+  @param {Schema} schema To initialise object
+  @param {Mixed} nullValue
+
+  @return {Object}
+  @memberof Skematic
+*/
+
+function createFrom (schema, nullValue) {
+  let o = {}
+
+  if (!schema) return o
+  if (is.string(schema)) schema = exports._getSchema(schema)
+
+  for (let k in schema) {
+    if (!schema.hasOwnProperty(k)) continue
+    o[k] = setDefault(nullValue, schema[k])
+    // Ensure undefined type:'array' is set to [] (unless overridden)
+    if (schema[k].type === 'array' && o[k] === nullValue) o[k] = []
+
+    // Setup the models for any defined sub-schema on OBJECT types
+    if (schema[k].schema) {
+      // Only apply to objects or assume 'object' if type not defined
+      if (!schema[k].type || schema[k].type === 'object') {
+        o[k] = createFrom(schema[k].schema)
+      }
+    }
+  }
+
+  // Now format the new object
+  o = format(schema, o, {once: true})
+
+  return o
 }
 
 /**
@@ -98,7 +137,7 @@ function _makeValue (ss = {}, opts, val) {
   // Run generators
   if (opts.generate !== false) {
     // Sets up the "runOnce" flag if `opts.compute = 'once'`
-    var runOnce = opts.generate === 'once'
+    var runOnce = opts.generate !== false && opts.once
 
     var args = [ss, {once: runOnce}]
     if (arguments.length > 2) args.push(val)
@@ -170,6 +209,11 @@ function _dive (skm, payload, opts) {
       let model = skm.$dynamic ? skm.$dynamic : skm[key]
       // Some field names won't have a schema defined. Skip these.
       if (!model) continue
+
+      // Remove data fields that are flagged as protected
+      if (opts.protect !== false && skm[key] && skm[key].protect) {
+        delete data[key]
+      }
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {

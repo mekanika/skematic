@@ -1,6 +1,6 @@
 
 /**
-  `Skematic` provides methods to structure and valid data.
+  Data structure and rule validation engine
   @module Skematic
 */
 

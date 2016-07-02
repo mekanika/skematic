@@ -93,6 +93,7 @@ Optional setup methods:
     - "array"
     - "object"
 - **default** _{any}_ value to apply if no value is set/passed
+- **protect** _{Boolean}_ disallows user from setting value (stripped on `format()`)
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
@@ -450,6 +451,8 @@ Skematic.format(schema [, data] [, opts])
 // -> {formattedData}
 ```
 
+**Special case**: Passing format no data will cause format to **create** blank model based on your schema, including defaults and generated fields. You can pass options too, as follows: `format(schema, null, {defaults: false})`
+
 Parameters:
 
 - **schema**: The schema to format against
@@ -469,9 +472,11 @@ Format _options_ include:
 
 - **strict** - _{Boolean}_ - `false` Strips any fields not declared on schema
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire schema
-- **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields
-- **generate** - _{Boolean|"once"}_ - `true`: Compute a new value (setting as `"once"` will _also_ compute for fields flagged as "once") - see [Design:generate](#generate)
-- **transform** - modify values - see [Design:transforms](#transforms)
+- **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
+- **generate** - _{Boolean|"once"}_ - `true`: Compute a new value - see [Design:generate](#generate)
+- **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
+- **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
+- **protect** - _{Boolean}_ - `false`: Disables protected model fields (ie. allows overwriting them). Use carefully.
 - **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
 - **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the schema)
 

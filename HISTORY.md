@@ -7,6 +7,7 @@
 Added:
 
 - `allowNull` model definition (enables NOT NULL)
+- `protect` model definition (prevent user supplying values)
 - `keyCheckOnly` validation option to check user keys are all set on schema
 
 Changed:
@@ -16,6 +17,7 @@ Changed:
 - Rule.required ONLY checks null/undefined
 - Rules 'present', 'notPresent' renamed to 'oneOf', 'notOneOf'
 - Typecast to Date returns ISO 8601 Date '2000-01-01T00:00:00.000Z'
+- Generate values 'once' uses new `once:<Boolean>` flag NOT `{generate: 'once'}`
 
 Removed:
 

@@ -114,6 +114,27 @@ describe('.format(skm, opts, data)', function () {
     expect(out).to.not.have.key('name')
   })
 
+  it('`protect` model flag removes user provided data fields', () => {
+    const s = {name: {protect: true}}
+    const data = format(s, {name: 'moo'})
+    expect(Object.keys(data).length).to.equal(0)
+
+    // Ensure user provided data gets stripped and regenerated
+    const y = {createdAt: {
+      generate: {ops: () => 'swee', once: true},
+      protect: true
+    }}
+    const zz = format(y, {createdAt: 'moo'}, {once: true})
+    expect(zz.createdAt).to.not.equal('moo')
+    expect(zz.createdAt).to.equal('swee')
+  })
+
+  it('`protect:false` format option disables model flag', () => {
+    const s = {name: {protect: true}}
+    const data = format(s, {name: 'moo'}, {protect: false})
+    expect(Object.keys(data).length).to.equal(1)
+  })
+
   it('`strip` removes matching field values', function () {
     var data = {a: undefined, b: null, c: 2, d: ':)'}
     var s = {a: {type: 'number'}}
