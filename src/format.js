@@ -201,12 +201,12 @@ function _dive (skm, payload, opts) {
     }
 
     let step = skm
-    // Switch to parsing only provided keys on data if a) dynamic or b) sparse
-    if (skm.$dynamic || opts.sparse) step = data
+    // Switch to parsing only provided keys on sparse data
+    if (opts.sparse) step = data
 
     for (let key in step) {
-      // Define the schema to use for this value
-      let model = skm.$dynamic ? skm.$dynamic : skm[key]
+      // Shorthand the schema model to use for this value
+      let model = skm[key]
       // Some field names won't have a schema defined. Skip these.
       if (!model) continue
 

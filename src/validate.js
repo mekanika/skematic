@@ -55,7 +55,7 @@ export {validate, checkValue}
 
 function validate (schema, data, opts = {}) {
   if (opts.keyCheckOnly) return _checkKeys(schema, data)
-  else if (opts.sparse || schema.$dynamic) return _sparse(data, schema)
+  else if (opts.sparse) return _sparse(data, schema)
   else return _validate(data, schema)
 }
 
@@ -225,15 +225,12 @@ function _validate (data, schema) {
       : {valid: true, errors: null}
   }
 
-  // Determine whether to step through the schema or the data
-  // based on whether we're using $dynamic keys or fixed
-  // (Note: sparse validation of known keys happens in `_sparse()`)
   let step = schema
-  if (schema.$dynamic) step = data
-
   // Step through ONLY our schema keys
+  // (Note: sparse validation of known keys happens in `_sparse()`)
   for (let key in step) {
-    let scm = schema.$dynamic ? schema.$dynamic : schema[key]
+    // Shorthand schema model reference
+    let scm = schema[key]
     // Only handle own properties
     if (!scm) continue
 

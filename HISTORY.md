@@ -22,6 +22,7 @@ Changed:
 Removed:
 
 - `copy` format option (immutable by default now)
+- `$dynamic` keys support because YAGNI. Explicit keys only.
 
 Internal:
 
