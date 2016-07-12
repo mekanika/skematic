@@ -9,6 +9,8 @@ Added:
 - `allowNull` model definition (enables NOT NULL)
 - `protect` model definition (prevent user supplying values)
 - `keyCheckOnly` validation option to check user keys are all set on schema
+- Plugins:
+  - `toReactShape()` Maps a model to React.PropTypes.shape()
 
 Changed:
 
