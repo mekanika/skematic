@@ -465,29 +465,6 @@ out = Skematic.format(myModel, {_id: '12345'}, {mapIdFrom: '_id'})
 // -> {mod_id: '12345', power: 5, name: 'ZIM'}
 ```
 
-
-### createFrom
-
-![status:unstable](https://img.shields.io/badge/status-unstable-orange.svg?style=flat-square)
-
-> Likely to be subsumed into `format()` as a flag. See [Issue #18](https://github.com/mekanika/skematic/issues/18)
-
-The convenience method `.createFrom( schema )` generates an object based on all the fields in the provided `schema`, and otherwise runs through `.format()` with default flags set - in other words, the new object gets defaults, generators and transforms applied.
-
-In many ways it is similar to passing a blank data object to `.format( schema, {} )`, except every field on schema gets intialised to `undefined` unless overridden by a `default` or a `generate` method.
-
-```js
-const mySchema = {
-  name: {type: 'string'},
-  power: {default: 5},
-  rnd: {generate: Math.random}
-}
-
-Skematic.createFrom(mySchema)
-// -> {name: undefined, power: 5, rnd:0.4125...}
-```
-
-
 ## Validate
 
 Validation applies any [rules](#rules) specified in the `schema` fields to the provided `data` and returns an object `{valid, errors}`:
