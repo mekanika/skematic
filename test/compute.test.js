@@ -1,6 +1,5 @@
 /* eslint-env node, mocha */
 const expect = require('chai').expect
-const Skematic = require('../index')
 const format = require('../index').format
 const computeValue = require('../src/compute').computeValue
 
@@ -11,25 +10,6 @@ describe('Computed value generator', function () {
   }
 
   var sc = {name: {generate: {ops: {fn: fnLib.run}}}}
-
-  beforeEach(function () {
-    // Clear the library
-    Skematic.useGenerators({})
-
-    // Reload the library
-    Skematic.useGenerators(fnLib)
-  })
-
-  it.skip('.useGenerators() can load in an object library of fns', function () {
-    var s = {name: {
-      generate: {ops: [{fn: fnLib.run}]}}
-    }
-    // Clear the library
-    Skematic.useGenerators({})
-    // Load in the library
-    Skematic.useGenerators(fnLib)
-    expect(format(s, {}).name).to.equal('yes')
-  })
 
   it('process a single value via .computeValue()', function () {
     expect(computeValue(sc.name, null, {})).to.equal('yes')

@@ -2,27 +2,6 @@
 import is from './is'
 
 /**
-  Expose the compute library
-  @ignore
-*/
-
-let fnLib = {}
-
-/**
-  Loads in a "library" hash of keyed functions that can then be used as
-  compute/generate methods.
-
-  @param {Object} lib An Object of keyed functions `{key:function()...}`
-
-  @memberof Skematic
-  @alias useGenerators
-*/
-
-function useGenerators (lib) {
-  fnLib = lib
-}
-
-/**
   Determines whether a generator SHOULD be run or not.
 
   Be very careful passing `undefined` as "val" as this will assume that the
@@ -146,8 +125,6 @@ function _generate (gen, runOnce, data) {
     if (is.function(ops[i])) runner = ops[i]
     // When declared as `{ops: [{fn: function () {}}]}`
     else if (is.function(ops[i].fn)) runner = ops[i].fn
-    // When declared as string `{ops: [{fn: 'woo'}]}`
-    else runner = fnLib[ops[i].fn]
 
     if (!runner) {
       throw new Error('No generator method:' + ops[i].fn)
@@ -190,4 +167,4 @@ function _generate (gen, runOnce, data) {
   Setup exports
 */
 
-export {useGenerators, canCompute, computeValue}
+export {canCompute, computeValue}

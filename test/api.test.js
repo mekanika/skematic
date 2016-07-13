@@ -4,9 +4,6 @@ const Skematic = require('../index')
 
 describe('API', function () {
   var apiMethods = [
-    'useSchemas',
-    'useGenerators',
-    'createFrom',
     'format',
     'validate'
   ]
@@ -20,40 +17,61 @@ describe('API', function () {
   })
 })
 
-describe('Lookup Schema by string reference', function () {
-  it('throws if ref not found', function (done) {
-    var s = { jam: {schema: 'woo'} }
-    try {
-      Skematic.validate(s, {jam: 1})
-    } catch (e) {
-      expect(e.message).to.match(/woo/ig)
-      done()
-    }
+describe('Skematic(model [, opts]) model loader', () => {
+  it('preloads model for .format', () => {
+    var s = {default: 'smoo'}
+    var out = Skematic(s).format('')
+    expect(out).to.equal('smoo')
   })
 
-  it('loads in a schemas reference', function () {
-    var s = { jam: {schema: 'woo'} }
-    Skematic.useSchemas({woo: {type: 'string'}})
-    var out = Skematic.validate(s, {jam: 1})
-    expect(out.valid).to.equal(false)
+  it('can preload opts on model for .format', () => {
+    var s = {name: {default: 'ace'}, power: {default: 3}}
+    var out = Skematic(s, {sparse: true}).format({power: undefined})
+    expect(out.power).to.equal(3)
+    expect(out).to.have.keys('power')
+  })
+
+  it('can override preloaded opts on .format', () => {
+    var s = {name: {default: 'ace'}, power: {default: 3}}
+    var out = Skematic(s, {sparse: true}).format({power: undefined}, {sparse: false})
+    expect(out.power).to.equal(3)
+    expect(out).to.have.keys('power', 'name')
+  })
+
+  it('can preload model for .validate', () => {
+    const s = { name: {type: 'string'} }
+    var res = Skematic(s).validate({name: 'Jack'})
+    expect(res).to.have.keys('valid', 'errors')
+  })
+
+  it('can preload opts on model for .validate', () => {
+    var s = {mega: {type: 'string'}, cray: {required: true}}
+    var res = Skematic(s, {sparse: true}).validate({mega: 'kool'})
+    expect(res.valid).to.equal(true)
+  })
+
+  it('can override preloaded opts on .validate', () => {
+    var s = {mega: {type: 'string'}, cray: {required: true}}
+    var res = Skematic(s, {sparse: true}).validate({mega: 'kool'}, {sparse: false})
+    expect(res.valid).to.equal(false)
   })
 })
 
-describe('createFrom', function () {
+describe('createFrom .format(skm)', function () {
   var _s = {name: {default: 'Gir'}, age: {}, power: {}}
 
   it('builds an object to match the Skematic keys', function () {
-    expect(Skematic.createFrom(_s)).to.have.keys('name', 'age', 'power')
+    expect(Skematic.format(_s)).to.have.keys('name', 'age', 'power')
   })
 
   it('sets intial object defaults', function () {
-    expect(Skematic.createFrom(_s).name).to.equal('Gir')
+    expect(Skematic.format(_s).name).to.equal('Gir')
   })
 
   it('runs .format() to execute generators', function () {
     var go = function () { return 'woo!' }
     var s = {shout: {generate: {ops: [go]}}}
-    expect(Skematic.createFrom(s)).to.eql({shout: 'woo!'})
+    expect(Skematic.format(s)).to.eql({shout: 'woo!'})
   })
 
   it('initialises sub-schema fields on objects', function () {
@@ -62,7 +80,7 @@ describe('createFrom', function () {
       name: {type: 'string', default: 'user'}
     }}}
 
-    expect(Skematic.createFrom(s)).to.eql({swee: {tags: [], name: 'user'}})
+    expect(Skematic.format(s)).to.eql({swee: {tags: [], name: 'user'}})
   })
 
   it('intialises sub-schema fields on arrays', function () {
@@ -70,14 +88,6 @@ describe('createFrom', function () {
       name: {type: 'string', default: 'user'}
     }}}
 
-    expect(Skematic.createFrom(s)).to.eql({swee: [{name: 'user'}]})
-  })
-
-  it('loads sub-schema as strings correctly', function () {
-    var moo = {name: {type: 'string', default: 'swee'}}
-    var joop = {meep: {schema: 'moo'}}
-
-    Skematic.useSchemas({moo: moo})
-    expect(Skematic.createFrom(joop)).to.eql({meep: {name: 'swee'}})
+    expect(Skematic.format(s)).to.eql({swee: [{name: 'user'}]})
   })
 })

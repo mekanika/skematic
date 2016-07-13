@@ -9,19 +9,6 @@ const gen = {
 }
 
 describe('.format(skm, opts, data)', function () {
-  // Load in the library of functions
-  before(function () {
-    Skematic.useGenerators({
-      xx: function () { return 'wow' },
-      dbl: function (x) { return x * 2 }
-    })
-  })
-
-  after(function () {
-    // Empty out the library
-    Skematic.useGenerators({})
-  })
-
   it('supports passing 2 args (schema, data)', function () {
     var s = {name: {default: 'ace'}, power: {default: 3}}
     var out = format(s, {})

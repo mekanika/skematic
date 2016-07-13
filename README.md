@@ -58,26 +58,14 @@ To use in a browser:
 > **Compatibility Note:** `Skematic` is written in ES6 but compiled down to ES5 and works across _all modern browsers_ (IE9+, Chrome, Firefox, Safari evergreens).
 > Please note that the ES5 `Object.keys()` method is not supported by IE7 & 8, so to use `Skematic` in these fossil browsers, you'll need to install [es5-shim](https://github.com/es-shims/es5-shim) (and worship Satan :metal:).
 
-## API
-
-> :warning: :construction: **Breaking changes pending in v2.0**
+## Usage
 
 The API surface is small by design, with two **primary methods**:
 
 - **.format**( schema, data [, opts])  - see [Format](#format)
 - **.validate**( schema, data [, opts] )  - see [Validate](#validate)
 
-> Note: Generated API docs can be found in the _npm package_ under `docs/index.html`
-
 A few other **convenience methods** are provided, that mostly encapsulate or expose specific functionality in format or validate:
-
-- **.createFrom**( schema ) - _generate an object from schema definitions_ - see [createFrom](#createfrom) ![status:unstable](https://img.shields.io/badge/status-unstable-orange.svg?style=flat-square)
-
-Optional setup methods:
-
-- **.useGenerators**( fnObj ) - _hash of functions used to generate values_ - see [Format:generate](#generate)
-- **.useSchemas**( schemas )  - _hash of schemas for lookup by string_ - see [Design:sub-schema](#sub-schema)
-
 
 ## Design
 
@@ -106,22 +94,28 @@ Optional setup methods:
 
 ### Simple examples
 
-A data model for a single key/field (eg. `name`):
+A basic data model:
 
 ```js
-const HeroNameField = {
-  type: 'string',
-  default: 'Genericman',
-  transforms: ['toString', 'nowhite'],
-  required: true,
-  rules: {maxLength: 140, minLength: 4},
-  errors: {maxLength: 'Too long', minLength: 'Shorty!'}
+const Hero = {
+  name: {
+    type: 'string',
+    default: 'Genericman',
+    transforms: ['toString', 'nowhite'],
+    required: true,
+    rules: {maxLength: 140, minLength: 4},
+    errors: {maxLength: 'Too long', minLength: 'Shorty!'}
+  }
 }
 
-Skematic.validate(HeroNameField, 'Spiderman')
+// Generate a record by passing null/undefined to `format(Model, null)`
+Skematic.format(Hero)
+// -> {name: 'Genericman'}
+
+Skematic.validate(Hero, {name: 'Spiderman'})
 // -> {valid: true, errors: null}
-Skematic.validate(HeroNameField, 'Moo')
-// -> {valid: false, errors: ['Shorty!']]}
+Skematic.validate(Hero, {name: 'Moo'})
+// -> {valid: false, errors: {name: ['Shorty!']]}}
 ```
 
 Typically you'll create a more complete data model to represent your application objects, with several fields to format and validate:
@@ -136,7 +130,6 @@ Skematic.validate(Hero, {name: 'Spiderman', skill: 15})
 // -> {valid: true, errors: null}
 Skematic.validate(Hero, {name: 'Moo', skill: 'magic'})
 // -> {valid: false, errors: {name: ['Shorty!'], skill: ['Not of type: number']}}
-// (Note: errors is an object when validating objects)
 ```
 
 ### Transforms
@@ -344,27 +337,6 @@ const Hero = {
 };
 ```
 
-#### Generators by string reference - **`useGenerators()`**
-
-You can _optionally_ instruct Skematic to lookup generator functions you've referenced by string, by passing the hash of functions to `useGenerators()`:
-
-```js
-// Load in a keyed function library
-Skematic.useGenerators({
-  magic: function () {
-    // Generates a random string of characters
-    return Math.random().toString(36).substr(2);
-  }
-})
-
-// Reference a generator by STRING: 'magic'
-const SpinModel = {
-  rando: {generate: {ops: [{fn: 'magic'}]}}
-}
-
-Skematic.createFrom(SpinModel)
-// -> {rando: '5wyml04ey1xos9k9'}
-```
 
 ### Sub-schema
 
@@ -388,27 +360,6 @@ const Picture = {
 ```
 
 All the schema validations and checks assigned to the sub-schema (`comments`) will be correctly cast and enforced when the parent (`post`) has any of its validation routines called.
-
-#### Schema by string reference - **`useSchemas()`**
-
-When storing schema data structures as JSON, it can be handy to reference definitions by String (rather than as objects):
-
-```js
-const allMyModels = {
-  Taste: {
-    major: {rules: {exists: ['sweet', 'sour', 'salty', 'other']}},
-    description: {type: 'string'}
-  },
-
-  Jellybean: {
-    // Reference by String
-    taste: {schema: 'Taste'}
-  }
-}
-
-// Tell Skematic to lookup string references on this object
-Skematic.useSchemas(allMyModels)
-```
 
 
 ### primaryKey
@@ -573,7 +524,6 @@ Validate _options_ include:
 - **keyCheckOnly** _{Boolean}_ `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on schema. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
 
 
-
 ## Development
 
 `Skematic` is written in **ES6+**.
@@ -585,6 +535,8 @@ Developing Skemetic requires installing all dependencies:
 Run the tests:
 
     npm test
+
+> Note: Generated API docs can be found in the _npm installed package_ under `docs/index.html`
 
 **Benchmarks:** The `perf/benchmark.js` is simply a check to ensure you haven't destroyed performance: `npm run benchmark`. Skematic runs at several tens of thousands of complex validations per second on basic hardware.
 

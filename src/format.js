@@ -57,7 +57,7 @@ export default format
   format(Model, {name: 'Mo', mydata: 'demo'}, {strict: true})
   // -> {name: 'Mo', created: 1467139049234}
 
-  @param {Schema} skm The schema to format to
+  @param {Schema} model The schema to format to
   @param {Mixed} data The data to format
   @param {Object} opts Options hash
 
@@ -67,14 +67,14 @@ export default format
   @alias format
 */
 
-function format (skm, data, opts = {}) {
-  if (data == null) return createFrom(skm)
+function format (model, data, opts = {}) {
+  if (data == null) return createFrom(model)
 
   // Apply bulk formatters
-  let res = _dive(skm, data, opts)
+  let res = _dive(model, data, opts)
 
   // Map the idField if provided
-  if (opts.mapIdFrom) idMap(skm, res, opts.mapIdFrom)
+  if (opts.mapIdFrom) idMap(model, res, opts.mapIdFrom)
 
   return res
 }
@@ -87,7 +87,7 @@ function format (skm, data, opts = {}) {
   @param {Mixed} nullValue
 
   @return {Object}
-  @memberof Skematic
+  @private
 */
 
 function createFrom (schema, nullValue) {

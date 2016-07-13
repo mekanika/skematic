@@ -2,131 +2,29 @@
 /**
   Data structure and rule validation engine
   @module Skematic
+
+  @example
+  import Skematic from 'skematic'
 */
 
-/**
-  Import type checker
-  @ignore
-*/
+const format = require('./format')
+const validate = require('./validate').validate
 
-import is from './is'
-
-/**
-  Import default setter
-  @ignore
-*/
-
-import setDefault from './default'
-
-/**
-  Internal reference for Schemas (if any)
-  (Used for 'string' lookups of schema)
-  @private
-*/
-
-let _schemas = {}
-
-/**
-  Internal method for other modules to access any loaded Schemas above
-  @param {String} ref The string reference to lookup
-  @throws {Error} if no reference found
-  @return {Schema}
-  @private
-*/
-
-function _getSchema (ref) {
-  let ret = _schemas[ref]
-  if (!ret) throw new Error('No schema found for: ' + ref)
-  return ret
-}
-
-/**
-  Loads a hash of schemas to use for lookups by string.
-
-  Used when presented with subschema string references that are not resolved,
-  but referenced by a string. These methods lookup references on an obj:
-
-  ```js
-  var schemas = {
-    name: {type:'string'},
-    age: {type:'number'} // etc.
-  }
-  ```
-
-  @param {Object} s Hash of schemas
-  @memberof Skematic
-*/
-
-function useSchemas (s) {
-  _schemas = s
-}
-
-/**
-  Returns an object built on ALL values present in the schema, set to defaults
-  and having been run through `.format()` with default flags.
-
-  @param {Schema} schema To initialise object
-  @param {Mixed} nullValue
-
-  @return {Object}
-  @memberof Skematic
-*/
-
-function createFrom (schema, nullValue) {
-  let o = {}
-
-  if (!schema) return o
-  if (is.string(schema)) schema = exports._getSchema(schema)
-
-  for (let k in schema) {
-    if (!schema.hasOwnProperty(k)) continue
-    o[k] = setDefault(nullValue, schema[k])
-    // Ensure undefined type:'array' is set to [] (unless overridden)
-    if (schema[k].type === 'array' && o[k] === nullValue) o[k] = []
-
-    // Setup the models for any defined sub-schema on OBJECT types
-    if (schema[k].schema) {
-      // Only apply to objects or assume 'object' if type not defined
-      if (!schema[k].type || schema[k].type === 'object') {
-        o[k] = createFrom(schema[k].schema)
-      }
+function Skematic (model, opts = {}) {
+  return {
+    format: (data, o2) => {
+      const conf = o2 ? Object.assign({}, opts, o2) : opts
+      return format(model, data, conf)
+    },
+    validate: (data, o2) => {
+      const conf = o2 ? Object.assign({}, opts, o2) : opts
+      return validate(model, data, conf)
     }
   }
-
-  // Now format the new object
-  o = format(schema, {once: true}, o)
-
-  return o
 }
 
-/**
-  Expose loading library of functions for compute
-  @ignore
-*/
+Skematic.format = format
+Skematic.validate = validate
 
-import {useGenerators} from './compute'
 
-/**
-  Expose validation surface
-  @ignore
-*/
-
-import {validate} from './validate'
-
-/**
-  Expose format surface
-  @ignore
-*/
-
-import format from './format'
-
-// Export the library
-export {
-  _schemas as models,
-  _getSchema,
-  createFrom,
-  format,
-  useGenerators,
-  useSchemas,
-  validate
-}
+module.exports = Skematic

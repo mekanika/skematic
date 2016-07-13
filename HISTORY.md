@@ -26,6 +26,8 @@ Removed:
 
 - `copy` format option (immutable by default now)
 - `$dynamic` keys support because YAGNI. Explicit keys only.
+- `useGenerators` and `useSchemas` "by string" loaders
+- `createFrom` API method (now part of `format()`)
 
 Internal:
 
