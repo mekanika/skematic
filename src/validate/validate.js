@@ -4,10 +4,10 @@
   @ignore
 */
 
-import is from './is'
-import {_getSchema as getSchema} from './api'
-import * as Rules from './rules'
-import setDefault from './default'
+import is from '../is'
+import * as Rules from '../rules'
+import setDefault from '../default'
+import checkValue from './checkValue'
 
 /**
   Expose the module
@@ -97,113 +97,6 @@ function _checkKeys (schema, data) {
 }
 
 /**
-  Creates an Error message to be returned to caller. Defaults to a basic
-  error message, that can get overridden by `schema.errors`
-
-  @param {Object} schema The schema related to this error
-  @param {String} key The field on the schema that has errored
-  @param {Array} errs An array of existing errors
-
-  @return {Array} Copy of new errors array
-  @private
-*/
-
-const setError = (schema, key, errs) => {
-  let msg = `Failed: ${key}`
-  let errCopy = errs.slice()
-
-  // Attempt to override default message if `.errors` config provided on schema
-  if (schema.errors) {
-    if (is.string(schema.errors)) msg = schema.errors
-    else if (schema.errors[key]) msg = schema.errors[key]
-    else if (schema.errors.default) msg = schema.errors.default
-  }
-
-  errCopy.push(msg)
-  return errCopy
-}
-
-/**
-  Checks a value against the rules defined in `schema`
-
-  Does **NOT** apply rules to undefined values that are not `required`
-
-  @param {Mixed} val The value to test
-  @param {Object} schema The schema to apply the tests against
-
-  @return {Array} errors
-  @private
-*/
-
-function checkValue (val, schema) {
-  let errs = []
-  if (!schema) return []
-
-  //  1. Check null value status
-  //
-  //           required | req & allowNull | allowNull | !allowNull
-  // undefined   fail          fail            pass        fail
-  //      null   fail          pass            pass        fail
-
-  // Disallow NOT NULL values
-  // Note: '==' equality matches `null` AND `undefined`
-  if (val == null && schema.allowNull === false) {
-    errs = setError(schema, 'required', errs)
-    return setError(schema, 'allowNull', errs)
-  }
-
-  // Don't validate `null/undefined` values if not required
-  if (val == null && !schema.required) return []
-
-  // Allow NULL values (no validations run)
-  if (val === null && schema.allowNull) return []
-
-  // Bail out if required is present and fails
-  // (It's not useful to run the other validations otherwise)
-  if (!Rules.required(val) && schema.required) {
-    return setError(schema, 'required', errs)
-  }
-
-  // 2. Check type match
-  // The value type matches its declaration (if any)
-  if (schema.type) {
-    if (!is[schema.type]) {
-      console.warn('[Skematic] Skipping validating unknown type', schema.type)
-    } else if (!is.undefined(val) && !is[ schema.type ](val)) {
-      return [`Not of type: ${schema.type}`]
-    }
-  }
-
-  // 3. Validate rules
-  for (let key in schema.rules) {
-    if (!schema.rules.hasOwnProperty(key)) continue
-
-    // Build parameters to pass to rule
-    let params = schema.rules[key]
-    if (!(params instanceof Array)) params = [params]
-    params.unshift(val)
-
-    // Check that the rule exists to run against
-    if (!Rules[key]) {
-      errs.push(`Unknown rule: ${key}`)
-      continue
-    }
-
-    // Run defensive validation
-    try {
-      var isValid = Rules[key].apply(this, params)
-    } catch (e) {
-      isValid = false
-    }
-
-    if (!isValid) errs = setError(schema, key, errs)
-  }
-
-  // Return errors
-  return errs
-}
-
-/**
   Internal method that handles the validation of arbitrary `data`.
 
   @param {Mixed} data Either a scalar, array or object to validate
@@ -215,7 +108,6 @@ function checkValue (val, schema) {
 
 function _validate (data, schema) {
   let errs = {}
-  let isValid = true
 
   // Validate scalars
   if (!is.object(data)) {
@@ -225,10 +117,9 @@ function _validate (data, schema) {
       : {valid: true, errors: null}
   }
 
-  let step = schema
   // Step through ONLY our schema keys
   // (Note: sparse validation of known keys happens in `_sparse()`)
-  for (let key in step) {
+  for (let key in schema) {
     // Shorthand schema model reference
     let scm = schema[key]
     // Only handle own properties
@@ -244,24 +135,16 @@ function _validate (data, schema) {
 
     // Recursively Validate sub-schema
     if (scm.schema) {
-      // Load a string referenced model from an accessor (expects a SCHEMA)
-      if (typeof scm.schema === 'string') scm.schema = getSchema(scm.schema)
-
       // Arrays can be either raw 'values' or complex 'objects'
       if (scm.type === 'array' || v instanceof Array) {
         // Don't attampt to process 'v' if it's not set
         if (!v) continue
 
-        // Step through the values in the array
-        for (let i = 0; i < v.length; i++) {
-          let val = v[i]
-          let idx = i
-
+        v.forEach((val, idx) => {
           // Array of complex objects
           if (is.type(val) === 'object') {
             let arsub = _validate(val, scm.schema)
             if (!arsub.valid) {
-              isValid = false
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = arsub.errors
             }
@@ -269,28 +152,21 @@ function _validate (data, schema) {
             // Array of simple types
             let er = checkValue(val, scm.schema)
             if (er.length) {
-              isValid = false
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = er
             }
           }
-        }
+        })
       } else {
         // Otherwise just assume it's an object
         let sub = _validate(v, scm.schema)
-        if (!sub.valid) {
-          isValid = false
-          errs[key] = sub.errors
-        }
+        if (!sub.valid) errs[key] = sub.errors
       }
 
       // Otherwise NO sub-schema: test the value directly
     } else {
       let errors = checkValue(v, scm)
-      if (errors.length) {
-        isValid = false
-        errs[key] = errors
-      }
+      if (errors.length) errs[key] = errors
     }
   }
 
@@ -298,7 +174,7 @@ function _validate (data, schema) {
   if (Object.keys(errs).length < 1) errs = null
 
   return {
-    valid: isValid,
+    valid: !errs,
     errors: errs
   }
 }
