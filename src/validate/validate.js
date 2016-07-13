@@ -150,7 +150,7 @@ function _validate (data, schema) {
             }
           } else {
             // Array of simple types
-            let er = checkValue(val, scm.schema)
+            let er = checkValue(val, scm.schema, data)
             if (er.length) {
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = er
@@ -165,7 +165,7 @@ function _validate (data, schema) {
 
       // Otherwise NO sub-schema: test the value directly
     } else {
-      let errors = checkValue(v, scm)
+      let errors = checkValue(v, scm, data)
       if (errors.length) errs[key] = errors
     }
   }

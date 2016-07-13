@@ -47,6 +47,28 @@ describe('Validate', function () {
     expect(Skematic.validate(s, '1234').errors).to.be.an.instanceof(Array)
   })
 
+  describe('Custom rules', () => {
+    it('are declared by providing a rule key a function ()', () => {
+      const s = {name: {rules: {wooCheck: (val) => {
+        return val === 'woo'
+      }}}}
+
+      expect(validate(s, {name: 'zim'}).valid).to.equal(false)
+      expect(validate(s, {name: 'zim'}).errors.name).to.match(/wooCheck/)
+      expect(validate(s, {name: 'woo'}).valid).to.equal(true)
+    })
+
+    it('can access parent data via this.<key>', () => {
+      const s = {name: {rules: {woo10: function (val) {
+        return this.age >= 10 && val === 'woo'
+      }}}}
+
+      expect(validate(s, {name: 'woo'}).valid).to.equal(false)
+      expect(validate(s, {name: 'woo', age: 5}).valid).to.equal(false)
+      expect(validate(s, {name: 'woo', age: 10}).valid).to.equal(true)
+    })
+  })
+
   describe('subschema', function () {
     describe('string reference', function () {
       it('accessor can return working schema', function () {

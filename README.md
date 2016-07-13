@@ -98,12 +98,10 @@ Optional setup methods:
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
 - **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
-- [**rules**](#rules) _{Object}_ hash of validation rules: `{ rules: {min:3, max:11} }`
+- [**rules**](#rules) _{Object}_ hash of validation rules: `{rules: {min: 3, max: 11}}`
 - [**errors**](#custom-error-messages) _{Object|String}_ hash of error messages for rules
 - [**schema**](#sub-schema) _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
 - [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
-
-> Note: As you can see, keys that can contain many values are always plural, eg. `transforms`, `rules`, etc. Keys that only contain one value or item are always singular, eg. `default`, `required`, `schema`, etc.
 
 
 ### Simple examples
@@ -184,6 +182,14 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.notMatch** - String must NOT match regexp
 - **.empty** - `true` checks the value is empty, `false` checks it's not
 
+**Custom rules** can be applied by providing your own validation functions that accept a `value` to test and return a `Boolean` (pass/fail).
+
+> Note: The `required` rule has a special shorthand to declare it directly on the schema:
+>
+> ```js
+> const modelProp = {default: 'Boom!', required: true}
+> ```
+
 Declare `rules` key as follows:
 
 ```js
@@ -193,15 +199,43 @@ const User = {
   }
 }
 
-Skematic.validate(User.name, 'Zim')
-// -> {valid: false, errors: ['Failed: minLength']}
+Skematic.validate(User, {name: 'Zim'})
+// -> {valid: false, errors: {name: ['Failed: minLength']}}
+
+Skematic.validate(User, {name: 'Bunnylord'})
+// -> {valid: true, errors: null}
 ```
 
-> Note: The `required` rule has a special shorthand to declare it directly on the schema:
->
-> ```js
-> const model = {type: 'string', required: true}
-> ```
+You can mix in **Custom rules** that have access to the rest of the data model via `this`. For example:
+
+```js
+const User = {
+  name: {
+    rules: {
+      // A built in validation
+      minLength: 5,
+      // Your own custom validator (accepts `value` to test, returns Boolean)
+      onlyFastBunnylord: function myCustomCheck (value) {
+        // See us access the `speed` prop in our check:
+        return value === 'Bunnylord' && this.speed > 5
+      }
+    }
+  }
+  speed: {default: 5}
+}
+
+// Wrong name
+Skematic.validate(User, {name: 'Zim', speed: 10})
+// -> {valid: false, errors: {name: ['Failed: minLength', 'Failed: onlyFastBunnylord']}}
+
+// Too slow!
+Skematic.validate(User, {name: 'Bunnylord', speed: 3})
+// -> {valid: false, errors: {name: ['Failed: onlyFastBunnylord']}}
+
+Skematic.validate(User, {name: 'Bunnylord', speed: 10})
+// -> {vaid: true, errors: null}
+```
+
 
 ### Custom **error** messages
 
@@ -237,6 +271,9 @@ Skematic.validate(User.name, 'Zim')
 Skematic.validate(User, {name:'Zim'})
 // -> {valid:false, errors:{name:['Name too short!']}}
 ```
+
+> Note: You can create error messages for custom rules too. Just use the same key you used to define the custom rule.
+> `{rules: {myCustom: val => false}, errors: {myCustom: 'Always fails!'}}`
 
 Rules can be combined, and you can declare a string message on errors to apply to any and all errors:
 
