@@ -9,7 +9,7 @@ const gen = {
 }
 
 describe('.format(skm, opts, data)', function () {
-  it('supports passing 2 args (schema, data)', function () {
+  it('supports passing 2 args (model, data)', function () {
     var s = {name: {default: 'ace'}, power: {default: 3}}
     var out = format(s, {})
     expect(out.name).to.equal('ace')
@@ -143,10 +143,10 @@ describe('.format(skm, opts, data)', function () {
     expect(out[0]).to.not.include.key('_id')
   })
 
-  it('`strict` strips fields not declared on schema', function () {
+  it('`strict` strips fields not declared on model', function () {
     var scm = {
       name: {type: 'string'},
-      tags: {type: 'array', schema: {label: {}}}
+      tags: {type: 'array', model: {label: {}}}
     }
     var data = {woot: '1', name: 'yo', tags: [{whatever: 1, label: 'moo'}]}
 
@@ -155,12 +155,12 @@ describe('.format(skm, opts, data)', function () {
     expect(out.tags[0]).to.have.key('label')
   })
 
-  describe('sub-schema', function () {
-    it('applies format to embedded schema objects', function () {
+  describe('sub-model', function () {
+    it('applies format to embedded model objects', function () {
       var s = {
         face: {default: 'smoo'},
         person: {
-          schema: {
+          model: {
             name: {default: 'Zim'},
             age: {generate: {ops: [{fn: gen.dbl, args: [5]}]}},
             phrase: {transforms: ['uppercase']}
@@ -185,7 +185,7 @@ describe('.format(skm, opts, data)', function () {
       var s = {
         field: {
           type: 'array',
-          schema: {
+          model: {
             default: 'moo',
             generate: {ops: [{fn: gen.xx}]},
             transforms: ['uppercase']
@@ -206,7 +206,7 @@ describe('.format(skm, opts, data)', function () {
       var s = {
         zeep: {
           type: 'array',
-          schema: {
+          model: {
             default: 'moo',
             generate: {ops: [{fn: gen.xx}]},
             transforms: ['uppercase']
@@ -225,9 +225,9 @@ describe('.format(skm, opts, data)', function () {
       expect(out.moo).to.eql([])
     })
 
-    it('applies schema to objects in arrays', function () {
+    it('applies model to objects in arrays', function () {
       var demo = {
-        field: {type: 'array', schema: {
+        field: {type: 'array', model: {
           boom: {default: '!', required: true}
         }}
       }

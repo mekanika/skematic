@@ -1,5 +1,5 @@
 
-2.0.0-alpha UNRELEASED
+2.0.0-rc.1 UNRELEASED
 ======
 
 **MAJOR BREAKING CHANGES**
@@ -8,7 +8,7 @@ Added:
 
 - `allowNull` model definition (enables NOT NULL)
 - `protect` model definition (prevent user supplying values)
-- `keyCheckOnly` validation option to check user keys are all set on schema
+- `keyCheckOnly` validation option to check user keys are all set on model
 - Custom rules with access to whole model data via `this.<field>`
 - Plugins:
   - `toReactShape()` Maps a model to React.PropTypes.shape()
@@ -21,6 +21,7 @@ Changed:
 - Rules 'present', 'notPresent' renamed to 'oneOf', 'notOneOf'
 - Typecast to Date returns ISO 8601 Date '2000-01-01T00:00:00.000Z'
 - Generate values 'once' uses new `once:<Boolean>` flag NOT `{generate: 'once'}`
+- #28 Rename `schema` references to `model`
 
 Removed:
 

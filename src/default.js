@@ -10,18 +10,18 @@ import is from './is'
 /**
   Sets a default value if specified on empty fields
 
-  Supports passing an object and complex schema.
+  Supports passing an object and complex model.
 
   @param {Mixed} v The value or object to default
-  @param {Schema} schema The associated schema to check the default value on
+  @param {Model} model The associated model to check the default value on
 
   @return Value or the default value
   @memberof Format
   @alias setDefault
 */
 
-export default function (v, schema) {
-  if (!schema) return v
+export default function (v, model) {
+  if (!model) return v
 
   const def = function (v, s) {
     // No default, return the value as is
@@ -33,12 +33,12 @@ export default function (v, schema) {
 
   // Parse objects
   if (v && typeof v === 'object') {
-    for (var k in schema) {
-      if (!is.undefined(schema[k].default)) v[k] = def(v[k], schema[k])
+    for (var k in model) {
+      if (!is.undefined(model[k].default)) v[k] = def(v[k], model[k])
     }
 
     return v
 
   // Or simply return defaulted scalars
-  } else return def(v, schema)
+  } else return def(v, model)
 }

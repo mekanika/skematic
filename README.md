@@ -1,14 +1,13 @@
 # Skematic
 
-**Data structure** and **rule validation** engine. Robust schema for JS objects.
+**Data structure** and **rule validation** engine. Robust model schema for JS objects.
 
 
-[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic)
-
+[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic) [![Travis](https://img.shields.io/travis/mekanika/skematic.svg?style=flat-square)]()
 
 > :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
-Universal, ultra fast and lightweight (5Kb!), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config objects, for browser and Node.js.
+Universal, ultra fast and lightweight (5Kb!), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config models, for browser and Node.js.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
@@ -62,8 +61,8 @@ To use in a browser:
 
 The API surface is small by design, with two **primary methods**:
 
-- **.format**( schema, data [, opts])  - see [Format](#format)
-- **.validate**( schema, data [, opts] )  - see [Validate](#validate)
+- **.format**( model, data [, opts])  - see [Format](#format)
+- **.validate**( model, data [, opts] )  - see [Validate](#validate)
 
 A few other **convenience methods** are provided, that mostly encapsulate or expose specific functionality in format or validate:
 
@@ -177,7 +176,7 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 
 **Custom rules** can be applied by providing your own validation functions that accept a `value` to test and return a `Boolean` (pass/fail).
 
-> Note: The `required` rule has a special shorthand to declare it directly on the schema:
+> Note: The `required` rule has a special shorthand to declare it directly on the model:
 >
 > ```js
 > const modelProp = {default: 'Boom!', required: true}
@@ -340,7 +339,7 @@ const Hero = {
 
 ### Sub-schema
 
-A property can be formatted to another schema (essentially, a complex object), or array of schema.
+A property can be formatted to another model (essentially, a complex object), or array of models.
 
 ```js
 // A "post" would have comments made up of `owner_id, body`
@@ -359,12 +358,12 @@ const Picture = {
 }
 ```
 
-All the schema validations and checks assigned to the sub-schema (`comments`) will be correctly cast and enforced when the parent (`post`) has any of its validation routines called.
+All the model validations and checks assigned to the sub-schema (`comments`) will be correctly cast and enforced when the parent (`post`) has any of its validation routines called.
 
 
 ### primaryKey
 
-A schema can declare any **one** of its fields as the **primary key** (the id field) to be used for its data objects. This can be used in conjunction with `Skematic.format()` in order to _modify_ an incoming data collection and map a pre-existing id field (say for example "_id") to the `primaryKey`.
+A model can declare any **one** of its fields as the **primary key** (the id field) to be used for its data objects. This can be used in conjunction with `Skematic.format()` in order to _modify_ an incoming data collection and map a pre-existing id field (say for example "_id") to the `primaryKey`.
 
 This is useful for data stores that use their own id fields (eg. MongoDB uses '_id').
 
@@ -381,26 +380,26 @@ Skematic.format(propSchema, {mapIdFrom: '_id'}, data)
 // -> [{prop_id: '512314', name: 'power'}, {prop_id: '519910', name: 'speed'}]
 ```
 
-> Note: Your data store might automatically use a particular field name for its identifying purposes (usually `"id"`). If you **know** you're using a datastore that defaults its id field to a given key, you can simply reuse this field name in your schema. Specifying `primaryKey` is simply a way to _force_ data models into using a given key. ([Adapters](https://github.com/mekanika/adapter) will use this information to map their usual id field onto your primary key)
+> Note: Your data store might automatically use a particular field name for its identifying purposes (usually `"id"`). If you **know** you're using a datastore that defaults its id field to a given key, you can simply reuse this field name in your model. Specifying `primaryKey` is simply a way to _force_ data models into using a given key. ([Adapters](https://github.com/mekanika/adapter) will use this information to map their usual id field onto your primary key)
 
 
 
 ## Format
 
-Format creates and returns a conformed data model based on the schema and input data provided.
+Format creates and returns a conformed data structure based on the model and input data provided.
 
 > Side-effect free, format never mutates data
 
 ```js
-Skematic.format(schema [, data] [, opts])
+Skematic.format(model [, data] [, opts])
 // -> {formattedData}
 ```
 
-**Special case**: Passing format no data will cause format to **create** blank model based on your schema, including defaults and generated fields. You can pass options too, as follows: `format(schema, null, {defaults: false})`
+**Special case**: Passing format no data will cause format to **create** blank model based on your model, including defaults and generated fields. You can pass options too, as follows: `format(model, null, {defaults: false})`
 
 Parameters:
 
-- **schema**: The schema to format against
+- **model**: The model to format against
 - **data**: The data object to format
 - **opts**: _[Optional]_ options hash (see below)
 
@@ -415,19 +414,19 @@ Format _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
-- **strict** - _{Boolean}_ - `false` Strips any fields not declared on schema
-- **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire schema
+- **strict** - _{Boolean}_ - `false` Strips any fields not declared on model
+- **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value - see [Design:generate](#generate)
 - **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
 - **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
 - **protect** - _{Boolean}_ - `false`: Disables protected model fields (ie. allows overwriting them). Use carefully.
 - **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
-- **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the schema)
+- **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the model)
 
 Format applies these options in significant order:
 
-1. `sparse`: Only processes keys on the provided data (not the whole schema)
+1. `sparse`: Only processes keys on the provided data (not the whole model)
 2. `defaults`: Apply default values
 3. `generate`: Compute and apply generated values
 4. `transform`: Run transform functions on values
@@ -449,7 +448,7 @@ const myModel = {
 let out = Skematic.format(myModel, {}, {generate: 'once'})
 // -> {rando: 0.24123545, power: 5, name: 'ZIM'}
 
-out = Skematic.format(myModel, {}) // (schema, data)
+out = Skematic.format(myModel, {}) // (model, data)
 // -> {power: 5, name: 'ZIM}
 
 out = Skematic.format(myModel, {}, {defaults: false})
@@ -467,16 +466,16 @@ out = Skematic.format(myModel, {_id: '12345'}, {mapIdFrom: '_id'})
 
 ## Validate
 
-Validation applies any [rules](#rules) specified in the `schema` fields to the provided `data` and returns an object `{valid, errors}`:
+Validation applies any [rules](#rules) specified in the `model` fields to the provided `data` and returns an object `{valid, errors}`:
 
 ```js
-Skematic.validate(schema, data [, opts])
+Skematic.validate(model, data [, opts])
 // -> {valid: <Boolean>, errors: {$key: [errors<String>]} | null}
 ```
 
 Parameters:
 
-- **schema**: The schema to validate against
+- **model**: The model to validate against
 - **data**: The data object to validate
 - **opts**: _[Optional]_ options hash (see below)
 
@@ -497,8 +496,8 @@ Validate _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
-- **sparse** _{Boolean}_ `false`: Only process fields on the provided data, rather than all fields on the entire schema
-- **keyCheckOnly** _{Boolean}_ `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on schema. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
+- **sparse** _{Boolean}_ `false`: Only process fields on the provided data, rather than all fields on the entire model
+- **keyCheckOnly** _{Boolean}_ `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on model. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
 
 
 ## Development
@@ -513,7 +512,7 @@ Run the tests:
 
     npm test
 
-> Note: Generated API docs can be found in the _npm installed package_ under `docs/index.html`
+> Note: Generated API docs can be found in the _npm installed package_ under `docs/index.html`. Otherwise generate them using `npm run docs`
 
 **Benchmarks:** The `perf/benchmark.js` is simply a check to ensure you haven't destroyed performance: `npm run benchmark`. Skematic runs at several tens of thousands of complex validations per second on basic hardware.
 

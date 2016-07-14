@@ -8,7 +8,7 @@ import is from './is'
   "val" has been _provided_ as far as the generator flags are concerned. In
   general, DO NOT pass `val` if the value does not exist on your data object.
 
-  @param {Schema} skm
+  @param {Model} model
   @param {Object} opts Options hash. Only contains `once` flag.
   @param {Mixed} [val] Optional value to pass. If passed assumed `provided`.
 
@@ -18,11 +18,11 @@ import is from './is'
   @ignore
 */
 
-function canCompute (skm, opts = {}, val) {
-  if (!skm || !skm.generate) return false
+function canCompute (model, opts = {}, val) {
+  if (!model || !model.generate) return false
 
   // Shorthand
-  const gen = skm.generate
+  const gen = model.generate
 
   const runOnce = opts ? opts.once : false
 
@@ -52,7 +52,7 @@ function canCompute (skm, opts = {}, val) {
   Used directly by 'format' to enable single pass data modification, rather
   than having to run 2 passes (one for computeAll, one for format).
 
-  Checks whether compute is valid (ie. should run) for this schema, and either
+  Checks whether compute is valid (ie. should run) for this model, and either
   returns the computed value or the passed value.
 
   Flags for processing generate configuration:
@@ -61,7 +61,7 @@ function canCompute (skm, opts = {}, val) {
   - require: Regenerate ONLY WHEN a key is provided (ie. require a provided key)
   - once: Only run if 'computeValue' is passed `{once:true}`
 
-  @param {Schema} skm
+  @param {Model} model
   @param {Object} opts Options hash. Only contains `once` flag.
   @param {Mixed} [val] Optional value to pass
 
@@ -70,9 +70,9 @@ function canCompute (skm, opts = {}, val) {
   @memberof Format
 */
 
-function computeValue (skm, opts = {}, val) {
+function computeValue (model, opts = {}, val) {
   const provided = arguments.length > 2
-  const args = [skm.generate, opts ? opts.once : false]
+  const args = [model.generate, opts ? opts.once : false]
   if (provided) args.push(val)
 
   // Check that we can compute and either:

@@ -26,7 +26,7 @@ describe('Computed value generator', function () {
     expect(format(s, {}).name).to.equal('hello')
   })
 
-  it('generates a value from a named function in schema def', function () {
+  it('generates a value from a named function in model def', function () {
     var s = {name: {
       generate: {ops: [{fn: fnLib.run}]}}
     }
@@ -34,7 +34,7 @@ describe('Computed value generator', function () {
     expect(format(s, {}).name).to.equal('yes')
   })
 
-  it('supports declaring a single fn in schema', function () {
+  it('supports declaring a single fn in model', function () {
     expect(format(sc, {}).name).to.equal('yes')
   })
 

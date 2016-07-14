@@ -69,11 +69,11 @@ describe('Validate', function () {
     })
   })
 
-  describe('subschema', function () {
+  describe('submodel', function () {
     describe('string reference', function () {
-      it('accessor can return working schema', function () {
+      it('accessor can return working model', function () {
         var hero = {name: {type: 'string'}, power: {type: 'integer'}}
-        var s = {group: {type: 'array', schema: hero}}
+        var s = {group: {type: 'array', model: hero}}
         var res = Skematic.validate(s, {group: [{name: 'gir', power: '3'}]})
         expect(res.valid).to.be.false
         expect(res.errors.group[0].power).to.have.length(1)
@@ -81,8 +81,8 @@ describe('Validate', function () {
     })
 
     describe('objects', function () {
-      it('can validate complex subschema', function () {
-        var s = { bigsub: {schema: {
+      it('can validate complex submodel', function () {
+        var s = { bigsub: {model: {
           top: {type: 'integer'},
           cool: {type: 'string'}}
         }}
@@ -96,16 +96,16 @@ describe('Validate', function () {
       it('can recursively validate', function () {
         var s = {
           name: {type: 'string'},
-          address: { schema: {
-            street: {schema: {
+          address: { model: {
+            street: {model: {
               number: {type: 'integer', required: true},
               name: {type: 'string', rules: {maxLength: 5}}
             }},
             city: {type: 'string', required: true},
             zipcode: {type: 'integer', required: true}
           }},
-          tags: { type: 'array', schema: {type: 'string'} },
-          books: {type: 'array', schema: {
+          tags: { type: 'array', model: {type: 'string'} },
+          books: {type: 'array', model: {
             title: {type: 'string'},
             author: {type: 'string'}
           }}
@@ -135,7 +135,7 @@ describe('Validate', function () {
 
     describe('arrays', function () {
       it('index errors', function () {
-        var s = {gir: {schema: {type: 'string'}}}
+        var s = {gir: {model: {type: 'string'}}}
         var res = Skematic.validate(s, {gir: ['a', 'b', 4]})
 
         expect(res.valid).to.be.false
@@ -144,7 +144,7 @@ describe('Validate', function () {
       })
 
       it('detects array values without declaring type:array', function () {
-        var s = {gir: {schema: {type: 'string', filters: ['toString']}}}
+        var s = {gir: {model: {type: 'string', filters: ['toString']}}}
 
         var data = {gir: ['a', 'b', '4']}
 
@@ -156,7 +156,7 @@ describe('Validate', function () {
       })
 
       it('of simple (primitive) types', function () {
-        var s = {gir: {type: 'array', schema: {type: 'string', filters: ['toString']}}}
+        var s = {gir: {type: 'array', model: {type: 'string', filters: ['toString']}}}
         var res = Skematic.validate(s, {gir: ['a', 'b', '4']})
 
         expect(res.valid).to.be.true
@@ -164,7 +164,7 @@ describe('Validate', function () {
 
       it('of complex objects/models', function () {
         var s = {
-          gir: {schema: {
+          gir: {model: {
             age: {type: 'integer'},
             says: {type: 'string'}
           }}
@@ -175,9 +175,9 @@ describe('Validate', function () {
         expect(res.errors.gir['1'].says).to.have.length(1)
       })
 
-      it('skips undefined arrays that have a schema AND a default', function () {
+      it('skips undefined arrays that have a model AND a default', function () {
         var rec = {mega: 'kool'}
-        var s = {jam: {type: 'array', default: ['moo'], schema: {type: 'string'}}}
+        var s = {jam: {type: 'array', default: ['moo'], model: {type: 'string'}}}
         var res = Skematic.validate(s, rec)
         expect(res.valid).to.be.ok
       })
@@ -185,7 +185,7 @@ describe('Validate', function () {
   })
 
   describe('{keyCheckOnly: true}', () => {
-    it('only checks data keys exist on schema', () => {
+    it('only checks data keys exist on model', () => {
       const s = {name: {default: 'hi'}}
       expect(validate(s, {name: 1}, {keyCheckOnly: true}).valid).to.equal(true)
       const out = validate(s, {name: 1, x: 1}, {keyCheckOnly: true})
@@ -194,7 +194,7 @@ describe('Validate', function () {
   })
 
   describe('{sparse: true} Sparse validate', function () {
-    it('only validates data object fields (not schema)', function () {
+    it('only validates data object fields (not model)', function () {
       var rec = {mega: 'kool'}
       var s = {mega: {type: 'string'}, cray: {required: true}}
 
@@ -204,7 +204,7 @@ describe('Validate', function () {
   })
 })
 
-describe('checkValue(val, schema)', function () {
+describe('checkValue(val, model)', function () {
   it('returns an array of string errors', function () {
     expect(checkValue).to.be.an.instanceof(Function)
     expect(checkValue('abc')).to.have.length(0)
@@ -212,7 +212,7 @@ describe('checkValue(val, schema)', function () {
     expect(checkValue(1, {type: 'string'})[0]).to.be.a('string')
   })
 
-  it('returns empty array if no schema provided', function () {
+  it('returns empty array if no model provided', function () {
     expect(checkValue('abc')).to.have.length(0)
   })
 
@@ -268,7 +268,7 @@ describe('checkValue(val, schema)', function () {
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
 
-    it('can set default error message for schema', function () {
+    it('can set default error message for model', function () {
       var s = {rules: {oneOf: ['a']}, errors: {default: 'Hotdog!'}}
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })

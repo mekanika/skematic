@@ -17,11 +17,11 @@ import checkValue from './checkValue'
 export {validate, checkValue}
 
 /**
-  Validates `data` against a schema's rules.
+  Validates `data` against a model's rules.
 
   If passed "opts" `{sparse:true}`, validation is only run on the fields in
   the data objected provided. Default is `false`, so validation is run on
-  all fields in the provided `schema`
+  all fields in the provided `model`
 
   Returns:
 
@@ -36,14 +36,14 @@ export {validate, checkValue}
   Example:
 
   ```
-  schema.validate({type:'string'}, '1')
+  validate({type:'string'}, '1')
   // -> {valid:true, errors:[]}
 
-  schema.validate({name:{type:'string'}}, {name:'Zim'})
+  validate({name:{type:'string'}}, {name:'Zim'})
   // -> {valid: true, errors:{}}
   ```
 
-  @param {Schema} schema The data structure rules used for validation
+  @param {Model} model The data structure rules used for validation
   @param {Object} [opts] Optional options `{sparse:true}` to only parse data keys
   @param {Object|Mixed} data The data item to validate
 
@@ -53,23 +53,23 @@ export {validate, checkValue}
   @alias validate
 */
 
-function validate (schema, data, opts = {}) {
-  if (opts.keyCheckOnly) return _checkKeys(schema, data)
-  else if (opts.sparse) return _sparse(data, schema)
-  else return _validate(data, schema)
+function validate (model, data, opts = {}) {
+  if (opts.keyCheckOnly) return _checkKeys(model, data)
+  else if (opts.sparse) return _sparse(data, model)
+  else return _validate(data, model)
 }
 
 /**
   Checks that the keys on the data object
 
-  @param {Schema} schema The data structure rules used for validation
+  @param {Model} model The data structure rules used for validation
   @param {Object|Mixed} data The data item to validate
 
   @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
   @private
 */
 
-function _checkKeys (schema, data) {
+function _checkKeys (model, data) {
   let ret = {
     valid: true,
     errors: {}
@@ -81,7 +81,7 @@ function _checkKeys (schema, data) {
 
   const MAX_USER_KEY_LEN = 16
   for (let key in data) {
-    if (!schema[key]) {
+    if (!model[key]) {
       ret.valid = false
 
       // Sanitize user keylength
@@ -100,28 +100,28 @@ function _checkKeys (schema, data) {
   Internal method that handles the validation of arbitrary `data`.
 
   @param {Mixed} data Either a scalar, array or object to validate
-  @param {Schema} schema The data structure to use for validation rules
+  @param {Model} model The data structure to use for validation rules
 
   @return {Object} `{valid:bool, errors:hash|array}`
   @private
 */
 
-function _validate (data, schema) {
+function _validate (data, model) {
   let errs = {}
 
   // Validate scalars
   if (!is.object(data)) {
-    let res = checkValue(data, schema)
+    let res = checkValue(data, model)
     return res.length
       ? {valid: false, errors: res}
       : {valid: true, errors: null}
   }
 
-  // Step through ONLY our schema keys
+  // Step through ONLY our model keys
   // (Note: sparse validation of known keys happens in `_sparse()`)
-  for (let key in schema) {
-    // Shorthand schema model reference
-    let scm = schema[key]
+  for (let key in model) {
+    // Shorthand model reference
+    let scm = model[key]
     // Only handle own properties
     if (!scm) continue
 
@@ -133,8 +133,8 @@ function _validate (data, schema) {
     const isRequired = scm.required || scm.allowNull === false
     if (!isRequired && Rules.empty(setDefault(v, scm))) continue
 
-    // Recursively Validate sub-schema
-    if (scm.schema) {
+    // Recursively Validate sub-model
+    if (scm.model) {
       // Arrays can be either raw 'values' or complex 'objects'
       if (scm.type === 'array' || v instanceof Array) {
         // Don't attampt to process 'v' if it's not set
@@ -143,14 +143,14 @@ function _validate (data, schema) {
         v.forEach((val, idx) => {
           // Array of complex objects
           if (is.type(val) === 'object') {
-            let arsub = _validate(val, scm.schema)
+            let arsub = _validate(val, scm.model)
             if (!arsub.valid) {
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = arsub.errors
             }
           } else {
             // Array of simple types
-            let er = checkValue(val, scm.schema, data)
+            let er = checkValue(val, scm.model, data)
             if (er.length) {
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = er
@@ -159,11 +159,11 @@ function _validate (data, schema) {
         })
       } else {
         // Otherwise just assume it's an object
-        let sub = _validate(v, scm.schema)
+        let sub = _validate(v, scm.model)
         if (!sub.valid) errs[key] = sub.errors
       }
 
-      // Otherwise NO sub-schema: test the value directly
+      // Otherwise NO sub-model: test the value directly
     } else {
       let errors = checkValue(v, scm, data)
       if (errors.length) errs[key] = errors
@@ -180,25 +180,25 @@ function _validate (data, schema) {
 }
 
 /**
-  Validates ONLY the keys on the data object, NOT the keys on the schema
+  Validates ONLY the keys on the data object, NOT the keys on the model
 
   @param {Object} data The keyed data object to validate
-  @param {Schema} schema The schema rules
+  @param {Model} model The model rules
 
   @return {Object} Validation object `{valid:$bool, errors:$Object}`
   @private
 */
 
-function _sparse (data, schema) {
+function _sparse (data, model) {
   let isValid = true
   let errs = {}
   let out
 
   for (let key in data) {
-    // Only valid with an associated schema
-    if (!schema[key]) continue
+    // Only valid with an associated model
+    if (!model[key]) continue
 
-    out = _validate(data[key], schema[key])
+    out = _validate(data[key], model[key])
     if (!out.valid) {
       isValid = false
       errs[key] = out.errors

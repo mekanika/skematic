@@ -18,7 +18,6 @@ import is from './is'
   @ignore
 */
 
-import {_getSchema as getSchema} from './api'
 import setDefault from './default'
 import transform from './transform'
 import strip from './strip'
@@ -33,15 +32,15 @@ import idMap from './idmap'
 export default format
 
 /**
-  Formats a data object according to schema rules.
+  Formats a data object according to model rules.
 
   Order of application is significant: 1. Defaults, 2. Generate, 3. Transform.
 
   The options hash may contain:
   > Legend: **name** _{Type}_ `default`:
 
-  - **strict** _{Boolean}_ - `false` Strips any fields not declared on schema
-  - **sparse** _{Boolean}_ - `false` only process keys on data (not full schema)
+  - **strict** _{Boolean}_ - `false` Strips any fields not declared on model
+  - **sparse** _{Boolean}_ - `false` only process keys on data (not full model)
   - **defaults** _{Boolean}_ - `true` set default values
   - **generate** _{Boolean|String}_ - `true` Compute values (pass `"once"` to run compute-once fields)
   - **transform** _{Boolean}_ - `true` apply transform functions
@@ -57,7 +56,7 @@ export default format
   format(Model, {name: 'Mo', mydata: 'demo'}, {strict: true})
   // -> {name: 'Mo', created: 1467139049234}
 
-  @param {Schema} model The schema to format to
+  @param {Model} model The model to format to
   @param {Mixed} data The data to format
   @param {Object} opts Options hash
 
@@ -80,39 +79,38 @@ function format (model, data, opts = {}) {
 }
 
 /**
-  Returns an object built on ALL values present in the schema, set to defaults
+  Returns an object built on ALL values present in the model, set to defaults
   and having been run through `.format()` with default flags.
 
-  @param {Schema} schema To initialise object
+  @param {Model} model To initialise object
   @param {Mixed} nullValue
 
   @return {Object}
   @private
 */
 
-function createFrom (schema, nullValue) {
+function createFrom (model, nullValue) {
   let o = {}
 
-  if (!schema) return o
-  if (is.string(schema)) schema = exports._getSchema(schema)
+  if (!model) return o
 
-  for (let k in schema) {
-    if (!schema.hasOwnProperty(k)) continue
-    o[k] = setDefault(nullValue, schema[k])
+  for (let k in model) {
+    if (!model.hasOwnProperty(k)) continue
+    o[k] = setDefault(nullValue, model[k])
     // Ensure undefined type:'array' is set to [] (unless overridden)
-    if (schema[k].type === 'array' && o[k] === nullValue) o[k] = []
+    if (model[k].type === 'array' && o[k] === nullValue) o[k] = []
 
-    // Setup the models for any defined sub-schema on OBJECT types
-    if (schema[k].schema) {
+    // Setup the models for any defined sub-model on OBJECT types
+    if (model[k].model) {
       // Only apply to objects or assume 'object' if type not defined
-      if (!schema[k].type || schema[k].type === 'object') {
-        o[k] = createFrom(schema[k].schema)
+      if (!model[k].type || model[k].type === 'object') {
+        o[k] = createFrom(model[k].model)
       }
     }
   }
 
   // Now format the new object
-  o = format(schema, o, {once: true})
+  o = format(model, o, {once: true})
 
   return o
 }
@@ -120,7 +118,7 @@ function createFrom (schema, nullValue) {
 /**
   Internal method to apply the modifier functions (default, generate etc)
 
-  @param {Schema} ss The schema to apply (default: {})
+  @param {Model} ss The model to apply (default: {})
   @param {Object} opts The options hash
   @param {Mixed} value The (likely SCALAR) value to be formatted
 
@@ -161,10 +159,10 @@ function _makeValue (ss = {}, opts, val) {
 }
 
 /**
-  Internal method to recurse through a schema and apply _makeValue. Handles
+  Internal method to recurse through a model and apply _makeValue. Handles
   scalars, arrays and object data.
 
-  @param {Schema} skm The schema to apply
+  @param {Model} skm The model to apply
   @param {Mixed} payload The (likely OBJECT) data to be formatted
   @param {Object} opts The options hash
 
@@ -173,7 +171,7 @@ function _makeValue (ss = {}, opts, val) {
 */
 
 function _dive (skm, payload, opts) {
-  // On the odd chance we reach here with no `skm` schema defined
+  // On the odd chance we reach here with no `skm` model defined
   // (This happened in real-world testing scenarios)
   if (!skm) return payload
 
@@ -181,9 +179,6 @@ function _dive (skm, payload, opts) {
   let out
 
   let data = payload
-
-  // Load a string referenced schema from an accessor (expects a SCHEMA)
-  if (is.string(skm.schema)) skm.schema = getSchema(skm.schema)
 
   // -- OBJECT
   // Process data as an object
@@ -194,9 +189,9 @@ function _dive (skm, payload, opts) {
 
     // Strip keys not declared on schea if in 'strict' mode
     if (opts.strict) {
-      const schemaKeys = Object.keys(skm)
+      const modelKeys = Object.keys(skm)
       Object.keys(data).forEach(function (k) {
-        if (schemaKeys.indexOf(k) < 0) delete data[k]
+        if (modelKeys.indexOf(k) < 0) delete data[k]
       })
     }
 
@@ -205,9 +200,9 @@ function _dive (skm, payload, opts) {
     if (opts.sparse) step = data
 
     for (let key in step) {
-      // Shorthand the schema model to use for this value
+      // Shorthand the model model to use for this value
       let model = skm[key]
-      // Some field names won't have a schema defined. Skip these.
+      // Some field names won't have a model defined. Skip these.
       if (!model) continue
 
       // Remove data fields that are flagged as protected
@@ -223,10 +218,10 @@ function _dive (skm, payload, opts) {
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
         out = _makeValue.apply(null, args)
 
-        // Special case handle objects with sub-schema
-        // Apply the sub-schema to the object output
-        if (is.object(out) && model.schema) {
-          out = _dive(model.schema, out, opts)
+        // Special case handle objects with sub-model
+        // Apply the sub-model to the object output
+        if (is.object(out) && model.model) {
+          out = _dive(model.model, out, opts)
         }
       }
 
@@ -234,18 +229,18 @@ function _dive (skm, payload, opts) {
       // not automatically added to ABSENT keys on the data object)
       if (out !== data[key]) data[key] = out
     }
-  } else if (is.array(data) && skm.schema) {
+  } else if (is.array(data) && skm.model) {
     // Create a copy of the array
     data = data.slice()
-    // ARRAY (with sub-schema)
-    // Process data as an array IF there is a sub-schema to format against
+    // ARRAY (with sub-model)
+    // Process data as an array IF there is a sub-model to format against
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
-        data[i] = _dive(skm.schema, data[i], opts)
+        data[i] = _dive(skm.model, data[i], opts)
       } else {
         // Or simply "makeValue" for everything else
-        out = _makeValue(skm.schema, opts, data[i])
+        out = _makeValue(skm.model, opts, data[i])
         if (data[i] !== out) data[i] = out
       }
     }

@@ -74,8 +74,8 @@ describe('createFrom .format(skm)', function () {
     expect(Skematic.format(s)).to.eql({shout: 'woo!'})
   })
 
-  it('initialises sub-schema fields on objects', function () {
-    var s = {swee: {schema: {
+  it('initialises sub-model fields on objects', function () {
+    var s = {swee: {model: {
       tags: {type: 'array', default: []},
       name: {type: 'string', default: 'user'}
     }}}
@@ -83,8 +83,8 @@ describe('createFrom .format(skm)', function () {
     expect(Skematic.format(s)).to.eql({swee: {tags: [], name: 'user'}})
   })
 
-  it('intialises sub-schema fields on arrays', function () {
-    var s = {swee: {type: 'array', default: [{}], schema: {
+  it('intialises sub-model fields on arrays', function () {
+    var s = {swee: {type: 'array', default: [{}], model: {
       name: {type: 'string', default: 'user'}
     }}}
 
