@@ -3,7 +3,7 @@
 **Data structure** and **rule validation** engine. Robust model schema for JS objects.
 
 
-[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic) [![Travis](https://img.shields.io/travis/mekanika/skematic.svg?style=flat-square)]()
+[![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic) [![Travis](https://img.shields.io/travis/mekanika/skematic.svg?style=flat-square)](https://travis-ci.org/mekanika/skematic)
 
 > :warning: :construction: [**Skematic v2.0**](https://github.com/mekanika/skematic/issues/26) is currently in progress. `v0.16` is deprecated. **Breaking things**.
 
