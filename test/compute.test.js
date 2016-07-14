@@ -57,19 +57,6 @@ describe('Computed value generator', function () {
     expect(out.boo).to.equal('!? no no')
   })
 
-  it('resolves parameters provided as functions prior to passing', function () {
-    var _get = function (p) {
-      return 'hello ' + p
-    }
-    var s = {name: {
-      generate: {ops: [{fn: fnLib.next, args: [ _get.bind(this, 'world') ]}]}}
-    }
-
-    var res = format(s, {})
-
-    expect(res.name).to.equal('hello world no')
-  })
-
   it('runs raw function ops', function () {
     var woo = function () { return 'woo!' }
     var s = {jam: {generate: {ops: [woo]}}}

@@ -421,7 +421,7 @@ Format _options_ include:
 - **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
 - **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
 - **protect** - _{Boolean}_ - `false`: Disables protected model fields (ie. allows overwriting them). Use carefully.
-- **strip** - _{Array}_ - `[]`: Remove matching field values from `data`
+- **strip** - _{Array}_ - `[]`: Remove fields with matching values from `data`
 - **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the model)
 
 Format applies these options in significant order:
@@ -430,7 +430,7 @@ Format applies these options in significant order:
 2. `defaults`: Apply default values
 3. `generate`: Compute and apply generated values
 4. `transform`: Run transform functions on values
-5. `strip`: Removes matching field values after all other formatting
+5. `strip`: Removes field with matching values after all other formatting
 6. `mapIdFrom`: Sets the id field on data to be on the 'primaryKey'
 
 Meaning if you have an uppercase transform, it will run AFTER your generate methods, thus uppercasing whatever they produce.

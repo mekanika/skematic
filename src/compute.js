@@ -150,13 +150,6 @@ function _generate (gen, runOnce, data) {
       ops[i].args = [ops[i].args]
     }
 
-    // Resolve function parameters to values
-    let k = -1
-    let px = ops[i].args || []
-    while (++k < px.length) {
-      if (typeof px[k] === 'function') px[k] = px[k]()
-    }
-
     value = runner.apply(this, ops[i].args)
   }
 

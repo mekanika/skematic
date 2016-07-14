@@ -29,6 +29,7 @@ Removed:
 - `$dynamic` keys support because YAGNI. Explicit keys only.
 - `useGenerators` and `useSchemas` "by string" loaders
 - `createFrom` API method (now part of `format()`)
+- Passing generator functions "auto-resolved" function args :P !?!
 
 Internal:
 

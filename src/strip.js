@@ -1,6 +1,7 @@
 
 /**
   Remove fields from data (destructive, ie. modifies `data` directly)
+  This is mostly useful to remove `undefined` fields from data
 
   @param {Mixed|Mixed[]} values The value or array of values to match
   @param {Object} data
