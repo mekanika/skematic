@@ -4,6 +4,7 @@
   @ignore
 */
 
+import is from './is'
 import * as Cast from './typeconvert'
 
 /**
@@ -86,15 +87,19 @@ function transform (val, transforms) {
   if (val === undefined) return val
 
   // Ensure transforms are provided as an array
-  if (typeof transforms === 'string') transforms = [transforms]
+  if (!is.array(transforms)) transforms = [transforms]
 
   for (let i = 0; i < transforms.length; i++) {
     let key = transforms[i]
     // Try-catch is to make it CLEAR that this can throw
     // May be useful in future to do more than propagate throw
     try {
-      // @note this will silently fail if no transform is found...
-      if (_transforms[key]) val = _transforms[key](val)
+      // Run the transform as a function if provided as such
+      if (is.function(key)) val = key(val)
+      // Attempt to source the transform from a built-in (see `_transforms`)
+      else if (_transforms[key]) val = _transforms[key](val)
+      // Otherwise developer has a problem, notify them
+      else console.warn('[Skematic] Could not run transform', key)
     } catch (e) {
       throw e
     }

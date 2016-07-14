@@ -52,6 +52,18 @@ describe('Transform', function () {
     })
   })
 
+  it('notifies if transform cannot run', () => {
+    const warn = console.warn
+    let flag = false
+    console.warn = () => (flag = true)
+
+    transform(1, ['woooo'])
+    // Reset method
+    console.warn = warn
+
+    expect(flag).to.equal(true)
+  })
+
   describe('method', function () {
     it('"trim" strings', function () {
       expect(transform(' ! .. 2 ', ['trim'])).to.equal('! .. 2')
@@ -67,6 +79,24 @@ describe('Transform', function () {
 
     it('"nowhite" removes whitespace from strings', function () {
       expect(transform(' c o  o  l  ', ['nowhite'])).to.equal('cool')
+    })
+  })
+
+  describe('custom methods', () => {
+    it('as only method in array', () => {
+      expect(transform(5, [val => val * 2])).to.equal(10)
+    })
+
+    it('as one of many methods in array', () => {
+      expect(transform(5, [v => v * 2, v => v * 3])).to.equal(30)
+    })
+
+    it('as one of mixed style methods in array', () => {
+      expect(transform('  5', ['nowhite', v => v * 2])).to.equal(10)
+    })
+
+    it('as straight method (no array)', () => {
+      expect(transform(5, v => v * 2)).to.equal(10)
     })
   })
 })
