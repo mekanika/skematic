@@ -12,6 +12,7 @@ Added:
 - Custom fns have access to whole model data via `this.<field>`
 - Plugins:
   - `toReactShape()` Maps a model to React.PropTypes.shape()
+  - `koa` and `connect` middleware
 
 Changed:
 
