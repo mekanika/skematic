@@ -79,7 +79,7 @@ for (var cast in Cast) {
   @alias transform
 */
 
-function transform (val, transforms) {
+function transform (val, transforms, parentData) {
   // No-op if no transforms
   if (!transforms) return val
 
@@ -95,9 +95,9 @@ function transform (val, transforms) {
     // May be useful in future to do more than propagate throw
     try {
       // Run the transform as a function if provided as such
-      if (is.function(key)) val = key(val)
+      if (is.function(key)) val = key.call(parentData, val)
       // Attempt to source the transform from a built-in (see `_transforms`)
-      else if (_transforms[key]) val = _transforms[key](val)
+      else if (_transforms[key]) val = _transforms[key].call(parentData, val)
       // Otherwise developer has a problem, notify them
       else console.warn('[Skematic] Could not run transform', key)
     } catch (e) {

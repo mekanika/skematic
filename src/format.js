@@ -118,6 +118,7 @@ function createFrom (model, nullValue) {
 /**
   Internal method to apply the modifier functions (default, generate etc)
 
+  @param {Object} data The parent (root) data to pass to generate for 'this' ref
   @param {Model} ss The model to apply (default: {})
   @param {Object} opts The options hash
   @param {Mixed} value The (likely SCALAR) value to be formatted
@@ -126,7 +127,7 @@ function createFrom (model, nullValue) {
   @private
 */
 
-function _makeValue (ss = {}, opts, val) {
+function _makeValue (data = {}, ss = {}, opts, val) {
   // Set defaults
   if (opts.defaults !== false) {
     if (!is.undefined(ss.default)) val = setDefault(val, ss)
@@ -138,21 +139,21 @@ function _makeValue (ss = {}, opts, val) {
     var runOnce = opts.generate !== false && opts.once
 
     var args = [ss, {once: runOnce}]
-    if (arguments.length > 2) args.push(val)
+    if (arguments.length > 3) args.push(val)
 
     if (canCompute.apply(null, args)) {
       // Handle generators flagged as 'once'
       if (ss.generate.once) {
-        if (runOnce) val = compute(ss, {once: true}, val)
+        if (runOnce) val = compute(ss, {once: true}, val, data)
 
       // All other generators run every time
-      } else val = compute(ss, {}, val)
+      } else val = compute(ss, {}, val, data)
     }
   }
 
   // Apply transforms
   if (opts.transform !== false) {
-    if (ss.transforms) val = transform(val, ss.transforms)
+    if (ss.transforms) val = transform(val, ss.transforms, data)
   }
 
   return val
@@ -165,12 +166,13 @@ function _makeValue (ss = {}, opts, val) {
   @param {Model} skm The model to apply
   @param {Mixed} payload The (likely OBJECT) data to be formatted
   @param {Object} opts The options hash
+  @param {Object} parentData The original data payload (used for ref)
 
   @return A fresh copy of formatted data (no mutation)
   @private
 */
 
-function _dive (skm, payload, opts) {
+function _dive (skm, payload, opts, parentData) {
   // On the odd chance we reach here with no `skm` model defined
   // (This happened in real-world testing scenarios)
   if (!skm) return payload
@@ -179,6 +181,7 @@ function _dive (skm, payload, opts) {
   let out
 
   let data = payload
+  if (!parentData) parentData = data
 
   // -- OBJECT
   // Process data as an object
@@ -212,16 +215,16 @@ function _dive (skm, payload, opts) {
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {
-        out = _dive(model, data[key], opts)
+        out = _dive(model, data[key], opts, parentData)
       } else {
-        let args = [model, opts]
+        let args = [parentData, model, opts]
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
         out = _makeValue.apply(null, args)
 
         // Special case handle objects with sub-model
         // Apply the sub-model to the object output
         if (is.object(out) && model.model) {
-          out = _dive(model.model, out, opts)
+          out = _dive(model.model, out, opts, parentData)
         }
       }
 
@@ -237,17 +240,17 @@ function _dive (skm, payload, opts) {
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
-        data[i] = _dive(skm.model, data[i], opts)
+        data[i] = _dive(skm.model, data[i], opts, parentData)
       } else {
         // Or simply "makeValue" for everything else
-        out = _makeValue(skm.model, opts, data[i])
+        out = _makeValue(parentData, skm.model, opts, data[i])
         if (data[i] !== out) data[i] = out
       }
     }
   } else {
     // NORMAL VALUE
     // Process as scalar value
-    out = _makeValue(skm, opts, data)
+    out = _makeValue(parentData, skm, opts, data)
     if (out !== data) data = out
   }
 

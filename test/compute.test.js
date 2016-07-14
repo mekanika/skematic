@@ -75,6 +75,19 @@ describe('Computed value generator', function () {
     expect(out.name).to.equal('yes')
   })
 
+  it('direct generators `{generate: fn}` receive value as prop', () => {
+    var s = {skill: {generate: val => val * 2}}
+    expect(format(s, {skill: 5}).skill).to.equal(10)
+  })
+
+  it('can access parent data keys via `this`', () => {
+    var s = {name: {generate: function () {
+      return 'Zim' + this.age
+    }}, age: {default: 18}}
+    const out = format(s)
+    expect(out.name).to.equal('Zim18')
+  })
+
   describe('Flags', function () {
     var make = function (x) { return 'swee!' + (x || '') }
     var swee = function () { return 'swee!' }

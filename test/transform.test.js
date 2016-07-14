@@ -98,5 +98,13 @@ describe('Transform', function () {
     it('as straight method (no array)', () => {
       expect(transform(5, v => v * 2)).to.equal(10)
     })
+
+    it('can access model fields on `this`', () => {
+      function xform (val) {
+        return val * this.power
+      }
+      const out = transform(5, xform, {power: 10})
+      expect(out).to.equal(50)
+    })
   })
 })

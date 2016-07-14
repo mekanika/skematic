@@ -36,13 +36,13 @@ function canCompute (model, opts = {}, val) {
   const provided = arguments.length > 2
 
   const preserve = gen.preserve
-  const require = gen.require
+  const req = gen.require
   const once = gen.once
 
   // Don't generate on the following conditions
   if (once && !runOnce) return false
   if (provided && preserve) return false
-  if (require && !provided) return false
+  if (req && !provided) return false
 
   return true
 }
@@ -64,23 +64,18 @@ function canCompute (model, opts = {}, val) {
   @param {Model} model
   @param {Object} opts Options hash. Only contains `once` flag.
   @param {Mixed} [val] Optional value to pass
+  @param {Object} [data] Root data object for `this` generator reference
 
   @return {Mixed} The computed value (if any) or the passed `val`
 
   @memberof Format
 */
 
-function computeValue (model, opts = {}, val) {
-  const provided = arguments.length > 2
-  const args = [model.generate, opts ? opts.once : false]
-  if (provided) args.push(val)
-
-  // Check that we can compute and either:
-  return canCompute.apply(null, arguments)
-    // 1. Generate the value, or
-    ? _generate.apply(null, args)
-    // 2. Return the unmodified value
-    : val
+function computeValue (model, opts = {}, val, data) {
+  // Return the raw value if unable to compute
+  if (!canCompute(model, opts, val, data)) return val
+  // Otherwise generate the value
+  return _generate(model.generate, opts ? opts.once : false, val, data)
 }
 
 /**
@@ -89,6 +84,7 @@ function computeValue (model, opts = {}, val) {
   @param {Object} gen The generator object {ops [, ...flags] }
   @param {Boolean} [runOnce] Flag to run 'once' generator functions
   @param {Mixed} [data] A provided value (if any)
+  @param {Object} data The parent/root data object
 
   @throws {Error} When trying to run 'once' flags without passing `runOnce`
   @throws {Error} When function `fn` string reference cannot be found
@@ -97,12 +93,12 @@ function computeValue (model, opts = {}, val) {
   @ignore
 */
 
-function _generate (gen, runOnce, data) {
+function _generate (gen, runOnce, value, data) {
   // Run immediately if `gen` is a function
-  if (is.function(gen)) return gen()
+  if (is.function(gen)) return gen.call(data, value)
 
   // Prepare the value to return
-  let value
+  let ret
 
   if (gen.once && !runOnce) {
     throw new Error('Must pass `runOnce` flag for `once` generators')
@@ -134,15 +130,15 @@ function _generate (gen, runOnce, data) {
     // arguments being run by the op
     if (!i && provided) {
       if (!ops[i].args) ops[i].args = []
-      ops[i].args.push(data)
+      ops[i].args.push(value)
     }
 
     // If a value has been generated (by a previous function)
     // then pass 'value' to the function as its first parameter
-    if (value) {
+    if (ret) {
       ops[i].args
-        ? ops[i].args.unshift(value)
-        : ops[i].args = [value]
+        ? ops[i].args.unshift(ret)
+        : ops[i].args = [ret]
     }
 
     // Ensure args are treated as an array
@@ -150,10 +146,10 @@ function _generate (gen, runOnce, data) {
       ops[i].args = [ops[i].args]
     }
 
-    value = runner.apply(this, ops[i].args)
+    ret = runner.apply(data, ops[i].args)
   }
 
-  return value
+  return ret
 }
 
 /*
