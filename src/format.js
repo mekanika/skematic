@@ -208,8 +208,8 @@ function _dive (skm, payload, opts, parentData) {
       // Some field names won't have a model defined. Skip these.
       if (!model) continue
 
-      // Remove data fields that are flagged as protected
-      if (opts.protect !== false && skm[key] && skm[key].protect) {
+      // Remove data fields that are flagged as locked
+      if (!opts.unlock && skm[key] && skm[key].lock) {
         delete data[key]
       }
 

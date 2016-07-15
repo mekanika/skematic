@@ -80,7 +80,7 @@ A few other **convenience methods** are provided, that mostly encapsulate or exp
     - "array"
     - "object"
 - **default** _{any}_ value to apply if no value is set/passed
-- **protect** _{Boolean}_ disallows user from setting value (stripped on `format()`)
+- **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
@@ -420,12 +420,13 @@ Format _options_ include:
 - **generate** - _{Boolean|"once"}_ - `true`: Compute a new value - see [Design:generate](#generate)
 - **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
 - **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
-- **protect** - _{Boolean}_ - `false`: Disables protected model fields (ie. allows overwriting them). Use carefully.
+- **unlock** - _{Boolean}_ - `false`: Unlocks 'lock'ed model fields (ie. no longer stripped, allows for overwriting).
 - **strip** - _{Array}_ - `[]`: Remove fields with matching values from `data`
 - **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the model)
 
 Format applies these options in significant order:
 
+0. `lock`: Strip locked fields (unless `{unlock: true}` provided)
 1. `sparse`: Only processes keys on the provided data (not the whole model)
 2. `defaults`: Apply default values
 3. `generate`: Compute and apply generated values

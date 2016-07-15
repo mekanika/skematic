@@ -7,7 +7,7 @@
 Added:
 
 - `allowNull` model definition (enables NOT NULL)
-- `protect` model definition (prevent user supplying values)
+- `lock` model definition (prevent user supplying values) and `unlock` on format
 - `keyCheckOnly` validation option to check user keys are all set on model
 - Custom fns have access to whole model data via `this.<field>`
 - Plugins:
