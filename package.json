@@ -14,7 +14,7 @@
     "validate",
     "validation"
   ],
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-rc.1",
   "homepage": "https://github.com/mekanika/skematic",
   "license": "ISC",
   "main": "build/skematic.min.js",
@@ -27,7 +27,7 @@
     "coverage": "nyc --require babel-register --reporter=lcov --reporter=text mocha -R spec test/",
     "docs": "documentation build index.js --name Skematic -o docs -f html",
     "dev": "npm run test:chain -s & nodemon --quiet --watch src --exec npm run build -s",
-    "lint": "standard --verbose index.js src/*.js test/*.js perf/*.js | snazzy",
+    "lint": "standard --verbose index.js src/**/*.js test/*.js perf/*.js | snazzy",
     "test": "mocha -r babel-register -R spec test/",
     "test:chain": "mocha -r babel-register -R min -w test",
     "watch:test": "npm test -- --watch"
@@ -49,7 +49,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "chai": "^3.5.0",
-    "documentation": "^4.0.0-beta8",
+    "documentation": "^4.0.0-beta9",
     "mocha": "^2.5.3",
     "nodemon": "^1.9.2",
     "nyc": "^7.0.0",

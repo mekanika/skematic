@@ -87,7 +87,7 @@ A few other **convenience methods** are provided, that mostly encapsulate or exp
 - **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
 - [**rules**](#rules) _{Object}_ hash of validation rules: `{rules: {min: 3, max: 11}}`
 - [**errors**](#custom-error-messages) _{Object|String}_ hash of error messages for rules
-- [**schema**](#sub-schema) _{Object|String}_ declare sub-schema defining this value (see "Sub-schema")
+- [**model**](#sub-model) _{Object|String}_ declare sub-model defining this value (see "Sub-model")
 - [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
 
 
@@ -288,7 +288,7 @@ The simplest usage is to specify `generate` as a function:
 {generate: () => Date.now()}
 ```
 
-Alternatively you may also pass a config object with properties:
+You may also pass `generate` a config object with properties:
 
 > Legend: **field** - _{Type}_ `default`: Description
 
@@ -297,7 +297,7 @@ Alternatively you may also pass a config object with properties:
 - **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data.
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
 
-> Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To ensure a generator is only run when you pass a `{generate:'once'}` to format(), set the `once: true` flag.
+Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To manually run generators based on a flag provided to format, set `{once: true}` on the model field, (and run `format(Model, data, {once: true})`.
 
 Example:
 
@@ -320,9 +320,9 @@ const Hero = {
       // Optional flag: ONLY generate if provided a field on data
       // (default: false)
       require: false,
-      // Optional flag: Require passing {generate:'once'} to format to compute value
+      // Optional flag: Require passing {once:true} to format to compute value
       // (default: false)
-      once: false
+      once: true
     }
   }
 };
@@ -332,19 +332,19 @@ That looks like a mouthful - but if we pass the raw functions and assume default
 
 ```js
 const Hero = {
-  updated: {generate: {ops: [myFunc, anotherFn]}}
+  updated: {generate: {ops: [myFunc, anotherFn], once: true}}
 };
 ```
 
 
-### Sub-schema
+### Sub-model
 
 A property can be formatted to another model (essentially, a complex object), or array of models.
 
 ```js
 // A "post" would have comments made up of `owner_id, body`
 const Post = {
-  comments: { type: 'array', schema: {
+  comments: { type: 'array', model: {
     owner_id: {type: 'number'},
     body: {type: 'string', rules: {minLength: 25}}
     }
@@ -354,11 +354,11 @@ const Post = {
 // Or, a simple scalar array of "tags" (an array of strings):
 const Picture = {
   url: {type: 'string'},
-  tags: {type: 'array', schema: {type: 'string', rules: {minLength: 3}}}
+  tags: {type: 'array', model: {type: 'string', rules: {minLength: 3}}}
 }
 ```
 
-All the model validations and checks assigned to the sub-schema (`comments`) will be correctly cast and enforced when the parent (`post`) has any of its validation routines called.
+All the model validations and checks assigned to the sub-model (`comments`) will be correctly cast and enforced when the parent (`post`) has any of its validation routines called.
 
 
 ### primaryKey
@@ -417,7 +417,7 @@ Format _options_ include:
 - **strict** - _{Boolean}_ - `false` Strips any fields not declared on model
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
-- **generate** - _{Boolean|"once"}_ - `true`: Compute a new value - see [Design:generate](#generate)
+- **generate** - _{Boolean}_ - `true`: Enable/disable generating new values - see [Design:generate](#generate)
 - **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
 - **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
 - **unlock** - _{Boolean}_ - `false`: Unlocks 'lock'ed model fields (ie. no longer stripped, allows for overwriting).
@@ -441,12 +441,12 @@ Format examples:
 ```js
 const myModel = {
   mod_id: {primaryKey: true},
-  rando: {generate: {ops: Math.random, once:true}},
+  rando: {generate: {ops: Math.random, once: true}},
   power: {default: 5},
-  name: {default: 'zim', transforms:['uppercase']}
+  name: {default: 'zim', transforms: ['uppercase']}
 };
 
-let out = Skematic.format(myModel, {}, {generate: 'once'})
+let out = Skematic.format(myModel, {}, {once: true})
 // -> {rando: 0.24123545, power: 5, name: 'ZIM'}
 
 out = Skematic.format(myModel, {}) // (model, data)
