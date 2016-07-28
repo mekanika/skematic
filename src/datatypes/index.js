@@ -172,7 +172,7 @@ FLOAT.key = FLOAT.prototype.key = 'FLOAT'
 
 /**
   Type: TIME
-  @param {Numeber} [precision]
+  @param {Number} [precision]
   @return {Object} {key}
   @memberof DataTypes
 */
@@ -298,7 +298,7 @@ GEOGRAPHY.key = GEOGRAPHY.prototype.key = 'GEOGRAPHY'
 /**
   Type: ENUM
   @param {Mixed} values
-  @return {Object} {key}
+  @return {Object} {key, values}
   @memberof DataTypes
 */
 
@@ -313,7 +313,7 @@ ENUM.key = ENUM.prototype.key = 'ENUM'
 /**
   Type: RANGE
   @param {Object} type The type of Range
-  @return {Object} {key}
+  @return {Object} {key, type}
   @memberof DataTypes
 */
 
@@ -324,6 +324,18 @@ function RANGE (type) {
 }
 
 RANGE.key = RANGE.prototype.key = 'RANGE'
+
+/**
+  Type: SERIAL
+  @return {Object} {key}
+  @memberof DataTypes
+*/
+
+function SERIAL () {
+  if (!(this instanceof SERIAL)) return new SERIAL()
+}
+
+SERIAL.key = SERIAL.prototype.key = 'SERIAL'
 
 /**
   @namespace DataTypes
@@ -354,30 +366,27 @@ RANGE.key = RANGE.prototype.key = 'RANGE'
 */
 
 export default {
-  // String exports
-  STRING,
+  ARRAY,
+  BOOLEAN,
+  BYTEA,
   CHAR,
-  TEXT,
-
-  // Number exports
-  INTEGER,
+  DATE,
   DECIMAL,
   DOUBLE,
-  REAL,
+  ENUM,
   FLOAT,
-
-  UUID,
-  ARRAY,
+  GEOGRAPHY,
+  GEOMETRY,
   HSTORE,
-  BOOLEAN,
-  TIME,
-  DATE,
-  BYTEA,
-
+  INTEGER,
   JSON: JSONTYPE,
   JSONB,
-  GEOMETRY,
-  GEOGRAPHY,
-  ENUM,
-  RANGE
+  NUMBER,
+  RANGE,
+  REAL,
+  SERIAL,
+  STRING,
+  TEXT,
+  TIME,
+  UUID
 }
