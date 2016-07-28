@@ -28,7 +28,7 @@
     "docs": "documentation build index.js --name Skematic -o docs -f html",
     "dev": "npm run test:chain -s & nodemon --quiet --watch src --exec npm run build -s",
     "lint": "standard --verbose index.js src/**/*.js test/*.js perf/*.js | snazzy",
-    "test": "mocha -r babel-register -R spec test/",
+    "test": "mocha -r babel-register -R spec test/ test/**/*.test.js",
     "test:chain": "mocha -r babel-register -R min -w test",
     "watch:test": "npm test -- --watch"
   },
