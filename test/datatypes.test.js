@@ -20,7 +20,7 @@ function invoke (type, opts) {
   it(type + ': key is set on raw and ()', () => {
     const dt = DataTypes[type]
     expect(dt.key).to.equal(type)
-    expect(dt().key).to.equal(type)
+    expect(dt(opts).key).to.equal(type)
   })
 
   if (opts) {
@@ -56,7 +56,16 @@ describe('DataTypes', () => {
   invoke('JSONB')
   invoke('GEOMETRY')
   invoke('GEOGRAPHY')
-  invoke('ENUM')
+
+  // ENUM has a required input
+  testedKeys.push('ENUM')
+  it('ENUM: key is set on ([vals])', () => {
+    const dt = DataTypes.ENUM
+    expect(dt.key).to.equal('ENUM')
+    const out = dt(['hi'])
+    expect(out.key).to.equal('ENUM')
+    expect(out.values).to.include('hi')
+  })
 
   // RANGE has a required input
   testedKeys.push('RANGE')

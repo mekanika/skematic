@@ -297,15 +297,15 @@ GEOGRAPHY.key = GEOGRAPHY.prototype.key = 'GEOGRAPHY'
 
 /**
   Type: ENUM
-  @param {Mixed} values
+  @param {Array} arrValues
   @return {Object} {key, values}
   @memberof DataTypes
 */
 
-function ENUM (...values) {
-  if (!(this instanceof ENUM)) return new ENUM(...values)
-  if (!values) throw new Error('ENUM must declare values')
-  this.values = values
+function ENUM (arrValues) {
+  if (!(this instanceof ENUM)) return new ENUM(arrValues)
+  if (!arrValues) throw new Error('ENUM must declare array of values')
+  this.values = arrValues
 }
 
 ENUM.key = ENUM.prototype.key = 'ENUM'
