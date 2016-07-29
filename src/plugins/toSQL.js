@@ -142,7 +142,7 @@ const getEnumTypeString = model => {
 
   Object.keys(model).forEach(key => {
     const type = model[key].type
-    if (type.key !== 'ENUM') return
+    if (!type || type.key !== 'ENUM') return
 
     let ts = type.values.map(v => typeof v === 'string' ? `'${v}'` : v)
     enums.push(`CREATE TYPE ${key} AS ENUM (${ts.join(', ')});`)
