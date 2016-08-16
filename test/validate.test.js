@@ -263,7 +263,7 @@ describe('checkValue(val, model)', function () {
   })
 
   describe('error msgs', function () {
-    it('can be set declaritively', function () {
+    it('can be set declaratively', function () {
       var s = {rules: {oneOf: ['a']}, errors: {oneOf: 'Hotdog!'}}
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
