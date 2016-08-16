@@ -1,5 +1,5 @@
 
-2.0.0-rc.1 UNRELEASED
+2.0.0-rc.2 UNRELEASED
 ======
 
 **MAJOR BREAKING CHANGES**
@@ -10,6 +10,7 @@ Added:
 - `lock` model definition (prevent user supplying values) and `unlock` on format
 - `keyCheckOnly` validation option to check user keys are all set on model
 - Custom fns have access to whole model data via `this.<field>`
+- #4 `show` array or string of scopes required to 'show' the field
 - Plugins:
   - `toReactShape()` Maps a model to React.PropTypes.shape()
   - `koa` and `connect` middleware

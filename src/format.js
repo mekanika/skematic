@@ -116,6 +116,32 @@ function createFrom (model, nullValue) {
 }
 
 /**
+  Checks that `source` permissions (what you HAVE) meet `target` permissions
+  (what you NEED). Returns `true` if so, `false` if not.
+
+  @param {String|String[]} source A scope string or Array of scopes (HAVE)
+  @param {String|String[]} target A scope string or Array of scopes (NEED)
+
+  @returns {Boolean} Are target permissions present in source permissions
+  @private
+*/
+
+function isIn (source, target) {
+  // No target permissions? Always passes
+  if (!target || !target.length) return true
+
+  // Note: indexOf works for Arrays AND String scalars
+  if (!Array.isArray(source)) return target.indexOf(source) > -1
+
+  let present = false
+  source.forEach(val => {
+    if (target.indexOf(val) > -1) present = true
+  })
+
+  return present
+}
+
+/**
   Internal method to apply the modifier functions (default, generate etc)
 
   @param {Object} data The parent (root) data to pass to generate for 'this' ref
@@ -174,7 +200,6 @@ function _makeValue (data = {}, ss = {}, opts, val) {
 
 function _dive (skm, payload, opts, parentData) {
   // On the odd chance we reach here with no `skm` model defined
-  // (This happened in real-world testing scenarios)
   if (!skm) return payload
 
   // Placeholder for formatted data
@@ -186,7 +211,6 @@ function _dive (skm, payload, opts, parentData) {
   // -- OBJECT
   // Process data as an object
   if (is.object(data)) {
-    // console.log('format as object')
     // Create a copy of the object
     data = {...data}
 
@@ -211,6 +235,13 @@ function _dive (skm, payload, opts, parentData) {
       // Remove data fields that are flagged as locked
       if (!opts.unlock && skm[key] && skm[key].lock) {
         delete data[key]
+      }
+
+      // Show/hide scope permissions projection
+      if (model.show && !isIn(opts.show, model.show)) {
+        delete data[key]
+        // Skips any further processing
+        continue
       }
 
       // Handle value of field being an Array

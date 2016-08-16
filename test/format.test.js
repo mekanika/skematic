@@ -157,6 +157,44 @@ describe('.format(skm, opts, data)', function () {
     expect(out.tags[0]).to.have.key('label')
   })
 
+  describe('`show` scopes projector', () => {
+    it('hides fields string:string', () => {
+      const s = {name: {show: 'admin'}, age: {default: 21}}
+      const hasScope = format(s, {name: 'X'}, {show: 'admin'})
+      const notScope = format(s, {name: 'X'}, {})
+
+      expect(hasScope.name).to.equal('X')
+      expect(notScope).to.have.keys('age')
+    })
+
+    it('hides fileds string:array', () => {
+      const s = {name: {show: ['admin']}, age: {default: 21}}
+      const hasScope = format(s, {name: 'X'}, {show: 'admin'})
+      const notScope = format(s, {name: 'X'}, {})
+
+      expect(hasScope.name).to.equal('X')
+      expect(notScope).to.have.keys('age')
+    })
+
+    it('hides fileds array:array', () => {
+      const s = {name: {show: ['anything', 'admin']}, age: {default: 21}}
+      const hasScope = format(s, {name: 'X'}, {show: ['admin']})
+      const notScope = format(s, {name: 'X'}, {})
+
+      expect(hasScope.name).to.equal('X')
+      expect(notScope).to.have.keys('age')
+    })
+
+    it('hides fileds array:string', () => {
+      const s = {name: {show: 'admin'}, age: {default: 21}}
+      const hasScope = format(s, {name: 'X'}, {show: ['admin', 'any']})
+      const notScope = format(s, {name: 'X'}, {})
+
+      expect(hasScope.name).to.equal('X')
+      expect(notScope).to.have.keys('age')
+    })
+  })
+
   describe('sub-model', function () {
     it('applies format to embedded model objects', function () {
       var s = {

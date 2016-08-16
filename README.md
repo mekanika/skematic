@@ -82,6 +82,7 @@ A few other **convenience methods** are provided, that mostly encapsulate or exp
 - **default** _{any}_ value to apply if no value is set/passed
 - **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
+- **show** _{String|Array}_ string scopes required to show field on format (hides if not met)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
 - **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
@@ -414,6 +415,7 @@ Format _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
+- **show** - _{String|Array}_ - `undefined`: Scopes to hide/show fields
 - **strict** - _{Boolean}_ - `false` Strips any fields not declared on model
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
@@ -426,13 +428,14 @@ Format _options_ include:
 
 Format applies these options in significant order:
 
-0. `lock`: Strip locked fields (unless `{unlock: true}` provided)
-1. `sparse`: Only processes keys on the provided data (not the whole model)
-2. `defaults`: Apply default values
-3. `generate`: Compute and apply generated values
-4. `transform`: Run transform functions on values
-5. `strip`: Removes field with matching values after all other formatting
-6. `mapIdFrom`: Sets the id field on data to be on the 'primaryKey'
+0. `show`: Checks scope match - bails out if the check fails
+1. `lock`: Strip locked fields (unless `{unlock: true}` provided)
+2. `sparse`: Only processes keys on the provided data (not the whole model)
+3. `defaults`: Apply default values
+4. `generate`: Compute and apply generated values
+5. `transform`: Run transform functions on values
+6. `strip`: Removes field with matching values after all other formatting
+7. `mapIdFrom`: Sets the id field on data to be on the 'primaryKey'
 
 Meaning if you have an uppercase transform, it will run AFTER your generate methods, thus uppercasing whatever they produce.
 
@@ -443,7 +446,8 @@ const myModel = {
   mod_id: {primaryKey: true},
   rando: {generate: {ops: Math.random, once: true}},
   power: {default: 5},
-  name: {default: 'zim', transforms: ['uppercase']}
+  name: {default: 'zim', transforms: ['uppercase']},
+  secret: {show: 'admin'}
 };
 
 let out = Skematic.format(myModel, {}, {once: true})
@@ -456,6 +460,11 @@ out = Skematic.format(myModel, {}, {defaults: false})
 // -> {}
 
 out = Skematic.format(myModel, {rando: undefined, power: 'x'}, {strip: [undefined, 'x']})
+// -> {name: 'ZIM'}
+
+out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {show: ['admin']})
+// -> {name: 'ZIM', secret: 'hi!'}
+out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {show: ['not:admin']})
 // -> {name: 'ZIM'}
 
 out = Skematic.format(myModel, {name: 'Gir'}, {sparse: true})
