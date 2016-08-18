@@ -506,8 +506,9 @@ Validate _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
-- **sparse** _{Boolean}_ `false`: Only process fields on the provided data, rather than all fields on the entire model
-- **keyCheckOnly** _{Boolean}_ `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on model. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
+- **strict** - _{Boolean}_ - `false`: Validates that all keys provided by data are defined on the model as well as valid (prevents validating/accepting extraneous fields)
+- **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
+- **keyCheckOnly** - _{Boolean}_ - `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on model. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
 
 
 ## Development

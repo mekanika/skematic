@@ -23,6 +23,10 @@ export {validate, checkValue}
   the data objected provided. Default is `false`, so validation is run on
   all fields in the provided `model`
 
+  If passed "opts" `{strict: true}`, validation ensures all keys on the data
+  payload are valid (ie. have an associated model field), before running
+  normal validation
+
   Returns:
 
   ```
@@ -55,7 +59,14 @@ export {validate, checkValue}
 
 function validate (model, data, opts = {}) {
   if (opts.keyCheckOnly) return _checkKeys(model, data)
-  else if (opts.sparse) return _sparse(data, model)
+
+  // Strict checks that the data keys are valid AND runs normal validation if so
+  if (opts.strict) {
+    const checkedKeys = _checkKeys(model, data)
+    if (!checkedKeys.valid) return checkedKeys
+  }
+
+  if (opts.sparse) return _sparse(data, model)
   else return _validate(data, model)
 }
 

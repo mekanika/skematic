@@ -202,6 +202,25 @@ describe('Validate', function () {
       expect(res.valid).to.equal(true)
     })
   })
+
+  describe('{strict: true} Strict field modeling', () => {
+    it('fails validation if passed unknown keys', () => {
+      var s = {mega: {}, cray: {required: true}}
+
+      const out = validate(s, {cray: '!', junk: true}, {strict: true})
+      expect(out.valid).to.equal(false)
+    })
+
+    it('succeeds if all keys known (and valid)', () => {
+      var s = {mega: {}, cray: {required: true}}
+
+      const failout = validate(s, {mega: 1}, {strict: true})
+      const winout = validate(s, {mega: 1, cray: 1}, {strict: true})
+
+      expect(failout.valid).to.equal(false)
+      expect(winout.valid).to.equal(true)
+    })
+  })
 })
 
 describe('checkValue(val, model)', function () {
