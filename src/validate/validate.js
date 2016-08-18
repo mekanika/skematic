@@ -90,7 +90,7 @@ function _checkKeys (model, data) {
     return {valid: false, errors: {data: ['Invalid data']}}
   }
 
-  const MAX_USER_KEY_LEN = 16
+  const MAX_USER_KEY_LEN = 48
   for (let key in data) {
     if (!model[key]) {
       ret.valid = false
