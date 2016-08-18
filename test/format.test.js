@@ -193,6 +193,15 @@ describe('.format(skm, opts, data)', function () {
       expect(hasScope.name).to.equal('X')
       expect(notScope).to.have.keys('age')
     })
+
+    it('`unscope` disables `show` scopes', () => {
+      const s = {name: {show: 'admin'}, age: {default: 21}}
+      const noscope = format(s, {name: 'X'})
+      const unscope = format(s, {name: 'X'}, {unscope: true})
+
+      expect(noscope).to.have.keys('age')
+      expect(unscope).to.have.keys('name', 'age')
+    })
   })
 
   describe('sub-model', function () {

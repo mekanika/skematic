@@ -416,7 +416,8 @@ Format _options_ include:
 > Legend: **field** - _{Type}_ - `default`: Description
 
 - **show** - _{String|Array}_ - `undefined`: Scopes to hide/show fields
-- **strict** - _{Boolean}_ - `false` Strips any fields not declared on model
+- **unscope** - _{Boolean}_ - `false`: Ignores 'show' any scopes
+- **strict** - _{Boolean}_ - `false`: Strips any fields not declared on model
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
 - **generate** - _{Boolean}_ - `true`: Enable/disable generating new values - see [Design:generate](#generate)
