@@ -1,5 +1,5 @@
 
-2.0.0-rc.4 UNRELEASED
+2.0.0-rc.5 UNRELEASED
 ======
 
 **MAJOR BREAKING CHANGES**
@@ -11,7 +11,7 @@ Added:
 - `keyCheckOnly` validation option to check user keys are all set on model
 - `strict` validation option to validate with key check
 - Custom fns have access to whole model data via `this.<field>`
-- #4 `show` array or string of scopes required to 'show' the field
+- #4 `scopes` array or string of scopes required to `.show` field on format()
 - #33 `.write` field to validate() scopes/permissions
 - `unscope` format boolean option to IGNORE `show` scopes
 - Plugins:

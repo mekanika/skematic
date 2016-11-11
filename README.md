@@ -416,8 +416,8 @@ Format _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
-- **show** - _{String|Array}_ - `undefined`: Scopes to hide/show fields
-- **unscope** - _{Boolean}_ - `false`: Ignores 'show' any scopes
+- **scopes** - _{String|Array}_ - `undefined`: List of scopes that toggle `.show` model fields on format() (See validate() for `.write` scopes)
+- **unscope** - _{Boolean}_ - `false`: Ignores 'show' of scopes (ie. shows all)
 - **strict** - _{Boolean}_ - `false`: Strips any fields not declared on model
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
@@ -430,7 +430,7 @@ Format _options_ include:
 
 Format applies these options in significant order:
 
-0. `show`: Checks scope match - bails out if the check fails
+0. `scopes`: Checks scope match - hides field if the check fails
 1. `lock`: Strip locked fields (unless `{unlock: true}` provided)
 2. `sparse`: Only processes keys on the provided data (not the whole model)
 3. `defaults`: Apply default values
@@ -464,9 +464,9 @@ out = Skematic.format(myModel, {}, {defaults: false})
 out = Skematic.format(myModel, {rando: undefined, power: 'x'}, {strip: [undefined, 'x']})
 // -> {name: 'ZIM'}
 
-out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {show: ['admin']})
+out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['admin']})
 // -> {name: 'ZIM', secret: 'hi!'}
-out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {show: ['not:admin']})
+out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['not:admin']})
 // -> {name: 'ZIM'}
 
 out = Skematic.format(myModel, {name: 'Gir'}, {sparse: true})

@@ -160,7 +160,7 @@ describe('.format(skm, opts, data)', function () {
   describe('`show` scopes projector', () => {
     it('hides fields string:string', () => {
       const s = {name: {show: 'admin'}, age: {default: 21}}
-      const hasScope = format(s, {name: 'X'}, {show: 'admin'})
+      const hasScope = format(s, {name: 'X'}, {scopes: 'admin'})
       const notScope = format(s, {name: 'X'}, {})
 
       expect(hasScope.name).to.equal('X')
@@ -169,7 +169,7 @@ describe('.format(skm, opts, data)', function () {
 
     it('hides fileds string:array', () => {
       const s = {name: {show: ['admin']}, age: {default: 21}}
-      const hasScope = format(s, {name: 'X'}, {show: 'admin'})
+      const hasScope = format(s, {name: 'X'}, {scopes: 'admin'})
       const notScope = format(s, {name: 'X'}, {})
 
       expect(hasScope.name).to.equal('X')
@@ -178,7 +178,7 @@ describe('.format(skm, opts, data)', function () {
 
     it('hides fileds array:array', () => {
       const s = {name: {show: ['anything', 'admin']}, age: {default: 21}}
-      const hasScope = format(s, {name: 'X'}, {show: ['admin']})
+      const hasScope = format(s, {name: 'X'}, {scopes: ['admin']})
       const notScope = format(s, {name: 'X'}, {})
 
       expect(hasScope.name).to.equal('X')
@@ -187,7 +187,7 @@ describe('.format(skm, opts, data)', function () {
 
     it('hides fileds array:string', () => {
       const s = {name: {show: 'admin'}, age: {default: 21}}
-      const hasScope = format(s, {name: 'X'}, {show: ['admin', 'any']})
+      const hasScope = format(s, {name: 'X'}, {scopes: ['admin', 'any']})
       const notScope = format(s, {name: 'X'}, {})
 
       expect(hasScope.name).to.equal('X')

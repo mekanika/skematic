@@ -232,7 +232,7 @@ function _dive (skm, payload, opts, parentData) {
 
       // Show/hide scope permissions projection
       // (`unscope:true` prevents using 'scopes' permissions)
-      if (!opts.unscope && model.show && !isIn(opts.show, model.show)) {
+      if (!opts.unscope && model.show && !isIn(opts.scopes, model.show)) {
         delete data[key]
         // Skips any further processing
         continue
