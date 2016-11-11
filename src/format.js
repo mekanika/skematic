@@ -123,8 +123,10 @@ function isIn (source, target) {
   // No target permissions? Always passes
   if (!target || !target.length) return true
 
-  // Note: indexOf works for Arrays AND String scalars
-  if (!Array.isArray(source)) return target.indexOf(source) > -1
+  // Convert to arrays so we don't accidentally do PARTIAL string matches
+  // using the .indexOf method (which would match 'thisperm' with 'hisp')
+  if (!Array.isArray(source)) source = [source]
+  if (!Array.isArray(target)) target = [target]
 
   let present = false
   source.forEach(val => {
