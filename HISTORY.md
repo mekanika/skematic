@@ -13,7 +13,7 @@ Added:
 - Custom fns have access to whole model data via `this.<field>`
 - #4 `scopes` array or string of scopes required to `.show` field on format()
 - #33 `.write` field to validate() scopes/permissions
-- `unscope` format boolean option to IGNORE `show` scopes
+- `unscope` format boolean option to IGNORE `show` or `write` scopes
 - Plugins:
   - `toReactShape()` Maps a model to React.PropTypes.shape()
   - `koa` and `connect` middleware

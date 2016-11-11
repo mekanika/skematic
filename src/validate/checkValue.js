@@ -17,7 +17,7 @@ import * as Rules from '../rules'
   @private
 */
 
-export default function checkValue (val, model, data, opts) {
+export default function checkValue (val, model, data, opts = {}) {
   let errs = []
   if (!model) return []
 
@@ -93,7 +93,8 @@ export default function checkValue (val, model, data, opts) {
   // 4. Check write permissions
   // If a key is being set, there should be a corresponding permission to do so
   // Check against the model.write parameter
-  if (model.write && !isIn(opts.scopes, model.write)) {
+  // Do NOT run this test if `unscope` option is set to `true`
+  if (!opts.unscope && model.write && !isIn(opts.scopes, model.write)) {
     errs = setError(model, 'writePermissions', errs)
   }
 

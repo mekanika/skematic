@@ -305,6 +305,12 @@ describe('checkValue(val, model)', function () {
       expect(o3).to.have.length(0)
       expect(o4).to.have.length(0)
     })
+
+    it('ignores .write settings if `unscope: true`', () => {
+      const s = {write: ['boom']}
+      const out = checkValue(1, s, null, {unscope: true})
+      expect(out).to.have.length(0)
+    })
   })
 
   describe('error msgs', function () {
