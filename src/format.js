@@ -25,13 +25,6 @@ import {canCompute, computeValue as compute} from './compute'
 import idMap from './idmap'
 
 /**
-  Export module
-  @ignore
-*/
-
-export default format
-
-/**
   Formats a data object according to model rules.
 
   Order of application is significant: 1. Defaults, 2. Generate, 3. Transform.
@@ -291,3 +284,11 @@ function _dive (skm, payload, opts, parentData) {
 
   return data
 }
+
+/**
+  Export module
+  @ignore
+*/
+
+module.exports = format
+module.exports.isIn = isIn
