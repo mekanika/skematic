@@ -281,6 +281,32 @@ describe('checkValue(val, model)', function () {
     expect(out).to.match(/required/ig)
   })
 
+  describe('.write scopes permissions', () => {
+    it('check .scopes against .write requirements', () => {
+      const s = {write: 'play'}
+      const out = checkValue('Swee!', s, null, {scopes: ['fail!']})
+      expect(out).to.match(/writePermissions/ig)
+
+      const good = checkValue('Swee!', s, null, {scopes: ['play']})
+      expect(good).to.have.length(0)
+    })
+
+    it('accepts strings + arrays on .write and .scopes', () => {
+      const s1 = {write: 'play'}
+      const s2 = {write: ['play']}
+
+      const o1 = checkValue(null, s1, null, {scopes: 'play'})
+      const o2 = checkValue(null, s1, null, {scopes: ['play']})
+      const o3 = checkValue(null, s2, null, {scopes: 'play'})
+      const o4 = checkValue(null, s2, null, {scopes: ['play']})
+
+      expect(o1).to.have.length(0)
+      expect(o2).to.have.length(0)
+      expect(o3).to.have.length(0)
+      expect(o4).to.have.length(0)
+    })
+  })
+
   describe('error msgs', function () {
     it('can be set declaratively', function () {
       var s = {rules: {oneOf: ['a']}, errors: {oneOf: 'Hotdog!'}}

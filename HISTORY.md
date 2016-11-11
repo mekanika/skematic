@@ -12,6 +12,7 @@ Added:
 - `strict` validation option to validate with key check
 - Custom fns have access to whole model data via `this.<field>`
 - #4 `show` array or string of scopes required to 'show' the field
+- #33 `.write` field to validate() scopes/permissions
 - `unscope` format boolean option to IGNORE `show` scopes
 - Plugins:
   - `toReactShape()` Maps a model to React.PropTypes.shape()

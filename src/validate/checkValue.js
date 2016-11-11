@@ -1,5 +1,6 @@
 
 import is from '../is'
+import {isIn} from '../format'
 import setError from './setError'
 import * as Rules from '../rules'
 
@@ -87,6 +88,13 @@ export default function checkValue (val, model, data, opts) {
     }
 
     if (!isValid) errs = setError(model, key, errs)
+  }
+
+  // 4. Check write permissions
+  // If a key is being set, there should be a corresponding permission to do so
+  // Check against the model.write parameter
+  if (model.write && !isIn(opts.scopes, model.write)) {
+    errs = setError(model, 'writePermissions', errs)
   }
 
   // Return errors

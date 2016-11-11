@@ -66,8 +66,8 @@ function validate (model, data, opts = {}) {
     if (!checkedKeys.valid) return checkedKeys
   }
 
-  if (opts.sparse) return _sparse(data, model)
-  else return _validate(data, model)
+  if (opts.sparse) return _sparse(data, model, opts)
+  else return _validate(data, model, opts)
 }
 
 /**
@@ -117,12 +117,12 @@ function _checkKeys (model, data) {
   @private
 */
 
-function _validate (data, model) {
+function _validate (data, model, opts) {
   let errs = {}
 
   // Validate scalars
   if (!is.object(data)) {
-    let res = checkValue(data, model)
+    let res = checkValue(data, model, null, opts)
     return res.length
       ? {valid: false, errors: res}
       : {valid: true, errors: null}
@@ -154,14 +154,14 @@ function _validate (data, model) {
         v.forEach((val, idx) => {
           // Array of complex objects
           if (is.type(val) === 'object') {
-            let arsub = _validate(val, scm.model)
+            let arsub = _validate(val, scm.model, opts)
             if (!arsub.valid) {
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = arsub.errors
             }
           } else {
             // Array of simple types
-            let er = checkValue(val, scm.model, data)
+            let er = checkValue(val, scm.model, data, opts)
             if (er.length) {
               if (!errs[key]) errs[key] = {}
               errs[key][idx] = er
@@ -170,13 +170,13 @@ function _validate (data, model) {
         })
       } else {
         // Otherwise just assume it's an object
-        let sub = _validate(v, scm.model)
+        let sub = _validate(v, scm.model, opts)
         if (!sub.valid) errs[key] = sub.errors
       }
 
       // Otherwise NO sub-model: test the value directly
     } else {
-      let errors = checkValue(v, scm, data)
+      let errors = checkValue(v, scm, data, opts)
       if (errors.length) errs[key] = errors
     }
   }
@@ -200,7 +200,7 @@ function _validate (data, model) {
   @private
 */
 
-function _sparse (data, model) {
+function _sparse (data, model, opts) {
   let isValid = true
   let errs = {}
   let out
@@ -209,7 +209,7 @@ function _sparse (data, model) {
     // Only valid with an associated model
     if (!model[key]) continue
 
-    out = _validate(data[key], model[key])
+    out = _validate(data[key], model[key], opts)
     if (!out.valid) {
       isValid = false
       errs[key] = out.errors

@@ -83,6 +83,7 @@ A few other **convenience methods** are provided, that mostly encapsulate or exp
 - **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
 - **show** _{String|Array}_ string scopes required to show field on format (hides if not met)
+- **write** _{String|Array}_ scopes required to validate this field being set (fails validation if `scopes` aren't matching)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
 - **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
@@ -507,6 +508,7 @@ Validate _options_ include:
 
 > Legend: **field** - _{Type}_ - `default`: Description
 
+- **scopes** - _{String|Array}_ - `undefined`: List of scopes that will be tested against `.write` model fields for matches. Errors if scopes don't meet.
 - **strict** - _{Boolean}_ - `false`: Validates that all keys provided by data are defined on the model as well as valid (prevents validating/accepting extraneous fields)
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **keyCheckOnly** - _{Boolean}_ - `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on model. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
