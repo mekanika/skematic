@@ -20,7 +20,8 @@ const mapToPropType = (PropTypes, type) => {
 
     default:
       if (type) {
-        console.log('[mapToPropType] No map for type: ' + type)
+        // @todo Make this log dependent on a development env
+        // console.log('[mapToPropType] No map for type: ' + type)
       }
       return PropTypes.any
   }
