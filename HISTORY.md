@@ -1,5 +1,5 @@
 
-2.0.0-rc.5 UNRELEASED
+2.0.0 - 18 November 2016
 ======
 
 **MAJOR BREAKING CHANGES**
