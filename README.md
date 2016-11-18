@@ -19,7 +19,7 @@ A **basic example**:
 const Hero = {
   name:    {rules: {minLength: 4}, errors: 'Bad name!'},
   shouts:  {transforms: ['trim', 'uppercase']},
-  skill:   {type: 'number', default: 3, required: true},
+  skill:   {type: Skematic.NUMBER, default: 3, required: true},
   updated: {generate: Date.now}
 }
 
@@ -64,21 +64,13 @@ The API surface is small by design, with two **primary methods**:
 - **.format**( model, data [, opts])  - see [Format](#format)
 - **.validate**( model, data [, opts] )  - see [Validate](#validate)
 
-A few other **convenience methods** are provided, that mostly encapsulate or expose specific functionality in format or validate:
-
 ## Design
 
 ### Model configuration
 
 `Skematic` provides keys to define rules and conditions for your data model. Config keys are **all optional**.
 
-- **type** _{String}_ Specify a _rule_ that value is type:
-    - "string"
-    - "boolean"
-    - "number"
-    - "integer"
-    - "array"
-    - "object"
+- **type** _{String}_ Currently a cosmetic field - will be used to both validate input and enable prep for exporting to SQL format (see [Issue #27](https://github.com/mekanika/skematic/issues/27))
 - **default** _{any}_ value to apply if no value is set/passed
 - **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
 - [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
@@ -100,7 +92,7 @@ A basic data model:
 ```js
 const Hero = {
   name: {
-    type: 'string',
+    type: Skematic.STRING,
     default: 'Genericman',
     transforms: ['toString', 'nowhite'],
     required: true,
@@ -124,13 +116,13 @@ Typically you'll create a more complete data model to represent your application
 ```js
 const Hero = {
   name: HeroNameField,
-  skill: {type: 'number', default: 0}
+  skill: {type: Skematic.NUMBER, default: 0}
 }
 
 Skematic.validate(Hero, {name: 'Spiderman', skill: 15})
 // -> {valid: true, errors: null}
-Skematic.validate(Hero, {name: 'Moo', skill: 'magic'})
-// -> {valid: false, errors: {name: ['Shorty!'], skill: ['Not of type: number']}}
+Skematic.validate(Hero, {name: 'Moo'})
+// -> {valid: false, errors: {name: ['Shorty!']}
 ```
 
 ### Transforms
@@ -346,17 +338,17 @@ A property can be formatted to another model (essentially, a complex object), or
 ```js
 // A "post" would have comments made up of `owner_id, body`
 const Post = {
-  comments: { type: 'array', model: {
-    owner_id: {type: 'number'},
-    body: {type: 'string', rules: {minLength: 25}}
+  comments: { type: Skematic.ARRAY, model: {
+    owner_id: {type: Skematic.NUMBER},
+    body: {type: Skematic.STRING, rules: {minLength: 25}}
     }
   }
 }
 
 // Or, a simple scalar array of "tags" (an array of strings):
 const Picture = {
-  url: {type: 'string'},
-  tags: {type: 'array', model: {type: 'string', rules: {minLength: 3}}}
+  url: {type: Skematic.STRING},
+  tags: {type: Skematic.ARRAY, model: {type: Skematic.STRING, rules: {minLength: 3}}}
 }
 ```
 
@@ -372,7 +364,7 @@ This is useful for data stores that use their own id fields (eg. MongoDB uses '_
 ```js
 const propSchema = {
   prop_id: {primaryKey: true},
-  name: {type: 'string'}
+  name: {type: Skematic.STRING}
 }
 
 // Example default results from data store:
