@@ -276,9 +276,12 @@ describe('.format(skm, opts, data)', function () {
 
     it('applies model to objects in arrays', function () {
       var demo = {
-        field: {type: 'array', model: {
-          boom: {default: '!', required: true}
-        }}
+        field: {
+          type: 'array',
+          model: {
+            boom: {default: '!', required: true}
+          }
+        }
       }
       var out = format(demo, {field: [{}]})
       expect(out.field[0].boom).to.equal('!')

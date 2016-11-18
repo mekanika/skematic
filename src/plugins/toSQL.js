@@ -178,9 +178,8 @@ export default function toSQL (schema, opts = {}) {
     // Open the field string
     let str = ''
 
-    if (true) { // opts.dropTables)
-      str += `\nDROP TABLE IF EXISTS ${k};`
-    }
+    // if (opts.dropTables)
+    str += `\nDROP TABLE IF EXISTS ${k};`
 
     // Generate ENUM types if present
     const enums = getEnumTypeString(model)

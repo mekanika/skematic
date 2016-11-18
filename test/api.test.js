@@ -84,9 +84,13 @@ describe('createFrom .format(skm)', function () {
   })
 
   it('intialises sub-model fields on arrays', function () {
-    var s = {swee: {type: 'array', default: [{}], model: {
-      name: {type: 'string', default: 'user'}
-    }}}
+    var s = {swee: {
+      type: 'array',
+      default: [{}],
+      model: {
+        name: {type: 'string', default: 'user'}
+      }
+    }}
 
     expect(Skematic.format(s)).to.eql({swee: [{name: 'user'}]})
   })

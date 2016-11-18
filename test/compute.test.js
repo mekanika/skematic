@@ -83,7 +83,9 @@ describe('Computed value generator', function () {
   it('can access parent data keys via `this`', () => {
     var s = {name: {generate: function () {
       return 'Zim' + this.age
-    }}, age: {default: 18}}
+    }},
+      age: {default: 18}
+    }
     const out = format(s)
     expect(out.name).to.equal('Zim18')
   })

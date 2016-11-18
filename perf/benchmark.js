@@ -17,10 +17,13 @@ var s = {
     zipcode: {type: 'integer', required: true}
   }},
   tags: { type: 'array', schema: {type: 'string'} },
-  books: {type: 'array', schema: {
-    title: {type: 'string'},
-    author: {type: 'string'}
-  }}
+  books: {
+    type: 'array',
+    schema: {
+      title: {type: 'string'},
+      author: {type: 'string'}
+    }
+  }
 }
 
 // ----------

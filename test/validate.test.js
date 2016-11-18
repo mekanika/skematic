@@ -105,10 +105,12 @@ describe('Validate', function () {
             zipcode: {type: 'integer', required: true}
           }},
           tags: { type: 'array', model: {type: 'string'} },
-          books: {type: 'array', model: {
-            title: {type: 'string'},
-            author: {type: 'string'}
-          }}
+          books: {type: 'array',
+            model: {
+              title: {type: 'string'},
+              author: {type: 'string'}
+            }
+          }
         }
 
         var data = {
