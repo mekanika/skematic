@@ -8,7 +8,8 @@
 
 export {
   required,
-  empty,
+  isEmpty,
+  notEmpty,
   eq,
   neq,
   minLength,
@@ -41,20 +42,30 @@ function required (val) {
 }
 
 /**
- * Value is empty (either `''` or `undefined`).
- *
- * Set `allowEmpty=false` to return `false` on empty, `true` on set
+ * Value is empty (either `''` or `undefined`) but NOT `false` or `0`
  *
  * @param {Mixed} v The value to test
- * @param {Boolean} allowEmpty [default:true] When `false`, empty values return `false`, set values return `true`
  * @return {Boolean}
  * @memberof Rules
- * @alias empty
+ * @alias isEmpty
  */
 
-function empty (v, allowEmpty) {
-  if (typeof allowEmpty === 'undefined') allowEmpty = true
-  return (v === '' || v === undefined) && allowEmpty
+function isEmpty (v) {
+  // if (typeof allowEmpty === 'undefined') allowEmpty = true
+  return (v === '' || v === undefined) // && allowEmpty
+}
+
+/**
+  * Value is NOT empty (either `''` or `undefined`)
+  *
+  * @param {Mixed} v The value to test
+  * @return {Boolean}
+  * @memberof Rules
+  * @alias notEmpty
+*/
+
+function notEmpty (v) {
+  return v !== '' && v !== undefined
 }
 
 /**

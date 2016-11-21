@@ -164,7 +164,8 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.isUrl** - no parameters: Is the string a URL
 - **.match** - String must match regexp
 - **.notMatch** - String must NOT match regexp
-- **.empty** - `true` checks the value is empty, `false` checks it's not
+- **.isEmpty** - set to `true` to check the value is empty
+- **.notEmpty** - set to `true` to check the value is **not** empty
 
 **Custom rules** can be applied by providing your own validation functions that accept a `value` to test and return a `Boolean` (pass/fail).
 

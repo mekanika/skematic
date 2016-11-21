@@ -23,22 +23,28 @@ describe('Rules', function () {
     })
   })
 
-  describe('.empty(v,allowEmpty)', function () {
+  describe('.isEmpty(v)', function () {
     it('passes if value is empty', function () {
-      expect(V.empty('')).to.be.true
-    })
-
-    it('passes if value is empty and allowEmpty', function () {
-      expect(V.empty('', true)).to.be.true
+      expect(V.isEmpty('')).to.be.true
     })
 
     it('fails if value is NOT empty', function () {
-      expect(V.empty('123')).to.be.false
-      expect(V.empty('123', true)).to.be.false
+      expect(V.isEmpty('123')).to.be.false
+      expect(V.isEmpty('123')).to.be.false
+      expect(V.isEmpty(null)).to.be.false
+    })
+  })
+
+  describe('.notEmpty(v)', function () {
+    it('passes if value is NOT empty', function () {
+      expect(V.notEmpty('whatever')).to.be.true
+      expect(V.notEmpty(null)).to.be.true
+      expect(V.notEmpty(false)).to.be.true
     })
 
-    it('fails if value IS empty by NOT allowEmpty', function () {
-      expect(V.empty('', false)).to.be.false
+    it('fails if value is empty', function () {
+      expect(V.notEmpty('')).to.be.false
+      expect(V.notEmpty()).to.be.false
     })
   })
 

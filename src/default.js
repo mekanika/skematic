@@ -4,7 +4,7 @@
   @ignore
 */
 
-import {empty} from './rules'
+import {isEmpty} from './rules'
 import is from './is'
 
 /**
@@ -28,7 +28,7 @@ export default function (v, model) {
     if (s.default === undefined) return v
 
     // Return the default if `v` is empty (ie. undefined or '')
-    return empty(v) || v === null ? s.default : v
+    return isEmpty(v) || v === null ? s.default : v
   }
 
   // Parse objects

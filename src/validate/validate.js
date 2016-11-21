@@ -142,7 +142,7 @@ function _validate (data, model, opts) {
     // If it's not required and the default value is 'empty', skip it
     // Note: 'allowNull: false' is NOT NULL. Disallows empty.
     const isRequired = scm.required || scm.allowNull === false
-    if (!isRequired && Rules.empty(setDefault(v, scm))) continue
+    if (!isRequired && Rules.isEmpty(setDefault(v, scm))) continue
 
     // Recursively Validate sub-model
     if (scm.model) {
