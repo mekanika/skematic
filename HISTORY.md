@@ -1,4 +1,13 @@
 
+2.2.0 - 21 November 2016
+======
+
+Changed:
+
+- Error messages are now KEYS by default, rather than Sentences
+
+
+
 2.1.1 - 21 November 2016
 ======
 
