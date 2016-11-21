@@ -1,4 +1,14 @@
 
+2.1.1 - 21 November 2016
+======
+
+Internal:
+
+- Added release runner to npm scripts to prep repo for npm publish
+- Ignore npm-debug.log
+
+
+
 2.1.0 - 21 November 2016
 ======
 
