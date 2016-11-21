@@ -331,11 +331,9 @@ describe('checkValue(val, model)', function () {
       expect(checkValue('b', s)[0]).to.equal('Hotdog!')
     })
 
-    it('uses system default msg if no match', function () {
+    it('uses default ruleKey msg if no match', function () {
       var s = {rules: {oneOf: ['a']}, errors: {}}
-
-      // @note This is HARDCODED to match the 'defaultError'
-      expect(checkValue('b', s)).to.match(/failed/ig)
+      expect(checkValue('b', s)[0]).to.eql('oneOf')
     })
 
     // The 'required' rule is a shorthand that previously was handled
@@ -344,6 +342,33 @@ describe('checkValue(val, model)', function () {
     it('enables setting custom required message', function () {
       var s = {required: true, errors: {required: 'woot!'}}
       expect(checkValue(undefined, s)).to.eql(['woot!'])
+    })
+
+    it('returns `unknownRule:...` on unknown rule declaration', () => {
+      const s = {rules: {derp: true}}
+      expect(checkValue(1, s)[0]).to.eql('unknownRule:derp')
+    })
+
+    it('returns `required` on missing required field', () => {
+      const s = {required: true}
+      expect(checkValue(undefined, s)[0]).to.eql('required')
+    })
+
+    it('returns `writePermissions` incorrect scopes', () => {
+      const s = {write: 'yo'}
+      const opts = {scopes: ['nothinguseful']}
+      expect(checkValue(1, s, null, opts)[0]).to.eql('writePermissions')
+    })
+
+    it('returns `invalidObject` on bad data keyCheck', () => {
+      const vdat = validate({}, undefined, {keyCheckOnly: true})
+      expect(vdat.errors.data[0]).to.eql('invalidObject')
+    })
+
+    it('returns `invalidKey` on bad key on keyCheck', () => {
+      const s = {moo: {}}
+      const vdat = validate(s, {swee: 1}, {keyCheckOnly: true})
+      expect(vdat.errors.swee[0]).to.eql('invalidKey')
     })
   })
 })

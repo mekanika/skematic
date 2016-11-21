@@ -87,7 +87,7 @@ function _checkKeys (model, data) {
   }
 
   if (!is.object(data)) {
-    return {valid: false, errors: {data: ['Invalid data']}}
+    return {valid: false, errors: {data: ['invalidObject']}}
   }
 
   const MAX_USER_KEY_LEN = 48
@@ -100,7 +100,7 @@ function _checkKeys (model, data) {
         ? key.substr(0, MAX_USER_KEY_LEN - 3) + '...'
         : key
 
-      ret.errors[shortKey] = [`Invalid key: ${shortKey}`]
+      ret.errors[shortKey] = [`invalidKey`]
     }
   }
 

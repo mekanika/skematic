@@ -50,7 +50,7 @@ export default function checkValue (val, model, data, opts = {}) {
   // The value type matches its declaration (if any)
   if (model.type && is[model.type]) {
     if (!is.undefined(val) && !is[ model.type ](val)) {
-      return [`Not of type: ${model.type}`]
+      return [`wrongType:${model.type}`]
     }
   }
 
@@ -75,7 +75,7 @@ export default function checkValue (val, model, data, opts = {}) {
 
       // Check that the rule exists to run against
       if (!Rules[key]) {
-        errs.push(`Unknown rule: ${key}`)
+        errs.push(`unknownRule:${key}`)
         continue
       }
 
