@@ -1,4 +1,18 @@
 
+2.1.0 - 21 November 2016
+======
+
+Added:
+
+- `.isEmpty` rule to test that a provided value is empty
+- `.notEmpty` rule to test that a provided value is NOT empty
+
+Removed:
+
+- `.empty` complex rule that check for both empty and not empty states
+
+
+
 2.0.0 - 18 November 2016
 ======
 
