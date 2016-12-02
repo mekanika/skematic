@@ -1,5 +1,5 @@
 
-const mapToPropType = (PropTypes, type) => {
+var mapToPropType = function (PropTypes, type) {
   switch (type) {
     // @todo Add support for:
     //   - Arrays
