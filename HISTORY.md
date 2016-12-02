@@ -1,4 +1,13 @@
 
+2.2.2 - 2 December 2016
+======
+
+Internal:
+
+- `toReactShape` file to full ES5 mode
+
+
+
 2.2.1 - 2 December 2016
 ======
 

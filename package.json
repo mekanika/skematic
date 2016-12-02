@@ -12,7 +12,7 @@
     "validate",
     "validation"
   ],
-  "version": "2.2.1",
+  "version": "2.2.2",
   "homepage": "https://github.com/mekanika/skematic",
   "license": "ISC",
   "main": "build/skematic.min.js",
