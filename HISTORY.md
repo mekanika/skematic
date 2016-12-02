@@ -1,3 +1,11 @@
+2.2.3 - 3 December 2016
+=====
+
+Internal:
+
+- Fix release with `npm release` and fully built docs and output
+
+
 
 2.2.2 - 2 December 2016
 ======
