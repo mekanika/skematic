@@ -38,10 +38,10 @@ var mapToPropType = function (PropTypes, type) {
 */
 
 module.exports = function toReactShape (model, PropTypes) {
-  let shape = {}
+  var shape = {}
 
-  for (let key in model) {
-    const field = model[key]
+  for (var key in model) {
+    var field = model[key]
 
     shape[key] = mapToPropType(PropTypes, field.type)
 
