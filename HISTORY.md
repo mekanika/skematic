@@ -1,4 +1,13 @@
 
+2.2.1 - 2 December 2016
+======
+
+Internal:
+
+- `toReactShape()` methods to ES5
+
+
+
 2.2.0 - 21 November 2016
 ======
 
