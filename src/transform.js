@@ -5,7 +5,7 @@
 */
 
 import is from './is'
-import * as Cast from './typeconvert'
+import * as Cast from './plugins/typeconvert'
 
 /**
   Export transform modules

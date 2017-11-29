@@ -4,9 +4,9 @@
  */
 
 const expect = require('chai').expect
-const Cast = require('../src/typeconvert')
+const Cast = require('../../src/plugins/typeconvert')
 
-describe('Cast Types', function () {
+describe('plugin:TypeConvert - Cast Types', function () {
   it('functions are named', function () {
     expect(Cast.toString.name).to.equal('toString')
     expect(Cast.toNumber.name).to.equal('toNumber')

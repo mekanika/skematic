@@ -1,7 +1,7 @@
 
 /**
- * Expose module
- * @namespace TypeConvert
+ * Methods to convert a value to a specific Type
+ * @namespace plugins/TypeConvert
  */
 
 export {
@@ -35,7 +35,7 @@ export {
  * @throws Conversion failure error
  * @returns {String} converted value
  * @alias toString
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toString (val) {
@@ -77,7 +77,7 @@ function toString (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias convertNumber
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function convertNumber (val, convertor, radix) {
@@ -121,7 +121,7 @@ function convertNumber (val, convertor, radix) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toNumber
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toNumber (val) {
@@ -138,7 +138,7 @@ function toNumber (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toFloat
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toFloat (val) {
@@ -156,7 +156,7 @@ function toFloat (val) {
  * @throws Conversion failure error
  * @returns {Number} converted value
  * @alias toInteger
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toInteger (val, radix) {
@@ -182,7 +182,7 @@ function toInteger (val, radix) {
  *
  * @returns {Boolean} converted value
  * @alias toBoolean
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toBoolean (val) {
@@ -213,7 +213,7 @@ function toBoolean (val) {
  * @throws Conversion failure error
  * @returns {String} ISO 8601 formatted date
  * @alias toDate
- * @memberof TypeConvert
+ * @memberof plugins/TypeConvert
  */
 
 function toDate (val) {

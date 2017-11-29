@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 const expect = require('chai').expect
 const transform = require('../src/transform')
-const TypeConvert = require('../src/typeconvert')
+const TypeConvert = require('../src/plugins/typeconvert')
 
 describe('Transform', function () {
   describe('apply', function () {
