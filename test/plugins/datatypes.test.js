@@ -1,7 +1,7 @@
 /* eslint-env node, mocha */
 
 const expect = require('chai').expect
-const DataTypes = require('../src/datatypes')
+const DataTypes = require('../../src/plugins/datatypes')
 
 const typeKeys = Object.keys(DataTypes)
 let testedKeys = []

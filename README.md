@@ -19,7 +19,7 @@ A **basic example**:
 const Hero = {
   name:    {rules: {minLength: 4}, errors: 'Bad name!'},
   shouts:  {transforms: ['trim', 'uppercase']},
-  skill:   {type: Skematic.NUMBER, default: 3, required: true},
+  skill:   {default: 3, required: true, rules: {isNumber: true}},
   updated: {generate: Date.now}
 }
 
@@ -92,7 +92,6 @@ A basic data model:
 ```js
 const Hero = {
   name: {
-    type: Skematic.STRING,
     default: 'Genericman',
     transforms: ['toString', 'nowhite'],
     required: true,
@@ -116,7 +115,7 @@ Typically you'll create a more complete data model to represent your application
 ```js
 const Hero = {
   name: HeroNameField,
-  skill: {type: Skematic.NUMBER, default: 0}
+  skill: {default: 0}
 }
 
 Skematic.validate(Hero, {name: 'Spiderman', skill: 15})
@@ -197,6 +196,7 @@ Skematic.validate(User, {name: 'Bunnylord'})
 // -> {valid: true, errors: null}
 ```
 
+#### Custom Rules
 You can mix in **Custom rules** that have access to the rest of the data model via `this`. For example:
 
 ```js
@@ -206,6 +206,7 @@ const User = {
       // A built in validation
       minLength: 5,
       // Your own custom validator (accepts `value` to test, returns Boolean)
+      // Note: MUST use `function () {}` notation to access correct `this`
       onlyFastBunnylord: function myCustomCheck (value) {
         // See us access the `speed` prop in our check:
         return value === 'Bunnylord' && this.speed > 5
@@ -244,7 +245,7 @@ Provide a default message if no specific error message exists for that rule:
 }
 ```
 
-Usage example :
+Usage example:
 
 ```js
 const User = {
@@ -343,17 +344,18 @@ A property can be formatted to another model (essentially, a complex object), or
 ```js
 // A "post" would have comments made up of `owner_id, body`
 const Post = {
-  comments: { type: Skematic.ARRAY, model: {
-    owner_id: {type: Skematic.NUMBER},
-    body: {type: Skematic.STRING, rules: {minLength: 25}}
+  comments: { 
+    model: {
+      owner_id: {lock: true},
+      body: {rules: {minLength: 25, }}
     }
   }
 }
 
 // Or, a simple scalar array of "tags" (an array of strings):
 const Picture = {
-  url: {type: Skematic.STRING},
-  tags: {type: Skematic.ARRAY, model: {type: Skematic.STRING, rules: {minLength: 3}}}
+  url: {rules: {isURL: true}},
+  tags: {model: {rules: {minLength: 3}}}
 }
 ```
 
@@ -544,5 +546,5 @@ Contributions to `Skematic` are welcome.
 
 ### License
 
-Copyright 2016 [@cayuu](https://github.com/cayuu)
+Copyright 2017 [@cayuu](https://github.com/cayuu)
 v2+ Released under the **ISC License** ([ISC](https://opensource.org/licenses/ISC))

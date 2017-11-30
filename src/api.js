@@ -1,6 +1,4 @@
 
-const Types = require('./datatypes')
-
 /**
   Data structure and rule validation engine
   @module Skematic
@@ -27,7 +25,5 @@ function Skematic (model, opts = {}) {
 
 Skematic.format = format
 Skematic.validate = validate
-
-Object.keys(Types).forEach(t => (Skematic[t] = Types[t]))
 
 module.exports = Skematic
