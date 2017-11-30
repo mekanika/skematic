@@ -167,6 +167,7 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.isAlpha** - no parameters: Checks value is an ALPHA string (abcd...)
 - **.isAlphaNum** - no parameters: Checks value is AlphaNumeric (abc..012..9)
 - **.isNumber** - no parameters: Checks value is a Number (NaN fails this test)
+- **.isString** - no parameters: Checks value is of type String
 - **.match** - String must match regexp
 - **.notMatch** - String must NOT match regexp
 - **.isEmpty** - set to `true` to check the value is empty

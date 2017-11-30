@@ -27,6 +27,7 @@ export {
   isAlpha,
   isAlphaNum,
   isNumber,
+  isString,
   match,
   notMatch
 }
@@ -274,6 +275,19 @@ function isAlphaNum (v) {
 
 function isNumber (v) {
   return is.number(v)
+}
+
+/**
+ * Value is of type 'String'
+ *
+ * @param {any} v
+ * @return {Boolean}
+ * @memberof Rules
+ * @alias isNumber
+ */
+
+function isString (v) {
+  return is.string(v)
 }
 
 /**

@@ -230,6 +230,20 @@ describe('Rules', function () {
         expect(V.isNumber('123')).to.be.false
       })
     })
+
+    describe('isString( val )', () => {
+      it('passes if val is a string', () => {
+        expect(V.isString('123')).to.be.true
+        expect(V.isString('!@#!@$!@$')).to.be.true
+        expect(V.isString(1 / 3 + '')).to.be.true
+      })
+
+      it('fails if val is not a string', () => {
+        expect(V.isString(NaN)).to.be.false
+        expect(V.isString(true)).to.be.false
+        expect(V.isString(123)).to.be.false
+      })
+    })
   })
 
   // --- Match
