@@ -22,13 +22,13 @@
     "watch:browser": "watchify -e src/api.js --debug -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports transform-object-rest-spread ] ]",
     "build": "npm run browser && npm run compress",
     "compress": "uglifyjs build/skematic.dev.js -r Skematic -cm -o build/skematic.min.js",
-    "coverage": "nyc --require babel-register --reporter=lcov --reporter=text mocha -R spec test/",
+    "coverage": "nyc --require babel-register --reporter=lcov --reporter=text mocha -R spec test test/**/*.test.js",
     "docs": "documentation build index.js --name Skematic -o docs -f html",
     "dev": "npm run test:chain -s & nodemon --quiet --watch src --exec npm run build -s",
     "lint": "standard --verbose index.js src/**/*.js test/*.js perf/*.js | snazzy",
     "release": "npm run lint && npm run coverage && rm -rf build && mkdir build && npm run build && npm run benchmark",
     "test": "mocha -r babel-register -R spec test/ test/**/*.test.js",
-    "test:chain": "mocha -r babel-register -R min -w test",
+    "test:chain": "mocha -r babel-register -R min -w test test/**/*.test.js",
     "watch:test": "npm test -- --watch"
   },
   "repository": {
