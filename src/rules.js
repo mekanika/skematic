@@ -2,6 +2,8 @@
   @namespace Rules
 */
 
+const is = require('./is')
+
 /*
  * Expose module
  */
@@ -24,6 +26,7 @@ export {
   isUrl,
   isAlpha,
   isAlphaNum,
+  isNumber,
   match,
   notMatch
 }
@@ -258,6 +261,19 @@ function isAlpha (v) {
 
 function isAlphaNum (v) {
   return (/^[a-zA-Z0-9]+$/i).test(v) && typeof v === 'string'
+}
+
+/**
+ * Value is of type 'Number'
+ *
+ * @param {any} v
+ * @return {Boolean}
+ * @memberof Rules
+ * @alias isNumber
+ */
+
+function isNumber (v) {
+  return is.number(v)
 }
 
 /**

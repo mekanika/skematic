@@ -216,6 +216,20 @@ describe('Rules', function () {
         expect(V.isAlphaNum(',./abc')).to.be.false
       })
     })
+
+    describe('isNumber( val )', () => {
+      it('passes if val is a number', () => {
+        expect(V.isNumber(123)).to.be.true
+        expect(V.isNumber(99.123)).to.be.true
+        expect(V.isNumber(1 / 3)).to.be.true
+      })
+
+      it('fails if val is not a number', () => {
+        expect(V.isNumber(NaN)).to.be.false
+        expect(V.isNumber(true)).to.be.false
+        expect(V.isNumber('123')).to.be.false
+      })
+    })
   })
 
   // --- Match

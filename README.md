@@ -164,6 +164,9 @@ Several validation rules are built in. Notably, 'required' is passed as a proper
 - **.hasNot** - List of elements does NOT contain the value
 - **.isEmail** - no parameters: Is the string an email
 - **.isUrl** - no parameters: Is the string a URL
+- **.isAlpha** - no parameters: Checks value is an ALPHA string (abcd...)
+- **.isAlphaNum** - no parameters: Checks value is AlphaNumeric (abc..012..9)
+- **.isNumber** - no parameters: Checks value is a Number (NaN fails this test)
 - **.match** - String must match regexp
 - **.notMatch** - String must NOT match regexp
 - **.isEmpty** - set to `true` to check the value is empty
