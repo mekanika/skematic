@@ -70,18 +70,22 @@ The API surface is small by design, with two **primary methods**:
 
 `Skematic` provides keys to define rules and conditions for your data model. Config keys are **all optional**.
 
-- **type** _{String}_ Currently a cosmetic field - will be used to both validate input and enable prep for exporting to SQL format (see [Issue #27](https://github.com/mekanika/skematic/issues/27))
+Format:
 - **default** _{any}_ value to apply if no value is set/passed
-- **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
+- **lock** _{Boolean}_ disallows/strips value on format (`unlock` format opts to override)
 - **transform** _{Function}_ a function to transform a value (not called if value is undefined or null)
+- [**generate**](#generate) _{Object|Function}_ enables computing a value from functions
 - **show** _{String|Array}_ string scopes required to show field on format (hides if not met)
 - **write** _{String|Array}_ scopes required to validate this field being set (fails validation if `scopes` aren't matching)
-- [**generate**](#generate) _{Object}_ enables computing a value from functions
+- [**model**](#sub-model) _{Object|String}_ declare sub-model defining this value (see "[Sub-model](#sub-model)")
+
+Validate:
+- [**rules**](#rules) _{Object}_ validation rules: `{rules: {min: 3, max: 11}}`
+- [**errors**](#custom-error-messages) _{Object|String}_ error messages for rules
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
+
+Plugins:
 - **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
-- [**rules**](#rules) _{Object}_ hash of validation rules: `{rules: {min: 3, max: 11}}`
-- [**errors**](#custom-error-messages) _{Object|String}_ hash of error messages for rules
-- [**model**](#sub-model) _{Object|String}_ declare sub-model defining this value (see "Sub-model")
 - [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
 
 > Note: See format()'s [**order of execution**](#format-order-of-updates) for which formatting changes get applied in what order.
@@ -233,7 +237,7 @@ const User = {
   }
 }
 
-// Using a "scalar" value test:
+// Using a value test:
 Skematic.validate(User.name, 'Zim')
 // -> {valid:false, errors:['Name too short!']}
 
@@ -374,19 +378,24 @@ Skematic.format(model [, data] [, opts])
 // -> {formattedData}
 ```
 
-**Special case**: Passing format no data will cause format to **create** blank record based on your model, including defaults and generated fields. You can pass options too, as follows: `format(model, null, {defaults: false})`
+**Special case**: Passing format no data will cause format to **create** blank record based on your model `format(model)`, including defaults and generated fields. You can pass options too, as follows: `format(model, null, {defaults: false})`
 
 Parameters:
 
 - **model**: The model to format against
-- **data**: The data object to format
+- **data**: The data object to format. If `null` or `undefined`, format will attempt to _create_ data to return
 - **opts**: _[Optional]_ options hash (see below)
 
 ```js
+Skematic.format(Hero) // create a data block
+// -> {name: 'Genericman'}
+
 Skematic.format(Hero, {name: 'Zim'})
+// -> {name: 'Zim'}
 
 // Or with options
-Skematic.format(Hero, {name: 'Zim', _junk: '!'}, {strict: true})
+Skematic.format(Hero, {name: 'Zim', junk: '!'}, {strict: true})
+// -> {name: 'Zim'}
 ```
 
 Format _options_ include:
@@ -394,7 +403,7 @@ Format _options_ include:
 > Legend: **field** - _{Type}_ - `default`: Description
 
 - **scopes** - _{String|Array}_ - `undefined`: List of scopes that toggle `.show` model fields on format() (See validate() for `.write` scopes)
-- **unscope** - _{Boolean}_ - `false`: Ignores 'show' of scopes (ie. shows all)
+- **unscope** - _{Boolean}_ - `false`: Ignores 'show' of scopes (ie. shows all fields)
 - **strict** - _{Boolean}_ - `false`: Strips any fields not declared on model
 - **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
