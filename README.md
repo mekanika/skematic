@@ -84,9 +84,11 @@ Validate:
 - [**errors**](#custom-error-messages) _{Object|String}_ error messages for rules
 - **required** _{Boolean}_ flag if property MUST be set and/or provided
 
-Plugins:
-- **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted)
-- [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
+Advanced:
+- **allowNull** _{Boolean}_ Accept `null` values (no other validation applied) or set to `false` to _force_ a NOT NULL condition (no undefined or null values permitted). Designed to: 
+  - a) `false`: enables setting `required` (which ordinarily passes for `null`) while disallowing `null` as a value.
+  - b) `true`: enables accepting `null` without triggering any other rule validation (ie. 'null' becomes a valid value)
+- [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field), used in conjunction with `mapIdFrom` [format option](#format-options) to allow transposing your datastore id to some other field on your data model (eg. Mongo's `_id` can be mapped to the field you set `primaryKey: true` on)
 
 > Note: See format()'s [**order of execution**](#format-order-of-updates) for which formatting changes get applied in what order.
 
@@ -397,6 +399,9 @@ Skematic.format(Hero, {name: 'Zim'})
 Skematic.format(Hero, {name: 'Zim', junk: '!'}, {strict: true})
 // -> {name: 'Zim'}
 ```
+
+
+#### Format options
 
 Format _options_ include:
 
