@@ -18,13 +18,13 @@ A **basic example**:
 // -- Define a simple data structure
 const Hero = {
   name:    {rules: {minLength: 4}, errors: 'Bad name!'},
-  shouts:  {transforms: ['trim', 'uppercase']},
+  shouts:  {transform: val => val.trim().toUpperCase()},
   skill:   {default: 3, required: true, rules: {isNumber: true}},
   updated: {generate: Date.now}
 }
 
 // -- Format some data
-Skematic.format(Hero, {shouts: '   woo    '})
+Skematic.format(Hero, {shouts: '  woo   '})
 // {shouts: 'WOO', skill: 3, updated: 1426937159385}
 
 // -- Validate an object
@@ -73,7 +73,7 @@ The API surface is small by design, with two **primary methods**:
 - **type** _{String}_ Currently a cosmetic field - will be used to both validate input and enable prep for exporting to SQL format (see [Issue #27](https://github.com/mekanika/skematic/issues/27))
 - **default** _{any}_ value to apply if no value is set/passed
 - **lock** _{Boolean}_ disallows/strips value (`unlock` format opts to override)
-- [**transforms**](#transforms) _{Array}_ string values of transform to apply (transforms)
+- **transform** _{Function}_ a function to transform a value (not called if value is undefined or null)
 - **show** _{String|Array}_ string scopes required to show field on format (hides if not met)
 - **write** _{String|Array}_ scopes required to validate this field being set (fails validation if `scopes` aren't matching)
 - [**generate**](#generate) _{Object}_ enables computing a value from functions
@@ -84,6 +84,8 @@ The API surface is small by design, with two **primary methods**:
 - [**model**](#sub-model) _{Object|String}_ declare sub-model defining this value (see "Sub-model")
 - [**primaryKey**](#primarykey) _{Boolean}_ flag to indicate whether this field is the primary key (id field)
 
+> Note: See format()'s [**order of execution**](#format-order-of-updates) for which formatting changes get applied in what order.
+
 
 ### Simple examples
 
@@ -93,7 +95,6 @@ A basic data model:
 const Hero = {
   name: {
     default: 'Genericman',
-    transforms: ['toString', 'nowhite'],
     required: true,
     rules: {maxLength: 140, minLength: 4},
     errors: {maxLength: 'Too long', minLength: 'Shorty!'}
@@ -122,29 +123,6 @@ Skematic.validate(Hero, {name: 'Spiderman', skill: 15})
 // -> {valid: true, errors: null}
 Skematic.validate(Hero, {name: 'Moo'})
 // -> {valid: false, errors: {name: ['Shorty!']}
-```
-
-### Transforms
-
-The following built-in transforms can be used to type convert and otherwise modify a provided value:
-
-- **trim**- trims whitespace from start and end of string value
-- **nowhite** - removes all whitespace from a string value
-- **lowercase** - converts a string value to lowercase
-- **uppercase** - converts a string value to uppercase
-- **toString** - converts value to a String
-- **toNumber** - converts value to a Number
-- **toFloat** - converts value to a Float
-- **toInteger** - converts value to an Integer
-- **toBoolean** - converts value to a Boolean
-- **toDate** - converts value to an ISO 8601 Date eg. `2000-01-01T00:00:00.000Z`
-
-These are provided as an array on key `transforms`:
-
-```js
-const mySchema = {
-  handle: {transforms: ['trim', 'lowercase']}
-}
 ```
 
 ### Rules
@@ -422,10 +400,12 @@ Format _options_ include:
 - **defaults** - _{Boolean}_ - `true`: Set default values on 'empty' fields. Toggle to `false` to disable.
 - **generate** - _{Boolean}_ - `true`: Enable/disable generating new values - see [Design:generate](#generate)
 - **once** - _{Boolean}_ - `false`: Run generator functions set to `{once: true}` - see [Design:generate](#generate)
-- **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values - see [Design:transforms](#transforms)
+- **transform** _{Boolean}_ - `true`: Toggle to `false` to cancel modifying values
 - **unlock** - _{Boolean}_ - `false`: Unlocks 'lock'ed model fields (ie. no longer stripped, allows for overwriting).
 - **strip** - _{Array}_ - `[]`: Remove fields with matching values from `data`
 - **mapIdFrom** - _{String}_ - `undefined`: Maps a primary key field from the field name provided (requires a `primaryKey` field set on the model)
+
+#### Format order of updates
 
 Format applies these options in significant order:
 
@@ -447,31 +427,31 @@ const myModel = {
   mod_id: {primaryKey: true},
   rando: {generate: {ops: Math.random, once: true}},
   power: {default: 5},
-  name: {default: 'zim', transforms: ['uppercase']},
+  name: {default: 'zim', transform: val => val.toUpperCase()},
   secret: {show: 'admin'}
 };
 
-let out = Skematic.format(myModel, {}, {once: true})
+Skematic.format(myModel, {}, {once: true})
 // -> {rando: 0.24123545, power: 5, name: 'ZIM'}
 
-out = Skematic.format(myModel, {}) // (model, data)
+Skematic.format(myModel, {}) // (model, data)
 // -> {power: 5, name: 'ZIM}
 
-out = Skematic.format(myModel, {}, {defaults: false})
+Skematic.format(myModel, {}, {defaults: false})
 // -> {}
 
-out = Skematic.format(myModel, {rando: undefined, power: 'x'}, {strip: [undefined, 'x']})
+Skematic.format(myModel, {rando: undefined, power: 'x'}, {strip: [undefined, 'x']})
 // -> {name: 'ZIM'}
 
-out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['admin']})
+Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['admin']})
 // -> {name: 'ZIM', secret: 'hi!'}
-out = Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['not:admin']})
+Skematic.format(myModel, {name: 'Zim', secret: 'hi!'}, {scopes: ['not:admin']})
 // -> {name: 'ZIM'}
 
-out = Skematic.format(myModel, {name: 'Gir'}, {sparse: true})
+Skematic.format(myModel, {name: 'Gir'}, {sparse: true})
 // -> {name: 'GIR'}
 
-out = Skematic.format(myModel, {_id: '12345'}, {mapIdFrom: '_id'})
+Skematic.format(myModel, {_id: '12345'}, {mapIdFrom: '_id'})
 // -> {mod_id: '12345', power: 5, name: 'ZIM'}
 ```
 

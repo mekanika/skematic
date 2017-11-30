@@ -19,7 +19,6 @@ import is from './is'
 */
 
 import setDefault from './default'
-import transform from './transform'
 import strip from './strip'
 import {canCompute, computeValue as compute} from './compute'
 import idMap from './idmap'
@@ -172,9 +171,18 @@ function _makeValue (data = {}, ss = {}, opts, val) {
     }
   }
 
-  // Apply transforms
+  // Apply transforms only if transforms are allowed...
   if (opts.transform !== false) {
-    if (ss.transforms) val = transform(val, ss.transforms, data)
+    // ...and a transform exists on the model
+    // ...and the value exists
+    if (ss.transform && val !== undefined && val !== null) {
+      // Force an error if .transform is not a function
+      // ie. Developer error. Declare your models correctly pls.
+      if (!is.function(ss.transform)) {
+        throw new Error('Expect .transform value to be a function()')
+      }
+      val = ss.transform(val)
+    }
   }
 
   return val

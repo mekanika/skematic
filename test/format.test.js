@@ -48,13 +48,13 @@ describe('.format(skm, opts, data)', function () {
   })
 
   it('`transform` opt default transforms values', function () {
-    var s = {name: {default: 'ace', transforms: ['uppercase']}}
+    var s = {name: {default: 'ace', transform: v => v.toUpperCase()}}
     var out = format(s, {}, {})
     expect(out.name).to.equal('ACE')
   })
 
   it('`transform` opt "false" does not apply transforms', function () {
-    var s = {name: {default: 'ace', transforms: ['uppercase']}}
+    var s = {name: {default: 'ace', transform: v => v.toUpperCase()}}
     var out = format(s, {}, {transform: false})
     expect(out.name).to.equal('ace')
   })
@@ -212,7 +212,7 @@ describe('.format(skm, opts, data)', function () {
           model: {
             name: {default: 'Zim'},
             age: {generate: {ops: [{fn: gen.dbl, args: [5]}]}},
-            phrase: {transforms: ['uppercase']}
+            phrase: {transform: v => v.toUpperCase()}
           },
           // If no default specified, 'person' will only be applied
           // when a {person:{..}} field is provided
@@ -237,7 +237,7 @@ describe('.format(skm, opts, data)', function () {
           model: {
             default: 'moo',
             generate: {ops: [{fn: gen.xx}]},
-            transforms: ['uppercase']
+            transform: v => v.toUpperCase()
           },
           default: []
         }
@@ -258,7 +258,7 @@ describe('.format(skm, opts, data)', function () {
           model: {
             default: 'moo',
             generate: {ops: [{fn: gen.xx}]},
-            transforms: ['uppercase']
+            transform: v => v.toUpperCase()
           },
           default: []
         },
