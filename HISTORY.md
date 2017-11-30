@@ -1,3 +1,24 @@
+3.0.0 - 30 November 2017
+=====
+
+**Breaking changes**:
+
+- Removed named `.transforms` functions and model field
+- Moved TypeConvert module into '/plugins'
+- Removed DataTypes from core Skematic module
+- Moved DataTypes into '/plugins'
+
+Added:
+
+- `.transform` model definition that runs a function to transform values
+- `.isNumber` and `.isString` built in rules
+
+Internal:
+
+- Updated all dev dependencies
+
+
+
 2.2.3 - 3 December 2016
 =====
 
