@@ -1,5 +1,7 @@
 # Skematic
 
+> ⚠️ **Warning** - `master` is currently in [3.0 flux](https://github.com/mekanika/skematic/milestone/2)
+
 **Data structure** and **rule validation** engine. Robust model schema for JS objects.
 
 
