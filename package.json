@@ -16,6 +16,7 @@
   "homepage": "https://github.com/mekanika/skematic",
   "license": "ISC",
   "main": "build/skematic.min.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "benchmark": "node perf/benchmark.js",
     "browser": "browserify -e src/api.js --debug -o build/skematic.dev.js -s Skematic -t [ babelify --presets [ es2015 ] --plugins [ add-module-exports transform-object-rest-spread ] ]",
@@ -49,6 +50,7 @@
     "browserify": "14.5.0",
     "chai": "4.1.2",
     "documentation": "5.3.3",
+    "dtslint": "0.2.0",
     "mocha": "4.0.1",
     "nodemon": "1.12.1",
     "nyc": "11.3.0",

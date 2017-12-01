@@ -75,7 +75,7 @@ Format:
 - [**generate**](#generate) _{Object|Function}_ enables computing a value from functions
 - **show** _{String|Array}_ string scopes required to show field on format (hides if not met)
 - **write** _{String|Array}_ scopes required to validate this field being set (fails validation if `scopes` aren't matching)
-- [**model**](#sub-model) _{Object|String}_ declare sub-model defining this value (see "[Sub-model](#sub-model)")
+- [**model**](#sub-model) _{Object}_ declare sub-model defining this value (see "[Sub-model](#sub-model)")
 
 Validate:
 - [**rules**](#rules) _{Object}_ validation rules: `{rules: {min: 3, max: 11}}`
