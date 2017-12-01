@@ -28,10 +28,10 @@ describe('Validate', function () {
 
   it('sets .valid boolean based on validation result', function () {
     var res = Skematic.validate({power: {type: 'integer'}}, {power: '1'})
-    expect(res.valid).to.be.false
+    expect(res.valid).to.equal(false)
 
     res = Skematic.validate({power: {type: 'integer'}}, {power: 1})
-    expect(res.valid).to.be.true
+    expect(res.valid).to.equal(true)
   })
 
   it('treats `allowNull: false` as required field', () => {
@@ -75,7 +75,7 @@ describe('Validate', function () {
         var hero = {name: {type: 'string'}, power: {type: 'integer'}}
         var s = {group: {type: 'array', model: hero}}
         var res = Skematic.validate(s, {group: [{name: 'gir', power: '3'}]})
-        expect(res.valid).to.be.false
+        expect(res.valid).to.equal(false)
         expect(res.errors.group[0].power).to.have.length(1)
       })
     })
@@ -128,9 +128,9 @@ describe('Validate', function () {
         const pre = JSON.stringify(data)
         var res = Skematic.validate(s, data)
         const post = JSON.stringify(data)
-        expect(pre === post).to.be.true
+        expect(pre === post).to.equal(true)
 
-        expect(res.valid).to.be.false
+        expect(res.valid).to.equal(false)
         expect(res.errors.books['1'].author).to.have.length(1)
       })
     })
@@ -140,7 +140,7 @@ describe('Validate', function () {
         var s = {gir: {model: {type: 'string'}}}
         var res = Skematic.validate(s, {gir: ['a', 'b', 4]})
 
-        expect(res.valid).to.be.false
+        expect(res.valid).to.equal(false)
         // The 3rd element should have an error `arr['2']`
         expect(res.errors.gir).to.have.key('2')
       })
@@ -151,17 +151,17 @@ describe('Validate', function () {
         var data = {gir: ['a', 'b', '4']}
 
         var res = Skematic.validate(s, data)
-        expect(res.valid).to.be.true
+        expect(res.valid).to.equal(true)
         s.gir.type = 'array'
         res = Skematic.validate(s, data)
-        expect(res.valid).to.be.true
+        expect(res.valid).to.equal(true)
       })
 
       it('of simple (primitive) types', function () {
         var s = {gir: {type: 'array', model: {type: 'string', filters: ['toString']}}}
         var res = Skematic.validate(s, {gir: ['a', 'b', '4']})
 
-        expect(res.valid).to.be.true
+        expect(res.valid).to.equal(true)
       })
 
       it('of complex objects/models', function () {
@@ -173,7 +173,7 @@ describe('Validate', function () {
         }
 
         var res = Skematic.validate(s, {gir: [{age: 2, says: 'hi'}, {age: 4, says: 1337}]})
-        expect(res.valid).to.be.false
+        expect(res.valid).to.equal(false)
         expect(res.errors.gir['1'].says).to.have.length(1)
       })
 
@@ -181,7 +181,7 @@ describe('Validate', function () {
         var rec = {mega: 'kool'}
         var s = {jam: {type: 'array', default: ['moo'], model: {type: 'string'}}}
         var res = Skematic.validate(s, rec)
-        expect(res.valid).to.be.ok
+        expect(res.valid).to.equal(true)
       })
     })
   })
