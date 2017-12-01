@@ -1,3 +1,16 @@
+3.1.0 - 1 December 2017
+=====
+
+Added:
+
+- Typescript Type definitions
+
+Fixed:
+
+- Lint failures in tests due to .expect library expressions
+
+
+
 3.0.0 - 30 November 2017
 =====
 
