@@ -5,7 +5,7 @@
 
 [![npm version](https://img.shields.io/npm/v/skematic.svg?label=version&style=flat-square)](https://npmjs.com/package/skematic) [![Code Climate](https://img.shields.io/codeclimate/github/mekanika/skematic.svg?style=flat-square)](https://codeclimate.com/github/mekanika/skematic) [![Travis](https://img.shields.io/travis/mekanika/skematic.svg?style=flat-square)](https://travis-ci.org/mekanika/skematic)
 
-Universal, ultra fast and lightweight (5Kb!), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config models, for browser and Node.js.
+Universal, ultra fast and lightweight (4Kb!), `Skematic` enables you to _design_, _format_ and _validate_ data according to rules and conditions specified as simple config models, for browser and Node.js.
 
 - [**Design**](#design): structure your data models as config objects
 - [**Format**](#format): transform, generate and modify data structures
