@@ -3,3 +3,5 @@ node_modules
 coverage
 examples
 npm-debug.log
+.nyc_output
+.babelrc
