@@ -1,3 +1,14 @@
+3.2.0 - 30 December 2017
+=====
+
+Internal:
+
+- Moved Babel config to `.babelrc` and ignored this file in `.npmignore`. This was to assist breakage in `parcel-bundler` failing on parsing Skematic babel references.
+- Added .nyc_output to `.npmignore`
+- Update dev dependencies
+
+
+
 3.1.0 - 1 December 2017
 =====
 
