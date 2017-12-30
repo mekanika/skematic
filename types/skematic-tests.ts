@@ -27,6 +27,7 @@ const formatOptions: Skematic.FormatOptions = {
 };
 
 Skematic.format(demoModel, { name: 'Zim' });
+Skematic.format(demoModel.name, 'Zim');
 
 // Check validate()
 const validateOptions: Skematic.ValidateOptions = {
@@ -37,3 +38,5 @@ const validateOptions: Skematic.ValidateOptions = {
 };
 
 Skematic.validate(demoModel, { hello: 'yes' });
+
+Skematic.validate(demoModel.power, 20);

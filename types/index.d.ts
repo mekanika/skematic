@@ -206,13 +206,13 @@ declare namespace Skematic {
   }
 
   function format(
-  	model: Model,
+  	model: Model | ModelProps,
   	data?: any,
   	options?: FormatOptions
   ): any;
 
   function validate(
-    model: Model,
+    model: Model | ModelProps,
     data: any,
     options?: ValidateOptions
   ): ValidateReturn;
