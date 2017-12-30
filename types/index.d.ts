@@ -200,20 +200,31 @@ declare namespace Skematic {
     primaryKey?: boolean;
   }
 
-  interface ValidateReturn {
+  interface ValidateComplexReturn {
     valid: boolean;
-    errors: {[key: string]: string} | string[] | null;
+    errors: {[key: string]: string[]} | null;
+  }
+
+  interface ValidateSimpleReturn {
+    valid: boolean;
+    errors: string[] | null;
   }
 
   function format(
-  	model: Model | ModelProps,
-  	data?: any,
-  	options?: FormatOptions
+    model: Model | ModelProps,
+    data?: any,
+    options?: FormatOptions
   ): any;
 
   function validate(
-    model: Model | ModelProps,
+    model: Model,
     data: any,
     options?: ValidateOptions
-  ): ValidateReturn;
+  ): ValidateComplexReturn;
+
+  function validate(
+    model: ModelProps,
+    data: any,
+    options?: ValidateOptions
+  ): ValidateSimpleReturn;
 }
