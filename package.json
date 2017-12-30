@@ -59,15 +59,6 @@
     "uglify-js": "3.2.2",
     "watchify": "3.9.0"
   },
-  "babel": {
-    "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      "add-module-exports",
-      "transform-object-rest-spread"
-    ]
-  },
   "standard": {
     "parser": "babel-eslint"
   }
