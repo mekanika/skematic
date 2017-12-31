@@ -110,25 +110,25 @@ declare namespace Skematic {
     // List of elements does NOT contain the value
     hasNot?: any;
     // no parameters: Is the string an email
-    isEmail?: true;
+    isEmail?: boolean;
     // no parameters: Is the string a URL
-    isUrl?: true;
+    isUrl?: boolean;
     // no parameters: Checks value is an ALPHA string (abcd...)
-    isAlpha?: true;
+    isAlpha?: boolean;
     // no parameters: Checks value is AlphaNumeric (abc..012..9)
-    isAlphaNum?: true;
+    isAlphaNum?: boolean;
     // no parameters: Checks value is a Number (NaN fails this test)
-    isNumber?: true;
+    isNumber?: boolean;
     // no parameters: Checks value is of type String
-    isString?: true;
+    isString?: boolean;
     // String must match regexp
     match?: RegExp;
     // String must NOT match regexp
     notMatch?: RegExp;
     // set to true to check the value is empty
-    isEmpty?: true;
+    isEmpty?: boolean;
     // set to true to check the value is not empty
-    notEmpty?: true;
+    notEmpty?: boolean;
   }
 
   // Arbitrary function
