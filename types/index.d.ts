@@ -138,7 +138,7 @@ declare namespace Skematic {
       // The ops array lists fn objects or functions
       // A fn object specifies `fn` and `args`:
       // -> {fn: myFunc, args: []}
-      ops: Array<{fn: Fn, args: any[]} | Fn>;
+      ops: Array<{fn: Fn, args: any[]} | Fn> | Fn;
       // preserves a provided value
       preserve?: boolean;
       // ONLY generate if provided a field on data
