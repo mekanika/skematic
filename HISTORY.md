@@ -1,3 +1,12 @@
+3.3.0 - 29 January 2018
+=====
+
+Internal:
+
+- Update Typings to allow sub model methods and overloaded validate returns
+
+
+
 3.2.0 - 30 December 2017
 =====
 
