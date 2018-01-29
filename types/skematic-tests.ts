@@ -39,4 +39,7 @@ const validateOptions: Skematic.ValidateOptions = {
 
 Skematic.validate(demoModel, { hello: 'yes' });
 
-Skematic.validate(demoModel.power, 20);
+function chk() {
+  const out = Skematic.validate(demoModel.power, 20);
+  return out.valid ? false : out.errors && out.errors[0];
+}
