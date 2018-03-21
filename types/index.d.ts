@@ -194,6 +194,13 @@ declare namespace Skematic {
 
   interface ModelProps {
     /**
+     * type:
+     * Aesthetic reference ONLY - has no effect on Skematic
+     * Note: this is intended to connect with the plugins/datatypes
+     * for use with SQL exporting. #todo
+     */
+    type?: any;
+    /**
      * default:
      * Value to apply if no value is set/passed
      * @type {any}
