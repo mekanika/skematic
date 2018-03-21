@@ -1,3 +1,12 @@
+3.4.1 - 21 March 2018
+=====
+
+Fixed:
+
+- Export plugins/datatypes as CJS
+
+
+
 3.4.0 - 21 March 2018
 =====
 
