@@ -1,27 +1,27 @@
 
 /**
-  Expose the module
-  @ignore
-*/
+ * Expose the module
+ * @ignore
+ */
 
 export default idMap
 
 /**
-  Defines the property to lookup
-  @ignore
-*/
+ * Defines the property to lookup
+ * @ignore
+ */
 
 const KEY_NAME = 'primaryKey'
 
 /**
-  Internal helper to retrieve an arbitrary property match from an object hash
-
-  @param {Model} model
-  @param {String} name The name of the property to match
-
-  @return {String|undefined} The name of the first field matching the property
-  @private
-*/
+ * Internal helper to retrieve an arbitrary property match from an object hash
+ *
+ * @param {Model} model
+ * @param {String} name The name of the property to match
+ *
+ * @return {String|undefined} The name of the first field matching the property
+ * @private
+ */
 
 function _getField (model, name) {
   for (let key in model) {
@@ -31,28 +31,28 @@ function _getField (model, name) {
 }
 
 /**
-  Maps a default id field to a model provided primaryKey field
-
-  ```js
-  var propModel = {
-    prop_id: {primaryKey:true},
-    name: {type:"string"}
-  }
-
-  // Example default results from data store:
-  var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ]
-
-  idMap( propModel, data, '_id' )
-  // -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
-  ```
-
-  @param {Model} model The model to apply
-  @param {Array} col The collection array of data objects to map
-  @param {String} idField The name of the provided id field
-
-  @return {Array} The collection of data mapped id fields
-  @memberof Format
-*/
+ * Maps a default id field to a model provided primaryKey field
+ *
+ * ```js
+ * var propModel = {
+ *   prop_id: {primaryKey:true},
+ *   name: {type:"string"}
+ * }
+ *
+ * // Example default results from data store:
+ * var data = [ {_id:"512314", name:"power"}, {_id:"519910", name:"speed"} ]
+ *
+ * idMap( propModel, data, '_id' )
+ * // -> [ {prop_id:"512314", name:"power"}, {prop_id:"519910", name:"speed"} ]
+ * ```
+ *
+ * @param {Model} model The model to apply
+ * @param {Array} col The collection array of data objects to map
+ * @param {String} idField The name of the provided id field
+ *
+ * @return {Array} The collection of data mapped id fields
+ * @memberof Format
+ */
 
 function idMap (model, col, idField) {
   // Load up the primaryKey field from a given model

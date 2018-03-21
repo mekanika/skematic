@@ -1,22 +1,22 @@
 
-import is from './is'
+const is = require('./is')
 
 /**
-  Determines whether a generator SHOULD be run or not.
-
-  Be very careful passing `undefined` as "val" as this will assume that the
-  "val" has been _provided_ as far as the generator flags are concerned. In
-  general, DO NOT pass `val` if the value does not exist on your data object.
-
-  @param {Model} model
-  @param {Object} opts Options hash. Only contains `once` flag.
-  @param {Mixed} [val] Optional value to pass. If passed assumed `provided`.
-
-  @return {Boolean} Passes if all the flags to compute are met
-
-  @private
-  @ignore
-*/
+ * Determines whether a generator SHOULD be run or not.
+ *
+ * Be very careful passing `undefined` as "val" as this will assume that the
+ * "val" has been _provided_ as far as the generator flags are concerned. In
+ * general, DO NOT pass `val` if the value does not exist on your data object.
+ *
+ * @param {Model} model
+ * @param {Object} opts Options hash. Only contains `once` flag.
+ * @param {Mixed} [val] Optional value to pass. If passed assumed `provided`.
+ *
+ * @returns {Boolean} Passes if all the flags to compute are met
+ *
+ * @private
+ * @ignore
+ */
 
 function canCompute (model, opts = {}, val) {
   if (!model || !model.generate) return false
@@ -48,28 +48,28 @@ function canCompute (model, opts = {}, val) {
 }
 
 /**
-  Computes a single value (rather than stepping through a data object).
-  Used directly by 'format' to enable single pass data modification, rather
-  than having to run 2 passes (one for computeAll, one for format).
-
-  Checks whether compute is valid (ie. should run) for this model, and either
-  returns the computed value or the passed value.
-
-  Flags for processing generate configuration:
-
-  - preserve: If a value is provided DO NOT regenerate, OVERRIDES every
-  - require: Regenerate ONLY WHEN a key is provided (ie. require a provided key)
-  - once: Only run if 'computeValue' is passed `{once:true}`
-
-  @param {Model} model
-  @param {Object} opts Options hash. Only contains `once` flag.
-  @param {Mixed} [val] Optional value to pass
-  @param {Object} [data] Root data object for `this` generator reference
-
-  @return {Mixed} The computed value (if any) or the passed `val`
-
-  @memberof Format
-*/
+ * Computes a single value (rather than stepping through a data object).
+ * Used directly by 'format' to enable single pass data modification, rather
+ * than having to run 2 passes (one for computeAll, one for format).
+ *
+ * Checks whether compute is valid (ie. should run) for this model, and either
+ * returns the computed value or the passed value.
+ *
+ * Flags for processing generate configuration:
+ *
+ * - preserve: If a value is provided DO NOT regenerate, OVERRIDES every
+ * - require: Regenerate ONLY WHEN a key is provided (ie. require a provided key)
+ * - once: Only run if 'computeValue' is passed `{once:true}`
+ *
+ * @param {Model} model
+ * @param {Object} opts Options hash. Only contains `once` flag.
+ * @param {Mixed} [val] Optional value to pass
+ * @param {Object} [data] Root data object for `this` generator reference
+ *
+ * @returns {Mixed} The computed value (if any) or the passed `val`
+ *
+ * @memberof Format
+ */
 
 function computeValue (model, opts = {}, val, data) {
   // Return the raw value if unable to compute
@@ -79,19 +79,19 @@ function computeValue (model, opts = {}, val, data) {
 }
 
 /**
-  Generates a value by executing all `gen.ops` functions
-
-  @param {Object} gen The generator object {ops [, ...flags] }
-  @param {Boolean} [runOnce] Flag to run 'once' generator functions
-  @param {Mixed} [data] A provided value (if any)
-  @param {Object} data The parent/root data object
-
-  @throws {Error} When trying to run 'once' flags without passing `runOnce`
-  @throws {Error} When function `fn` string reference cannot be found
-
-  @private
-  @ignore
-*/
+ * Generates a value by executing all `gen.ops` functions
+ *
+ * @param {Object} gen The generator object {ops [, ...flags] }
+ * @param {Boolean} [runOnce] Flag to run 'once' generator functions
+ * @param {Mixed} [data] A provided value (if any)
+ * @param {Object} data The parent/root data object
+ *
+ * @throws {Error} When trying to run 'once' flags without passing `runOnce`
+ * @throws {Error} When function `fn` string reference cannot be found
+ *
+ * @private
+ * @ignore
+ */
 
 function _generate (gen, runOnce, value, data) {
   // Run immediately if `gen` is a function
@@ -156,4 +156,4 @@ function _generate (gen, runOnce, value, data) {
   Setup exports
 */
 
-export {canCompute, computeValue}
+module.exports = {canCompute, computeValue}

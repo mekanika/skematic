@@ -4,7 +4,7 @@
  * @namespace plugins/TypeConvert
  */
 
-export {
+module.exports = {
   toString,
   convertNumber,
   toNumber,

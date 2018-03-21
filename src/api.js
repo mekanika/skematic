@@ -1,10 +1,10 @@
 
 /**
-  Data structure and rule validation engine
-  @module Skematic
-
-  @example
-  import Skematic from 'skematic'
+ * Data structure and rule validation engine
+ * @module Skematic
+ *
+ * @example
+ * import * as Skematic from 'skematic'
 */
 
 const format = require('./format')

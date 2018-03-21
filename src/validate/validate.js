@@ -1,61 +1,61 @@
 
 /**
-  Module dependencies
-  @ignore
-*/
+ * Module dependencies
+ * @ignore
+ */
 
-import is from '../is'
-import * as Rules from '../rules'
-import setDefault from '../default'
-import checkValue from './checkValue'
-
-/**
-  Expose the module
-  @ignore
-*/
-
-export {validate, checkValue}
+const is = require('../is')
+const Rules = require('../rules')
+const setDefault = require('../default')
+const checkValue = require('./checkValue')
 
 /**
-  Validates `data` against a model's rules.
+ * Expose the module
+ * @ignore
+ */
 
-  If passed "opts" `{sparse:true}`, validation is only run on the fields in
-  the data objected provided. Default is `false`, so validation is run on
-  all fields in the provided `model`
+module.exports = {validate, checkValue}
 
-  If passed "opts" `{strict: true}`, validation ensures all keys on the data
-  payload are valid (ie. have an associated model field), before running
-  normal validation
-
-  Returns:
-
-  ```
-  {
-    valid: {Boolean},
-    // Error object if data is object, array if scalar
-    errors: {Object|Array}
-  }
-  ```
-
-  Example:
-
-  ```
-  validate({type:'string'}, '1')
-  // -> {valid:true, errors:[]}
-
-  validate({name:{type:'string'}}, {name:'Zim'})
-  // -> {valid: true, errors:{}}
-  ```
-
-  @param {Model} model The data structure rules used for validation
-  @param {Object} [opts] Optional options `{sparse:true}` to only parse data keys
-  @param {Object|Mixed} data The data item to validate
-
-  @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
-
-  @memberof Skematic
-  @alias validate
-*/
+/**
+ * Validates `data` against a model's rules.
+ *
+ * If passed "opts" `{sparse:true}`, validation is only run on the fields in
+ * the data objected provided. Default is `false`, so validation is run on
+ * all fields in the provided `model`
+ *
+ * If passed "opts" `{strict: true}`, validation ensures all keys on the data
+ * payload are valid (ie. have an associated model field), before running
+ * normal validation
+ *
+ * Returns:
+ *
+ * ```
+ * {
+ *  valid: {Boolean},
+ *  // Error object if data is object, array if scalar
+ *  errors: {Object|Array}
+ * }
+ * ```
+ *
+ * Example:
+ *
+ * ```
+ * validate({type:'string'}, '1')
+ * // -> {valid:true, errors:[]}
+ *
+ * validate({name:{type:'string'}}, {name:'Zim'})
+ * // -> {valid: true, errors:{}}
+ * ```
+ *
+ * @param {Model} model The data structure rules used for validation
+ * @param {Object} [opts] Optional options `{sparse:true}` to only parse data keys
+ * @param {Object|Mixed} data The data item to validate
+ *
+ * @returns {Object} Validation object `{valid:$bool, errors:$Object|Array}`
+ *
+ * @memberof Skematic
+ * @alias validate
+ */
 
 function validate (model, data, opts = {}) {
   if (opts.keyCheckOnly) return _checkKeys(model, data)
@@ -71,14 +71,14 @@ function validate (model, data, opts = {}) {
 }
 
 /**
-  Checks that the keys on the data object
-
-  @param {Model} model The data structure rules used for validation
-  @param {Object|Mixed} data The data item to validate
-
-  @return {Object} Validation object `{valid:$bool, errors:$Object|Array}`
-  @private
-*/
+ * Checks that the keys on the data object
+ *
+ * @param {Model} model The data structure rules used for validation
+ * @param {Object|Mixed} data The data item to validate
+ *
+ * @returns {Object} Validation object `{valid:$bool, errors:$Object|Array}`
+ * @private
+ */
 
 function _checkKeys (model, data) {
   let ret = {
@@ -108,14 +108,14 @@ function _checkKeys (model, data) {
 }
 
 /**
-  Internal method that handles the validation of arbitrary `data`.
-
-  @param {Mixed} data Either a scalar, array or object to validate
-  @param {Model} model The data structure to use for validation rules
-
-  @return {Object} `{valid:bool, errors:hash|array}`
-  @private
-*/
+ * Internal method that handles the validation of arbitrary `data`.
+ *
+ * @param {Mixed} data Either a scalar, array or object to validate
+ * @param {Model} model The data structure to use for validation rules
+ *
+ * @returns {Object} `{valid:bool, errors:hash|array}`
+ * @private
+ */
 
 function _validate (data, model, opts) {
   let errs = {}
@@ -191,14 +191,14 @@ function _validate (data, model, opts) {
 }
 
 /**
-  Validates ONLY the keys on the data object, NOT the keys on the model
-
-  @param {Object} data The keyed data object to validate
-  @param {Model} model The model rules
-
-  @return {Object} Validation object `{valid:$bool, errors:$Object}`
-  @private
-*/
+ * Validates ONLY the keys on the data object, NOT the keys on the model
+ *
+ * @param {Object} data The keyed data object to validate
+ * @param {Model} model The model rules
+ *
+ * @returns {Object} Validation object `{valid:$bool, errors:$Object}`
+ * @private
+ */
 
 function _sparse (data, model, opts) {
   let isValid = true

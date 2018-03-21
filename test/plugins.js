@@ -4,6 +4,6 @@
   in the coverage report :)
 */
 
-import '../src/plugins/toReactShape'
-import '../src/plugins/koaMiddleware'
-import '../src/plugins/connectMiddleware'
+require('../src/plugins/toReactShape')
+require('../src/plugins/koaMiddleware')
+require('../src/plugins/connectMiddleware')

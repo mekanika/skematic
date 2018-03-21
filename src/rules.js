@@ -1,6 +1,6 @@
 /**
-  @namespace Rules
-*/
+ * @namespace Rules
+ */
 
 const is = require('./is')
 
@@ -8,7 +8,7 @@ const is = require('./is')
  * Expose module
  */
 
-export {
+module.exports = {
   required,
   isEmpty,
   notEmpty,
@@ -36,7 +36,7 @@ export {
  * Ensure the value is set (and not undefined)
  *
  * @param {Mixed} val The value to test
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias required
  */
@@ -49,7 +49,7 @@ function required (val) {
  * Value is empty (either `''` or `undefined`) but NOT `false` or `0`
  *
  * @param {Mixed} v The value to test
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isEmpty
  */
@@ -63,7 +63,7 @@ function isEmpty (v) {
   * Value is NOT empty (either `''` or `undefined`)
   *
   * @param {Mixed} v The value to test
-  * @return {Boolean}
+  * @returns {Boolean}
   * @memberof Rules
   * @alias notEmpty
 */
@@ -77,7 +77,7 @@ function notEmpty (v) {
  *
  * @param {Mixed} val The value to test
  * @param {Mixed} mustMatchVal The value to strictly equal
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias eq
 */
@@ -91,7 +91,7 @@ function eq (val, mustMatchVal) {
  *
  * @param {Mixed} val The value to test
  * @param {Mixed} mustNotMatchVal The value to strictly NOT equal
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias neq
 */
@@ -105,7 +105,7 @@ function neq (val, mustNotMatchVal) {
  *
  * @param {String} str The value to test
  * @param {Number} min Minimum length to equal or exceed
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias minLength
  */
@@ -119,7 +119,7 @@ function minLength (str, min) {
  *
  * @param {String} str The value to test
  * @param {Number} max Maximum length
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias maxLength
  */
@@ -133,7 +133,7 @@ function maxLength (str, max) {
  *
  * @param {Number} val The value to test
  * @param {Number} limit The maximum condition
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias max
  */
@@ -147,7 +147,7 @@ function max (val, limit) {
  *
  * @param {Number} val The value to test
  * @param {Number} limit The minimum condition
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias min
  */
@@ -161,7 +161,7 @@ function min (val, limit) {
  *
  * @param {Mixed} v The value to test
  * @param {Mixed|Mixed[]} list The list of values to test against
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias oneOf
  */
@@ -176,7 +176,7 @@ function oneOf (v, list) {
  *
  * @param {Number} v The value to test
  * @param {Number[]} list The list of values to test against
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias notPresent
  */
@@ -215,7 +215,7 @@ function hasNot (arr, val) {
  * String is a valid email
  *
  * @param {String} str
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isEmail
  */
@@ -228,7 +228,7 @@ function isEmail (str) {
  * String is a valid URL
  *
  * @param {String} str
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isUrl
  */
@@ -242,7 +242,7 @@ function isUrl (str) {
  * String is alpha characters
  *
  * @param {String} v
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isAlpha
  */
@@ -255,7 +255,7 @@ function isAlpha (v) {
  * String is alphaNumeric characters
  *
  * @param {String} v
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isAlphaNum
  */
@@ -268,7 +268,7 @@ function isAlphaNum (v) {
  * Value is of type 'Number'
  *
  * @param {any} v
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isNumber
  */
@@ -281,7 +281,7 @@ function isNumber (v) {
  * Value is of type 'String'
  *
  * @param {any} v
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias isNumber
  */
@@ -296,7 +296,7 @@ function isString (v) {
  * @param {String} str
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias match
  */
@@ -312,11 +312,11 @@ function match (str, exp, flags) {
  * @param {String} str
  * @param {Regex|String} exp A regular expression to test (converted to RegExp if string)
  * @param {String} [flags] to apply to regex (eg. "ig")
- * @return {Boolean}
+ * @returns {Boolean}
  * @memberof Rules
  * @alias notMatch
  */
 
 function notMatch (str, exp, flags) {
-  return !exports.match(str, exp, flags)
+  return !match(str, exp, flags)
 }

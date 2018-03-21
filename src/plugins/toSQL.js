@@ -1,10 +1,10 @@
 
 /**
-  Conversion map for Skematic type `key`s to equivalent PGSQL
-  @private
-*/
+ * Conversion map for Skematic type `key`s to equivalent PGSQL
+ * @private
+ */
 
-export const pgSQL = {
+const pgSQL = {
   ARRAY: (t, opts) => typeToSQL(t.type, opts) + ' ARRAY',
   BOOLEAN: t => t.key,
   BYTEA: t => t.key,
@@ -40,16 +40,16 @@ export const pgSQL = {
 }
 
 /**
-  Converts a DataType to a SQL compliant string
+ * Converts a DataType to a SQL compliant string
+ *
+ * @param {Object|String} type The type to convert to SQL string
+ * @param {Boolean} [forceUnrecognised] Don't throw on unrecognised type
+ *
+ * @throws On unrecognised type
+ * @returns {String} The SQL compliant string
+ */
 
-  @param {Object|String} type The type to convert to SQL string
-  @param {Boolean} [forceUnrecognised] Don't throw on unrecognised type
-
-  @throws On unrecognised type
-  @return {String} The SQL compliant string
-*/
-
-export const typeToSQL = (type, opts = {forceUnrecognised: false}) => {
+const typeToSQL = (type, opts = {forceUnrecognised: false}) => {
   if (!type) return ''
 
   // Return immediately if no key set on data type
@@ -66,30 +66,30 @@ export const typeToSQL = (type, opts = {forceUnrecognised: false}) => {
 }
 
 /**
-  Converts a JS array to a PG SQL compatible string
-  @example
-  arrayToPGString(['1', '2'])
-  // -> '{"1", "2"}'
+ * Converts a JS array to a PG SQL compatible string
+ * @example
+ * arrayToPGString(['1', '2'])
+ * // -> '{"1", "2"}'
+ *
+ * @param {Array} arr The array to convert
+ * @returns {String}
+ */
 
-  @param {Array} arr The array to convert
-  @return {String}
-*/
-
-export const arrayToPGString = arr => {
+const arrayToPGString = arr => {
   return JSON.stringify(arr).replace(/\[/g, '{').replace(/\]/g, '}')
 }
 
 /**
-  Converts a field column on a model to a SQL string
+ * Converts a field column on a model to a SQL string
+ *
+ * @param {String} name The name of column
+ * @param {Object} model The associated Skematic model for this column
+ * @param {String} table The name of the table (used for debug)
+ *
+ * @returns {String} The SQL for this column
+ */
 
-  @param {String} name The name of column
-  @param {Object} model The associated Skematic model for this column
-  @param {String} table The name of the table (used for debug)
-
-  @return {String} The SQL for this column
-*/
-
-export const fieldToString = (name, model, table) => {
+const fieldToString = (name, model, table) => {
   // Define the colun name
   let str = [name]
 
@@ -131,11 +131,11 @@ export const fieldToString = (name, model, table) => {
 }
 
 /**
-  Generates a `CREATE TYPE` enumerated string for all enum fields in `model`
-
-  @param {Object} model The Skematic model with potential enum fields
-  @return {String[]|null} Array of CREATE TYPE strings or null if none
-*/
+ * Generates a `CREATE TYPE` enumerated string for all enum fields in `model`
+ *
+ * @param {Object} model The Skematic model with potential enum fields
+ * @returns {String[]|null} Array of CREATE TYPE strings or null if none
+ */
 
 const getEnumTypeString = model => {
   let enums = []
@@ -152,22 +152,22 @@ const getEnumTypeString = model => {
 }
 
 /**
-  Converts a keyed object of Skematic models to equivalent CREATE SQL
+ * Converts a keyed object of Skematic models to equivalent CREATE SQL
+ *
+ * @example
+ * const model = {id: {primaryKey: true}, name: {type: Skematic.STRING}}}
+ * toSQL({tablefoo: model})
+ * // CREATE TABLE tablefoo (
+ * //   id PRIMARY KEY,
+ * //   name VARCHAR
+ * // );
+ *
+ * @param {Object} schema The 'table' keyed list of models to write as SQL
+ *
+ * @returns {String} The SQL CREATE strings
+ */
 
-  @example
-  const model = {id: {primaryKey: true}, name: {type: Skematic.STRING}}}
-  toSQL({tablefoo: model})
-  // CREATE TABLE tablefoo (
-  //   id PRIMARY KEY,
-  //   name VARCHAR
-  // );
-
-  @param {Object} schema The 'table' keyed list of models to write as SQL
-
-  @return {String} The SQL CREATE strings
-*/
-
-export default function toSQL (schema, opts = {}) {
+module.exports = function toSQL (schema, opts = {}) {
   let sql = `-- Skematic generated SQL\n-- ${(new Date().toISOString())}\n\n`
 
   Object.keys(schema).forEach(k => {

@@ -1,62 +1,65 @@
 
 /**
-  Format methods are **not directly available** on the API, but are used by the
-  `Skematic.format()` function to modify provided data.
-
-  @namespace Format
-*/
-
-/**
-  Import utilities
-  @ignore
-*/
-
-import is from './is'
+ * Format methods are **not directly available** on the API, but are used by the
+ * `Skematic.format()` function to modify provided data.
+ *
+ * @namespace Format
+ */
 
 /**
-  Import Skematic tools
-  @ignore
-*/
+ * Import utilities
+ * @ignore
+ */
 
-import setDefault from './default'
-import strip from './strip'
-import {canCompute, computeValue as compute} from './compute'
-import idMap from './idmap'
+const is = require('./is')
 
 /**
-  Formats a data object according to model rules.
+ * Import Skematic tools
+ * @ignore
+ */
 
-  Order of application is significant: 1. Defaults, 2. Generate, 3. Transform.
+const setDefault = require('./default')
+const strip = require('./strip')
+const {canCompute, computeValue} = require('./compute')
+const idMap = require('./idmap')
 
-  The options hash may contain:
-  > Legend: **name** _{Type}_ `default`:
+// Shorthand accessor
+const compute = computeValue
 
-  - **strict** _{Boolean}_ - `false` Strips any fields not declared on model
-  - **sparse** _{Boolean}_ - `false` only process keys on data (not full model)
-  - **defaults** _{Boolean}_ - `true` set default values
-  - **generate** _{Boolean|String}_ - `true` Compute values (pass `"once"` to run compute-once fields)
-  - **transform** _{Boolean}_ - `true` apply transform functions
-  - **strip** _{Array}_ `undefined` list of field values to strip from `data`
-  - **mapIdFrom** _{String}_ `undefined` maps a primarykey field from the field name provided
-
-  @example
-  const Model = {name: {default: 'Player 1'}, created: {generate: Date.now}}
-
-  format(Model, {mydata: 'demo'})
-  // -> {name: 'Player 1', created: 1467139008992, mydata: 'demo'}
-
-  format(Model, {name: 'Mo', mydata: 'demo'}, {strict: true})
-  // -> {name: 'Mo', created: 1467139049234}
-
-  @param {Model} model The model to format to
-  @param {Mixed} data The data to format
-  @param {Object} opts Options hash
-
-  @return {Object} A fresh copy of formatted data
-
-  @memberof Skematic
-  @alias format
-*/
+/**
+ * Formats a data object according to model rules.
+ *
+ * Order of application is significant: 1. Defaults, 2. Generate, 3. Transform.
+ *
+ * The options hash may contain:
+ * > Legend: **name** _{Type}_ `default`:
+ *
+ * - **strict** _{Boolean}_ - `false` Strips any fields not declared on model
+ * - **sparse** _{Boolean}_ - `false` only process keys on data (not full model)
+ * - **defaults** _{Boolean}_ - `true` set default values
+ * - **generate** _{Boolean|String}_ - `true` Compute values (pass `"once"` to run compute-once fields)
+ * - **transform** _{Boolean}_ - `true` apply transform functions
+ * - **strip** _{Array}_ `undefined` list of field values to strip from `data`
+ * - **mapIdFrom** _{String}_ `undefined` maps a primarykey field from the field name provided
+ *
+ * @example
+ * const Model = {name: {default: 'Player 1'}, created: {generate: Date.now}}
+ *
+ * format(Model, {mydata: 'demo'})
+ * // -> {name: 'Player 1', created: 1467139008992, mydata: 'demo'}
+ *
+ * format(Model, {name: 'Mo', mydata: 'demo'}, {strict: true})
+ * // -> {name: 'Mo', created: 1467139049234}
+ *
+ * @param {Model} model The model to format to
+ * @param {Mixed} data The data to format
+ * @param {Object} opts Options hash
+ *
+ * @returns {Object} A fresh copy of formatted data
+ *
+ * @memberof Skematic
+ * @alias format
+ */
 
 function format (model, data, opts = {}) {
   if (data == null) return createFrom(model)
@@ -71,15 +74,15 @@ function format (model, data, opts = {}) {
 }
 
 /**
-  Returns an object built on ALL values present in the model, set to defaults
-  and having been run through `.format()` with default flags.
-
-  @param {Model} model To initialise object
-  @param {Mixed} nullValue
-
-  @return {Object}
-  @private
-*/
+ * Returns an object built on ALL values present in the model, set to defaults
+ * and having been run through `.format()` with default flags.
+ *
+ * @param {Model} model To initialise object
+ * @param {Mixed} nullValue
+ *
+ * @returns {Object}
+ * @private
+ */
 
 function createFrom (model, nullValue) {
   let o = {}
@@ -108,15 +111,15 @@ function createFrom (model, nullValue) {
 }
 
 /**
-  Checks that `source` permissions (what you HAVE) meet `target` permissions
-  (what you NEED). Returns `true` if so, `false` if not.
-
-  @param {String|String[]} source A scope string or Array of scopes (HAVE)
-  @param {String|String[]} target A scope string or Array of scopes (NEED)
-
-  @returns {Boolean} Are target permissions present in source permissions
-  @private
-*/
+ * Checks that `source` permissions (what you HAVE) meet `target` permissions
+ * (what you NEED). Returns `true` if so, `false` if not.
+ *
+ * @param {String|String[]} source A scope string or Array of scopes (HAVE)
+ * @param {String|String[]} target A scope string or Array of scopes (NEED)
+ *
+ * @returns {Boolean} Are target permissions present in source permissions
+ * @private
+ */
 
 function isIn (source, target) {
   // No target permissions? Always passes
@@ -136,16 +139,16 @@ function isIn (source, target) {
 }
 
 /**
-  Internal method to apply the modifier functions (default, generate etc)
-
-  @param {Object} data The parent (root) data to pass to generate for 'this' ref
-  @param {Model} ss The model to apply (default: {})
-  @param {Object} opts The options hash
-  @param {Mixed} value The (likely SCALAR) value to be formatted
-
-  @return Formatted value
-  @private
-*/
+ * Internal method to apply the modifier functions (default, generate etc)
+ *
+ * @param {Object} data The parent (root) data to pass to generate for 'this' ref
+ * @param {Model} ss The model to apply (default: {})
+ * @param {Object} opts The options hash
+ * @param {Mixed} value The (likely SCALAR) value to be formatted
+ *
+ * @returns Formatted value
+ * @private
+ */
 
 function _makeValue (data = {}, ss = {}, opts, val) {
   // Set defaults
@@ -189,17 +192,17 @@ function _makeValue (data = {}, ss = {}, opts, val) {
 }
 
 /**
-  Internal method to recurse through a model and apply _makeValue. Handles
-  scalars, arrays and object data.
-
-  @param {Model} skm The model to apply
-  @param {Mixed} payload The (likely OBJECT) data to be formatted
-  @param {Object} opts The options hash
-  @param {Object} parentData The original data payload (used for ref)
-
-  @return A fresh copy of formatted data (no mutation)
-  @private
-*/
+ * Internal method to recurse through a model and apply _makeValue. Handles
+ * scalars, arrays and object data.
+ *
+ * @param {Model} skm The model to apply
+ * @param {Mixed} payload The (likely OBJECT) data to be formatted
+ * @param {Object} opts The options hash
+ * @param {Object} parentData The original data payload (used for ref)
+ *
+ * @returns A fresh copy of formatted data (no mutation)
+ * @private
+ */
 
 function _dive (skm, payload, opts, parentData) {
   // On the odd chance we reach here with no `skm` model defined
@@ -296,9 +299,9 @@ function _dive (skm, payload, opts, parentData) {
 }
 
 /**
-  Export module
-  @ignore
-*/
+ * Export module
+ * @ignore
+ */
 
 module.exports = format
 module.exports.isIn = isIn

@@ -1,26 +1,26 @@
 
 /**
-  Import rules and type checker
-  @ignore
-*/
+ * Import rules and type checker
+ * @ignore
+ */
 
-import {isEmpty} from './rules'
-import is from './is'
+const {isEmpty} = require('./rules')
+const is = require('./is')
 
 /**
-  Sets a default value if specified on empty fields
-
-  Supports passing an object and complex model.
-
-  @param {Mixed} v The value or object to default
-  @param {Model} model The associated model to check the default value on
-
-  @return Value or the default value
-  @memberof Format
-  @alias setDefault
+ * Sets a default value if specified on empty fields
+ *
+ * Supports passing an object and complex model.
+ *
+ * @param {Mixed} v The value or object to default
+ * @param {Model} model The associated model to check the default value on
+ *
+ * @returns Value or the default value
+ * @memberof Format
+ * @alias setDefault
 */
 
-export default function (v, model) {
+module.exports = function (v, model) {
   if (!model) return v
 
   const def = function (v, s) {

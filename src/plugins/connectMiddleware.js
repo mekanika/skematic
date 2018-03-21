@@ -1,7 +1,6 @@
+const Skematic = require('../api')
 
-import Skematic from '../api'
-
-export function validate (model, opts = {}) {
+function validate (model, opts = {}) {
   return function SkematicValidate (req, res, next) {
     const data = req.body
     const out = Skematic.validate(model, data, opts)
@@ -10,11 +9,16 @@ export function validate (model, opts = {}) {
   }
 }
 
-export function format (model, opts = {}) {
+function format (model, opts = {}) {
   return function SkematicFormat (req, res, next) {
     const data = req.body
     const out = Skematic.format(model, data, opts)
     req[opts.formatField || 'formatted'] = out
     return next()
   }
+}
+
+module.exports = {
+  validate,
+  format
 }

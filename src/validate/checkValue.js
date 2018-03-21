@@ -1,23 +1,22 @@
-
-import is from '../is'
-import {isIn} from '../format'
-import setError from './setError'
-import * as Rules from '../rules'
+const is = require('../is')
+const {isIn} = require('../format')
+const setError = require('./setError')
+const Rules = require('../rules')
 
 /**
-  Checks a value against the rules defined in `model`
+ * Checks a value against the rules defined in `model`
+ *
+ * Does **NOT** apply rules to undefined values that are not `required`
+ *
+ * @param {Mixed} val The value to test
+ * @param {Object} model The model to apply the tests against
+ * @param {Object} [data] The parent data object to reference on custom rules
+ *
+ * @returns Array of errors
+ * @private
+ */
 
-  Does **NOT** apply rules to undefined values that are not `required`
-
-  @param {Mixed} val The value to test
-  @param {Object} model The model to apply the tests against
-  @param {Object} [data] The parent data object to reference on custom rules
-
-  @return {Array} errors
-  @private
-*/
-
-export default function checkValue (val, model, data, opts = {}) {
+module.exports = function checkValue (val, model, data, opts = {}) {
   let errs = []
   if (!model) return []
 
