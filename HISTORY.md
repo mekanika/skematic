@@ -1,3 +1,15 @@
+3.4.0 - 21 March 2018
+=====
+
+Internal:
+
+- Switched to CJS module import/export
+- Updated Type definition comment format to work with Intellisense
+- Added `type` field to Model type definitions
+- Updated dev dependencies
+
+
+
 3.3.0 - 29 January 2018
 =====
 
