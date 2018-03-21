@@ -365,7 +365,7 @@ SERIAL.key = SERIAL.prototype.key = 'SERIAL'
 
 */
 
-export default {
+module.exports = {
   ARRAY,
   BOOLEAN,
   BYTEA,
