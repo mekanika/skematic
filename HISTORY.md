@@ -1,3 +1,12 @@
+3.5.0 - 30 April 2018
+=====
+
+Fixed:
+
+- `checkValue()` in validate correctly handles array properties
+
+
+
 3.4.1 - 21 March 2018
 =====
 
