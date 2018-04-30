@@ -68,9 +68,7 @@ module.exports = function checkValue (val, model, data, opts = {}) {
       }
     } else {
       // Build parameters to pass to rule
-      let params = model.rules[key]
-      if (!(params instanceof Array)) params = [params]
-      params.unshift(val)
+      const params = [val, model.rules[key]]
 
       // Check that the rule exists to run against
       if (!Rules[key]) {
