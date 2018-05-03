@@ -1,3 +1,12 @@
+3.5.1 - 3 May 2018
+=====
+
+Fixed:
+
+- Setting preserve:true on generators fails to generate if no value given #38
+
+
+
 3.5.0 - 30 April 2018
 =====
 
