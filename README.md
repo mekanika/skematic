@@ -275,11 +275,11 @@ You may also pass `generate` a config object with properties:
 > Legend: **field** - _{Type}_ `default`: Description
 
 - **ops** _{Array}_ of fn objects `{fn [, args])` or functions. The first function in the list is passed the value of the object being formatted. The output of each function is passed as the first parameter of the next.
-- **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite if set to `true`. (If left as `false`, generate will always replace the provided value)
+- **preserve** _{Boolean}_ `false`: OPTIONAL Preserves a provided value and does not overwrite if set to `true`. (If left as `false`, generate will always replace the provided value). Note: `undefined` values treated as being NOT SET - use `null` to pass 'no value'
 - **require** _{Boolean_ `false`: OPTIONAL Ensures that value is only generated if the field exists on the provided data.
 - **once** _{Boolean}_ `false`: OPTIONAL Flag this field to only generate if `.format()` is called with the option `once:true`. Useful for fields like "created".
 
-Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true`. To _only_ generate a value when the key for that field is provided, set `require: true`. To manually run generators based on a flag provided to format, set `{once: true}` on the model field, (and run `format(Model, data, {once: true})`.
+Unless instructed otherwise (via flags) `generate` will compute a value _every_ time and _overwrite_ any provided value. To preserve any provided value set `preserve: true` (note that `undefined` is treated as not set, use `null` to provide a no-value). To _only_ generate a value when the key for that field is provided, set `require: true`. To manually run generators based on a flag provided to format, set `{once: true}` on the model field, (and run `format(Model, data, {once: true})`.
 
 Example:
 

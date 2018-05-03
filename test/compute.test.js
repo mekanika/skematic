@@ -111,6 +111,16 @@ describe('Computed value generator', function () {
       expect(out.moo).to.equal('moo!')
     })
 
+    it('preserve:true generates if no value provided', function () {
+      var s = {
+        moo: {
+          generate: { ops: () => 'moo!', preserve: true }
+        }
+      }
+      var out = format(s, {somekey: '!'})
+      expect(out.moo).to.equal('moo!')
+    })
+
     it('require:true', function () {
       var s = {
         moo: {generate: {ops: [swee], require: true}},

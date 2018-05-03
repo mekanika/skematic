@@ -101,7 +101,7 @@ describe('.format(skm, opts, data)', function () {
     expect(out).to.not.have.key('name')
   })
 
-  it('`protect` model flag removes user provided data fields', () => {
+  it('`lock` model flag removes user provided data fields', () => {
     const s = {name: {lock: true}}
     const data = format(s, {name: 'moo'})
     expect(Object.keys(data).length).to.equal(0)

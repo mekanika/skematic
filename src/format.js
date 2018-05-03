@@ -159,7 +159,7 @@ function _makeValue (data = {}, ss = {}, opts, val) {
   // Run generators
   if (opts.generate !== false) {
     // Sets up the "runOnce" flag if `opts.compute = 'once'`
-    var runOnce = opts.generate !== false && opts.once
+    var runOnce = (opts.generate !== false) && opts.once
 
     var args = [ss, {once: runOnce}]
     if (arguments.length > 3) args.push(val)

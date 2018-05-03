@@ -32,8 +32,8 @@ function canCompute (model, opts = {}, val) {
   // Run if `gen` is a function
   if (is.function(gen)) return true
 
-  // Has a value been provided by the caller
-  const provided = arguments.length > 2
+  // `undefined` is treated as NO VALUE PROVIDED
+  const provided = typeof val !== 'undefined'
 
   const preserve = gen.preserve
   const req = gen.require
