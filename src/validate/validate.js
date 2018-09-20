@@ -169,6 +169,10 @@ function _validate (data, model, opts) {
           }
         })
       } else {
+        // Forces strict checking on sub-models
+        const checkedKeys = _checkKeys(scm.model, v)
+        if (!checkedKeys.valid) return (errs[key] = checkedKeys)
+
         // Otherwise just assume it's an object
         let sub = _validate(v, scm.model, opts)
         if (!sub.valid) errs[key] = sub.errors

@@ -93,6 +93,16 @@ describe('Validate', function () {
         expect(res.errors.bigsub.top[0]).to.match(/integer/)
       })
 
+      // Force passing of validation paramaters to sub-models
+      it('enforces strict key checks on submodels', () => {
+        var m = { hop: { model: { name: { required: true } } } }
+        // Load in an invalid key 'derp'
+        var data = { hop: { name: 'moo', derp: '😜' } }
+        const res = Skematic.validate(m, data, { strict: true })
+        expect(res.valid).to.equal(false)
+        expect(res.errors.derp[0]).to.match(/invalidkey/i)
+      })
+
       it('can recursively validate', function () {
         var s = {
           name: {type: 'string'},
