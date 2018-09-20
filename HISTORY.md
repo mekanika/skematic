@@ -1,3 +1,13 @@
+3.6.0 - 19 September 2018
+=====
+
+Fixed:
+
+- Sub-models correctly apply `{ strict: true }` check
+
+
+
+
 3.5.1 - 3 May 2018
 =====
 
