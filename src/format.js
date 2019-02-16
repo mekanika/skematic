@@ -184,7 +184,8 @@ function _makeValue (data = {}, ss = {}, opts, val) {
       if (!is.function(ss.transform)) {
         throw new Error('Expect .transform value to be a function()')
       }
-      val = ss.transform(val)
+      // Bind the data as `this` so object values are available for transform
+      val = ss.transform.bind(data)(val)
     }
   }
 

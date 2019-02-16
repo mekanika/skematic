@@ -10,6 +10,21 @@ describe('Transform', () => {
     expect(out.name).to.equal('123')
   })
 
+  it('can access values on `this`', () => {
+    const m = {
+      name: {},
+      power: {
+        transform: function (v) {
+          console.log(this)
+          if (this.name === 'Gandalf') return 'magic'
+          else return v
+        }
+      }
+    }
+    const out = format(m, { name: 'Gandalf', power: 'beard' })
+    expect(out.power).to.equal('magic')
+  })
+
   it('throws an error if .transform is not a function', () => {
     const m = {name: {transform: 'yes'}}
     const match = 'Expect .transform value to be a function()'
