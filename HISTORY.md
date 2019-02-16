@@ -1,3 +1,10 @@
+3.7.1 - 16 February 2019
+=====
+
+Released 3.7.0 to include the built version
+
+
+
 3.7.0 - 16 February 2019
 =====
 
