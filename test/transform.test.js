@@ -15,7 +15,6 @@ describe('Transform', () => {
       name: {},
       power: {
         transform: function (v) {
-          console.log(this)
           if (this.name === 'Gandalf') return 'magic'
           else return v
         }
