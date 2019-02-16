@@ -1,10 +1,18 @@
+3.7.0 - 16 February 2019
+=====
+
+Changed:
+
+- `transform` functions on format now have access to `this` values
+
+
+
 3.6.0 - 19 September 2018
 =====
 
 Fixed:
 
 - Sub-models correctly apply `{ strict: true }` check
-
 
 
 
