@@ -1,3 +1,12 @@
+4.1.1 - 26 March 2019
+=====
+
+Fixed:
+
+- Sparse validating now _actually_ passes the parentData for `this` references
+
+
+
 4.1.0 - 26 March 2019
 =====
 
