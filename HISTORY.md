@@ -1,3 +1,11 @@
+4.0.0
+=====
+
+**Breaking changes**:
+
+- Rules now ALWAYS run if defined on the model. Set `{sparse: true}` as a validate option to avoid validating rules on fields that are not passed.
+
+
 3.7.1 - 16 February 2019
 =====
 
