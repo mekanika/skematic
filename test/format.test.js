@@ -286,5 +286,21 @@ describe('.format(skm, opts, data)', function () {
       var out = format(demo, {field: [{}]})
       expect(out.field[0].boom).to.equal('!')
     })
+
+    it('passes local array data as `this` (and not global obj)', () => {
+      const s = {
+        tasks: {
+          model: {
+            name: {
+              // Will transform the `name` field to whatever this.go is
+              // which CONFIRMS we have access to nested sub data
+              transform () { return this.go }
+            }
+          }
+        }
+      }
+      const out = format(s, { tasks: [{ go: 'Yas!', name: 'derp' }] })
+      expect(out.tasks[0].name).to.equal('Yas!')
+    })
   })
 })

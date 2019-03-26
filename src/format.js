@@ -254,7 +254,7 @@ function _dive (skm, payload, opts, parentData) {
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {
-        out = _dive(model, data[key], opts, parentData)
+        out = _dive(model, data[key], opts, data[key])
       } else {
         let args = [parentData, model, opts]
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
@@ -279,7 +279,7 @@ function _dive (skm, payload, opts, parentData) {
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {
-        data[i] = _dive(skm.model, data[i], opts, parentData)
+        data[i] = _dive(skm.model, data[i], opts, data[i])
       } else {
         // Or simply "makeValue" for everything else
         out = _makeValue(parentData, skm.model, opts, data[i])
