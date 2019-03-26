@@ -1,3 +1,12 @@
+4.2.0 - 26 March 2019
+=====
+
+Fixed:
+
+- Nested models pass local/nested data as `this` rather than global object data
+
+
+
 4.1.1 - 26 March 2019
 =====
 
