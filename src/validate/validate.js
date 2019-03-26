@@ -220,7 +220,7 @@ function _sparse (data, model, opts) {
     // Only valid with an associated model
     if (!model[key]) continue
 
-    out = _validate(data[key], model[key], opts)
+    out = _validate(data[key], model[key], opts, data)
     if (!out.valid) {
       isValid = false
       errs[key] = out.errors

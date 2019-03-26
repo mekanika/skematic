@@ -240,8 +240,10 @@ describe('Validate', function () {
           }}
         }
       }
-      const out = validate(mdl, { type: 'moo', label: '' }, { sparse: true })
-      expect(out.valid).to.equal(true)
+      const out = validate(mdl, { type: 'label', label: '' }, { sparse: true })
+      const out2 = validate(mdl, { type: 'label' }, { sparse: true })
+      expect(out.valid).to.equal(false)
+      expect(out2.valid).to.equal(true)
     })
   })
 
