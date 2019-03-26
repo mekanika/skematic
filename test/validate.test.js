@@ -67,6 +67,22 @@ describe('Validate', function () {
       expect(validate(s, {name: 'woo', age: 5}).valid).to.equal(false)
       expect(validate(s, {name: 'woo', age: 10}).valid).to.equal(true)
     })
+
+    it('runs custom rules even when no value is set for field', () => {
+      let flag = false
+      const s = {
+        name: {
+          rules: { shouldExist: function (val) {
+            if (!val) flag = true
+            return !!val
+          }}
+        }
+      }
+      const out = validate(s, { }, { strict: true })
+      console.log(out)
+      expect(out.valid).to.equal(false)
+      expect(flag).to.equal(true)
+    })
   })
 
   describe('submodel', function () {
@@ -270,8 +286,19 @@ describe('checkValue(val, model)', function () {
     expect(checkValue(null, s)).to.have.length(0)
   })
 
+  it('runs rules on `null` if rules are set and .allowNull', () => {
+    const a = checkValue(null, { allowNull: true })
+    const b = checkValue(null, { allowNull: true, rules: { minLength: 3 } })
+    expect(a).to.have.length(0)
+    expect(b).to.have.length(1)
+  })
+
   it('returns unrequired undefined values', function () {
-    expect(checkValue(undefined, {rules: {min: 0}})).to.have.length(0)
+    const noRules = checkValue(undefined, { default: 'yes' })
+    const withRules = checkValue(undefined, { rules: { min: 0 } })
+
+    expect(noRules).to.have.length(0)
+    expect(withRules).to.have.length(1)
   })
 
   it('then applies specified rules', function () {

@@ -33,11 +33,12 @@ module.exports = function checkValue (val, model, data, opts = {}) {
     return setError(model, 'allowNull', errs)
   }
 
-  // Don't validate `null/undefined` values if not required
-  if (val == null && !model.required) return []
+  const hasRules = !!Object.keys(model.rules || {}).length
+  // Don't validate `null/undefined` values if not required AND no rules set
+  if (val == null && !model.required && !hasRules) return []
 
   // Allow NULL values (no validations run)
-  if (val === null && model.allowNull) return []
+  if (val === null && model.allowNull && !hasRules) return []
 
   // Bail out if required is present and fails
   // (It's not useful to run the other validations otherwise)

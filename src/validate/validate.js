@@ -140,9 +140,12 @@ function _validate (data, model, opts) {
     let v = data[key]
 
     // If it's not required and the default value is 'empty', skip it
+    // UNLESS it has other rules defined -- then run validation
     // Note: 'allowNull: false' is NOT NULL. Disallows empty.
     const isRequired = scm.required || scm.allowNull === false
-    if (!isRequired && Rules.isEmpty(setDefault(v, scm))) continue
+    const hasRules = !!Object.keys(scm.rules || {}).length
+    const hasEmptyDefault = Rules.isEmpty(setDefault(v, scm))
+    if (!hasRules && !isRequired && hasEmptyDefault) continue
 
     // Recursively Validate sub-model
     if (scm.model) {

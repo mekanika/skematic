@@ -131,7 +131,11 @@ Skematic.validate(Hero, {name: 'Moo'})
 
 ### Rules
 
-Several validation rules are built in. Notably, 'required' is passed as a property option, rather than a rule. The other available validators are:
+Several validation rules are built in. Custom rules are defined as functions that receive the field value and return pass/fail (true/false). Notably, 'required' is passed as a property option, rather than a rule. 
+
+If _any_ rules are defined on the model they will attempt to validate, _even if no data value is provided_. To only run the rules when data is provided, validate using the `{ sparse: true }` option.
+
+The other available validators are:
 
 - **.min** - The lowest permitted number
 - **.max** - The highest permitted number
