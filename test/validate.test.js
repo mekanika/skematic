@@ -229,6 +229,20 @@ describe('Validate', function () {
       var res = Skematic.validate(s, rec, {sparse: true})
       expect(res.valid).to.equal(true)
     })
+
+    it('passes parentData object for sparse `this` rule checks', () => {
+      const mdl = {
+        type: { default: 'email' },
+        label: {
+          rules: { has: function (val) {
+            if (this.type === 'label') return !!val
+            else return true
+          }}
+        }
+      }
+      const out = validate(mdl, { type: 'moo', label: '' }, { sparse: true })
+      expect(out.valid).to.equal(true)
+    })
   })
 
   describe('{strict: true} Strict field modeling', () => {

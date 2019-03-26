@@ -112,17 +112,21 @@ function _checkKeys (model, data) {
  *
  * @param {Mixed} data Either a scalar, array or object to validate
  * @param {Model} model The data structure to use for validation rules
+ * @param {Options} opts Validation options
+ * @param {Object} [parentData] Optional parent data object
  *
  * @returns {Object} `{valid:bool, errors:hash|array}`
  * @private
  */
 
-function _validate (data, model, opts) {
+function _validate (data, model, opts, parentData = {}) {
   let errs = {}
 
   // Validate scalars
+  // Used by `_sparse()` to check scalar vals -- pass parentObj if exists
+  // so that rules that check `this` data don't get null.
   if (!is.object(data)) {
-    let res = checkValue(data, model, null, opts)
+    let res = checkValue(data, model, parentData, opts)
     return res.length
       ? {valid: false, errors: res}
       : {valid: true, errors: null}
