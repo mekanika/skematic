@@ -254,7 +254,7 @@ function _dive (skm, payload, opts, parentData) {
 
       // Handle value of field being an Array
       if (is.array(data[key]) || model.type === 'array') {
-        out = _dive(model, data[key], opts, data[key])
+        out = _dive(model, data[key], opts, parentData)
       } else {
         let args = [parentData, model, opts]
         if (Object.keys(data).indexOf(key) > -1) args.push(data[key])
@@ -276,6 +276,8 @@ function _dive (skm, payload, opts, parentData) {
     data = data.slice()
     // ARRAY (with sub-model)
     // Process data as an array IF there is a sub-model to format against
+    // Note: we use the sub-data AS the parentData in this case because
+    // the sub-model evaluates its `this` against the sub-data NOT parent
     for (let i = 0; i < data.length; i++) {
       // Recurse through objects
       if (is.object(data[i])) {

@@ -59,6 +59,24 @@ describe('.format(skm, opts, data)', function () {
     expect(out.name).to.equal('ace')
   })
 
+  it('Array fields receive correct `this` parentData', () => {
+    const s = {
+      cat: {},
+      mew: {
+        default: [],
+        transform (v) {
+          if (this.cat !== 'bear') return []
+          else return v
+        }
+      }
+    }
+    const x = format(s, { cat: 'bear', mew: ['hi'] })
+    const y = format(s, { cat: 'boom', mew: ['hi'] })
+
+    expect(x.mew[0]).to.equal('hi')
+    expect(y.mew[0]).to.equal(undefined)
+  })
+
   it('`generate` opt default computes generator values', function () {
     var s = {
       name: {
