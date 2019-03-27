@@ -1,3 +1,12 @@
+4.3.0 - 27 March 2019
+=====
+
+Fixed:
+
+- Array fields are passed correct parentData as `this` reference
+
+
+
 4.2.0 - 26 March 2019
 =====
 
