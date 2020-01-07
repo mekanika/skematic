@@ -1,3 +1,12 @@
+4.4.0 - 7 January 2020
+=====
+
+Types:
+
+- Enable generics for passing model definitions to `Skematic.Model<T>`
+
+
+
 4.3.0 - 27 March 2019
 =====
 
