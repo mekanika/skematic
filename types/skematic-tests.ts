@@ -1,5 +1,14 @@
 import * as Skematic from '../';
 
+interface SuperHero {
+  name: string;
+  power: number;
+}
+const xmo: Skematic.Model<SuperHero> = {
+  name: { required: true },
+  power: {}
+};
+
 const demoModel: Skematic.Model = {
   created: {
     generate: () => new Date().toISOString()

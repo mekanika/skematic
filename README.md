@@ -30,6 +30,22 @@ Skematic.validate(Hero, {name: 'Zim'})
 // {valid: false, errors: {name: ['Bad name!'], skill: ['Failed: required']}}
 ```
 
+Also fully supports Typescript:
+
+```ts
+interface ISimpleHero {
+  name: string
+}
+const SimpleHero: Skematic.Model<ISuperHero> {
+  name: { required: true },
+  sOmeJUNKK: {}
+}
+
+// Typescript Error:
+// Object literal may only specify known properties, 
+// and 'some_junk' does not exist in type ISimpleHero
+```
+
 ## Install
 
     npm install --save skematic

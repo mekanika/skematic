@@ -188,9 +188,10 @@ declare namespace Skematic {
       once?: boolean;
   }
 
-  interface Model {
-    [key: string]: ModelProps;
-  }
+  type _GenericModel = { [key: string]: ModelProps; }
+  type _TypedModel<T> = { [key in keyof T]: ModelProps; }
+
+  type Model<T = _GenericModel> = _TypedModel<T>
 
   interface ModelProps {
     /**
