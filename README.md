@@ -43,7 +43,7 @@ const SimpleHero: Skematic.Model<ISuperHero> {
 
 // Typescript Error:
 // Object literal may only specify known properties, 
-// and 'some_junk' does not exist in type ISimpleHero
+// and 'sOmeJUNKK' does not exist in type ISimpleHero
 ```
 
 ## Install

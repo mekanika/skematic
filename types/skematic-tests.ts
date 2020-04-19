@@ -2,7 +2,7 @@ import * as Skematic from '../';
 
 interface SuperHero {
   name: string;
-  power: number;
+  power?: number;
 }
 const xmo: Skematic.Model<SuperHero> = {
   name: { required: true },
@@ -36,7 +36,7 @@ const formatOptions: Skematic.FormatOptions = {
 };
 
 Skematic.format(demoModel, { name: 'Zim' });
-Skematic.format(demoModel.name, 'Zim');
+Skematic.format(demoModel.name!, 'Zim');
 
 // Check validate()
 const validateOptions: Skematic.ValidateOptions = {
@@ -49,6 +49,9 @@ const validateOptions: Skematic.ValidateOptions = {
 Skematic.validate(demoModel, { hello: 'yes' });
 
 function chk() {
-  const out = Skematic.validate(demoModel.power, 20);
+  const out = Skematic.validate(demoModel.power!, 20);
   return out.valid ? false : out.errors && out.errors[0];
 }
+
+// Ensure "optional" `?:` props work for format
+Skematic.format(xmo, { name: 'Barry' });

@@ -189,7 +189,7 @@ declare namespace Skematic {
   }
 
   type _GenericModel = { [key: string]: ModelProps; }
-  type _TypedModel<T> = { [key in keyof T]: ModelProps; }
+  type _TypedModel<T> = { [key in keyof T]: ModelProps | undefined; }
 
   type Model<T = _GenericModel> = _TypedModel<T>
 
