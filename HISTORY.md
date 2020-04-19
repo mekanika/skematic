@@ -1,3 +1,10 @@
+4.5.0 - 19 April 2020
+=====
+
+- `_TypeModel<T>` supports optional `?:` (possibly undefined) props
+
+
+
 4.4.0 - 7 January 2020
 =====
 
