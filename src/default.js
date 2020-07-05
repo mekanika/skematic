@@ -31,8 +31,8 @@ module.exports = function (v, model) {
     return isEmpty(v) || v === null ? s.default : v
   }
 
-  // Parse objects
-  if (v && typeof v === 'object') {
+  // Parse objects (but NOT arrays)
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
     for (var k in model) {
       if (!is.undefined(model[k].default)) v[k] = def(v[k], model[k])
     }

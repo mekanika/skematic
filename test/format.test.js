@@ -264,6 +264,8 @@ describe('.format(skm, opts, data)', function () {
       var out = format(s, {field: [undefined, 'hi']})
       expect(out.field).to.have.length(2)
       expect(out.field[0]).to.equal('WOW')
+      // Check that defaults are set correctly on arrays (bug in setDefault)
+      expect(out.field.model).to.equal(undefined)
 
       out = format(s, undefined)
       expect(out.field).to.eql([])
