@@ -288,6 +288,9 @@ function _dive (skm, payload, opts, parentData) {
         if (data[i] !== out) data[i] = out
       }
     }
+    // Apply the value transformation to the ROOT array data otherwise
+    // we skip doing things like transforms on this data
+    data = _makeValue(parentData, skm, opts, data)
   } else {
     // NORMAL VALUE
     // Process as scalar value

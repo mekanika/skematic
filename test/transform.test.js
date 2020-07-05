@@ -10,6 +10,17 @@ describe('Transform', () => {
     expect(out.name).to.equal('123')
   })
 
+  it('transforms sub-model driven arrays', () => {
+    const m = {
+      demo: {
+        model: { hi: {} },
+        transform: v => JSON.stringify(v) + 'moo!'
+      }
+    }
+    const out = format(m, { demo: [{hi: 1, x: 1}] }, { strict: true })
+    expect(out.demo).to.equal('[{"hi":1}]moo!')
+  })
+
   it('can access values on `this`', () => {
     const m = {
       name: {},
