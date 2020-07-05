@@ -1,3 +1,13 @@
+4.6.0 - 5 July 2020
+=====
+
+Fixed:
+
+- Sub-model array types correctly apply transforms to array root
+- Correctly set defaults on array types with sub-models
+
+
+
 4.5.0 - 19 April 2020
 =====
 
