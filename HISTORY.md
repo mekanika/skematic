@@ -1,3 +1,16 @@
+5.0.0 - 28 November 2020
+=====
+
+**BREAKING changes:**
+
+- Disable running rules for undefined data unless required by the model
+
+Internal:
+
+- Minor docs updates
+
+
+
 4.6.0 - 5 July 2020
 =====
 
