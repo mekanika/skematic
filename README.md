@@ -520,9 +520,9 @@ Validate _options_ include:
 > Legend: **field** - _{Type}_ - `default`: Description
 
 - **scopes** - _{String|Array}_ - `undefined`: List of scopes that will be tested against `.write` model fields for matches. Errors if scopes don't meet.
-- **unscope** - _{Boolean}_ - `false`: Ignores any `.write` scope requirements on the model
+- **unscope** - _{Boolean}_ - `false`: Ignores any scope requirements on the model
 - **strict** - _{Boolean}_ - `false`: Validates that all keys provided by data are defined on the model as well as valid (prevents validating/accepting extraneous fields)
-- **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model
+- **sparse** - _{Boolean}_ - `false`: Only process fields on the provided data, rather than all fields on the entire model. This will skip required fields on your model if those fields are not present on your data. Can be useful for only validating subsets of models.
 - **keyCheckOnly** - _{Boolean}_ - `false`: **Overrides normal validation** and ONLY checks user data keys are all defined on model. Useful to ensure user is not sending bogus keys. @see [Format options: `strict`](#format) to simply strip unknown keys.
 
 
