@@ -67,22 +67,6 @@ describe('Validate', function () {
       expect(validate(s, {name: 'woo', age: 5}).valid).to.equal(false)
       expect(validate(s, {name: 'woo', age: 10}).valid).to.equal(true)
     })
-
-    it('runs custom rules even when no value is set for field', () => {
-      let flag = false
-      const s = {
-        name: {
-          rules: { shouldExist: function (val) {
-            if (!val) flag = true
-            return !!val
-          }}
-        }
-      }
-      const out = validate(s, { }, { strict: true })
-      console.log(out)
-      expect(out.valid).to.equal(false)
-      expect(flag).to.equal(true)
-    })
   })
 
   describe('submodel', function () {
@@ -309,12 +293,12 @@ describe('checkValue(val, model)', function () {
     expect(b).to.have.length(1)
   })
 
-  it('returns unrequired undefined values', function () {
+  it('returns empty for unrequired undefined values', function () {
     const noRules = checkValue(undefined, { default: 'yes' })
     const withRules = checkValue(undefined, { rules: { min: 0 } })
 
     expect(noRules).to.have.length(0)
-    expect(withRules).to.have.length(1)
+    expect(withRules).to.have.length(0)
   })
 
   it('then applies specified rules', function () {
@@ -334,6 +318,19 @@ describe('checkValue(val, model)', function () {
     var out = checkValue(undefined, s)
     expect(out).to.have.length(1)
     expect(out).to.match(/required/ig)
+  })
+
+  it('skips rules if value is undefined and field is NOT required', () => {
+    const s = { name: { rules: { maxLength: 3 } } }
+    // Validate EMPTY data -- because the field is NOT required, should pass
+    const out = validate(s, {})
+    expect(out.valid).to.equal(true)
+
+    // And should fail if the value is required
+    s.name.required = true
+    expect(validate(s, {}).valid).to.equal(false)
+    // And applies rule
+    expect(validate(s, { name: 'Captain' }).valid).to.equal(false)
   })
 
   describe('.write scopes permissions', () => {

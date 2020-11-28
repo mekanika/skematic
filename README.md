@@ -149,7 +149,7 @@ Skematic.validate(Hero, {name: 'Moo'})
 
 Several validation rules are built in. Custom rules are defined as functions that receive the field value and return pass/fail (true/false). Notably, 'required' is passed as a property option, rather than a rule. 
 
-If _any_ rules are defined on the model they will attempt to validate, _even if no data value is provided_. To only run the rules when data is provided, validate using the `{ sparse: true }` option.
+**Important:** rules ONLY run when the value of the field is defined (i.e. NOT `undefined`). If a value is undefined on your data, no rules are applied. You can force a value to be provided by add the `required: true` flag to your model.
 
 The other available validators are:
 

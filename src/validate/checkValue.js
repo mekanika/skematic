@@ -54,6 +54,12 @@ module.exports = function checkValue (val, model, data, opts = {}) {
     }
   }
 
+  // If there ARE rules, but the value is UNDEFINED that means there IS NO VALUE
+  // to validate, so UNLESS the value is REQUIRED, we DO NOT APPLY RULES.
+  // Note: this caused a TON of production screw ups where rules were failing on
+  // no data being passed, particularly when fields were NOT required.
+  if (!model.required && val === undefined) return []
+
   // 3. Validate rules
   for (let key in model.rules) {
     if (!model.rules.hasOwnProperty(key)) continue
